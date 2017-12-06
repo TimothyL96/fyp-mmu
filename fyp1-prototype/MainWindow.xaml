@@ -53,10 +53,10 @@
 					<Button Content="Register"		x:Name="btn_register"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="01"/>
 					
 					<!--Main buttons-->
-					<Button Content="Single Player" x:Name="btn_singlePlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="03"/>
+					<Button Content="Single Player" x:Name="btn_singlePlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="03" Click="singlePlayer"/>
 					<Button Content="Multi Player"	x:Name="btn_multiPlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="05"/>
 					<Button Content="Load Game"		x:Name="btn_loadGame"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="07"/>
-					<Button Content="High Scores"	x:Name="btn_highScores"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="09"/>
+					<Button Content="High Scores"	x:Name="btn_highScores"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="09" Click="highscore"/>
 					<Button Content="Help"			x:Name="btn_help"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="11"/>
 					<Button Content="Exit"			x:Name="btn_exit"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="13" Click="close"/>
 				

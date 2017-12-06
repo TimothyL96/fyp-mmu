@@ -25,13 +25,13 @@ namespace fyp1_prototype
 	{
 		private KinectSensorChooser kinectSensorChooser;
 		private HandPointer capturedHandPointer;
-		private GripState lastGripState = GripState.Released;
+		private bool isGripinInteraction = false;
 
-		private enum GripState
+		/*private enum GripState
 		{
 			Released,
 			Gripped
-		}
+		}*/
 
 		public DragDropImages(Microsoft.Kinect.Toolkit.KinectSensorChooser kinectSensorChooser)
 		{
@@ -137,7 +137,7 @@ namespace fyp1_prototype
 			if (capturedHandPointer == e.HandPointer)
 			{
 				capturedHandPointer = null;
-				lastGripState = GripState.Released;
+				isGripinInteraction = false;
 				e.Handled = true;
 			}
 		}
@@ -169,7 +169,7 @@ namespace fyp1_prototype
 					capturedHandPointer = e.HandPointer;
 				}
 
-				lastGripState = GripState.Gripped;
+				isGripinInteraction = true;
 				e.Handled = true;
 			}
 		}
@@ -178,7 +178,7 @@ namespace fyp1_prototype
 		{
 			if (Img.Equals(e.HandPointer.Captured))
 			{
-				lastGripState = GripState.Released;
+				isGripinInteraction = false;
 				e.HandPointer.Capture(null);
 				e.Handled = true;
 			}
@@ -186,10 +186,28 @@ namespace fyp1_prototype
 
 		private void QueryInteractionStatusEvent(object sender, QueryInteractionStatusEventArgs e)
 		{
-			if (Img.Equals(e.HandPointer.Captured))
+			/*if (Img.Equals(e.HandPointer.Captured))
 			{ 
 				e.IsInGripInteraction = lastGripState == GripState.Gripped;
 				e.Handled = true;
+			}*/
+
+			//	If a grip is detected then change the cursor image to grip
+			if (e.HandPointer.HandEventType == HandEventType.Grip)
+			{
+				isGripinInteraction = true;
+			}
+
+			//	If grip release is detected then change the cursor image to open
+			else if (e.HandPointer.HandEventType == HandEventType.GripRelease)
+			{
+				isGripinInteraction = false;
+			}
+
+			// If no change in state then do not change the cursor
+			else if (e.HandPointer.HandEventType == HandEventType.None)
+			{
+				e.IsInGripInteraction = isGripinInteraction;
 			}
 		}
 
@@ -202,7 +220,7 @@ namespace fyp1_prototype
 
 				var currentPosition = e.HandPointer.GetPosition(Img);
 
-				if (lastGripState == GripState.Released || !e.HandPointer.IsInteractive)
+				if (isGripinInteraction == false || !e.HandPointer.IsInteractive)
 					return;
 				
 				Image image = e.Source as Image;
@@ -214,7 +232,15 @@ namespace fyp1_prototype
 		private void DropImage(object sender, DragEventArgs e)
 		{
 
+		}
 
+		//	Disable maximizing window
+		private void Window_StateChanged(object sender, EventArgs e)
+		{
+			if (this.WindowState == System.Windows.WindowState.Maximized)
+			{
+				this.WindowState = System.Windows.WindowState.Normal;
+			}
 		}
 	}
 }

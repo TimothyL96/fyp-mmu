@@ -296,5 +296,17 @@ namespace fyp1_prototype
 		{
 			this.Close();
 		}
+
+		private void highscore(object sender, RoutedEventArgs e)
+		{
+			HighScore highScore = new HighScore(kinectSensorChooser);
+			highScore.Show();
+		}
+
+		private void singlePlayer(object sender, RoutedEventArgs e)
+		{
+			DragDropImages dragDropImages = new DragDropImages(kinectSensorChooser);
+			dragDropImages.Show();
+		}
 	}
 }
