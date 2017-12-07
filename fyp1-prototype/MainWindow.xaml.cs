@@ -254,24 +254,8 @@ namespace fyp1_prototype
 			Image image = new Image();
 			image.Width = 150;
 			image.Height = 150;
-			image.Source = BitmapToImageSource(Properties.Resources.test);
+			//image.Source = BitmapToImageSource(Properties.Resources.test);
 			//canvas.Children.Add(image);
-		}
-
-		BitmapImage BitmapToImageSource(System.Drawing.Bitmap bitmap)
-		{
-			using (System.IO.MemoryStream memory = new System.IO.MemoryStream())
-			{
-				bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-				memory.Position = 0;
-				BitmapImage bitmapimage = new BitmapImage();
-				bitmapimage.BeginInit();
-				bitmapimage.StreamSource = memory;
-				bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-				bitmapimage.EndInit();
-
-				return bitmapimage;
-			}
 		}
 
 		private void wpfbtn3_Click(object sender, RoutedEventArgs e)
@@ -306,6 +290,7 @@ namespace fyp1_prototype
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
 			DragDropImages dragDropImages = new DragDropImages(kinectSensorChooser);
+			dragDropImages.Owner = Application.Current.MainWindow;
 			dragDropImages.Show();
 		}
 	}

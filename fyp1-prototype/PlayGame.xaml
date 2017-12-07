@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:k="http://schemas.microsoft.com/kinect/2013"
+		xmlns:Controls="clr-namespace:KinectControls;assembly=KinectControls"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:fyp1_prototype"
         mc:Ignorable="d"
-        Title="Play Game" Height="800" Width="1200" Icon="grab.png" StateChanged="Window_StateChanged" >
+        Title="Play Game" Height="900" Width="1200" Icon="grab.png" WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" StateChanged="Window_StateChanged" >
     <Grid>
 		<Border BorderThickness="5" BorderBrush="Black"></Border>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
@@ -15,7 +16,7 @@
 				<Grid>
 					<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0">Back</Button>
 				</Grid>
-				<Image Name="Img" AllowDrop="True" VerticalAlignment="Center" HorizontalAlignment="Center" Source="grab.png" Width="150" Height="150"/>
+				<Canvas Name="canvas"></Canvas>
 			</Grid>
 		</k:KinectRegion>
 	</Grid>

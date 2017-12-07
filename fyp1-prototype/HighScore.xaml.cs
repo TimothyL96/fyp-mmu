@@ -132,5 +132,14 @@ namespace fyp1_prototype
 				e.Handled = true;
 			}
 		}
+
+		//	Disable maximizing window
+		private void Window_StateChanged(object sender, EventArgs e)
+		{
+			if (this.WindowState == System.Windows.WindowState.Maximized)
+			{
+				this.WindowState = System.Windows.WindowState.Normal;
+			}
+		}
 	}
 }
