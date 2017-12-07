@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
@@ -136,9 +127,9 @@ namespace fyp1_prototype
 		//	Disable maximizing window
 		private void Window_StateChanged(object sender, EventArgs e)
 		{
-			if (this.WindowState == System.Windows.WindowState.Maximized)
+			if (this.WindowState == WindowState.Maximized)
 			{
-				this.WindowState = System.Windows.WindowState.Normal;
+				this.WindowState = WindowState.Normal;
 			}
 		}
 	}

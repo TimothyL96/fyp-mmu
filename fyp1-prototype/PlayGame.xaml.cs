@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
@@ -27,17 +20,11 @@ namespace fyp1_prototype
 		private KinectSensorChooser kinectSensorChooser;
 		private HandPointer capturedHandPointer;
 		private bool isGripinInteraction = false;
-		private int test = 50;
+		private int test = 50;	//	X axis image drop starting point
 		private DispatcherTimer dispatcherTimer1 = new DispatcherTimer();
 		private int speed = 10;
-
-		/*private enum GripState
-		{
-			Released,
-			Gripped
-		}*/
-
-		public DragDropImages(Microsoft.Kinect.Toolkit.KinectSensorChooser kinectSensorChooser)
+		
+		public DragDropImages(KinectSensorChooser kinectSensorChooser)
 		{
 			this.kinectSensorChooser = kinectSensorChooser;
 			this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -73,6 +60,7 @@ namespace fyp1_prototype
 
 			KinectRegion.AddHandPointerMoveHandler(Img, HandPointerMoveEvent);*/
 
+			//	Start creating images
 			var dispatcherTimer = new System.Timers.Timer(1000);
 			dispatcherTimer.Elapsed += dispatcherTimer_Tick;
 			dispatcherTimer.Start();
@@ -246,7 +234,7 @@ namespace fyp1_prototype
 		{
 			Image image;
 			Application.Current.Dispatcher.Invoke((Action)delegate {
-				 image = new Image();
+				image = new Image();
 				image.Width = 200;
 				image.Height = 200;
 				image.Source = BitmapToImageSource(Properties.Resources.test);
@@ -262,6 +250,7 @@ namespace fyp1_prototype
 				if (test > 1300) //1540 > width size is 200
 					test = 50;
 
+				//	Start pushing images down
 				dispatcherTimer1.Tick += new EventHandler(dispatcherTimer_Tick1);
 				dispatcherTimer1.Interval = TimeSpan.FromMilliseconds(300);
 				dispatcherTimer1.Start();
@@ -293,12 +282,13 @@ namespace fyp1_prototype
 		//	Disable maximizing window
 		private void Window_StateChanged(object sender, EventArgs e)
 		{
-			if (this.WindowState == System.Windows.WindowState.Normal)
+			if (this.WindowState == WindowState.Normal)
 			{
-				this.WindowState = System.Windows.WindowState.Maximized;
+				this.WindowState = WindowState.Maximized;
 			}
 		}
 
+		//	Convert bitmap image to image source
 		BitmapImage BitmapToImageSource(System.Drawing.Bitmap bitmap)
 		{
 			using (System.IO.MemoryStream memory = new System.IO.MemoryStream())
