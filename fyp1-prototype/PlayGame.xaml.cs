@@ -46,13 +46,16 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerLostCaptureHandler(back, HandPointerLostCaptureEvent);
 
 			//Grip
-			/*KinectRegion.SetIsGripTarget(Img, true);
+			KinectRegion.SetIsGripTarget(back, true);
 
-			KinectRegion.AddHandPointerEnterHandler(Img, HandPointerGripEnterEvent);
+			KinectRegion.AddHandPointerGripHandler(back, HandPointerPressEvent);
+			KinectRegion.AddHandPointerGripReleaseHandler(back, HandPointerPressReleaseEvent);
 
-			KinectRegion.AddHandPointerGripHandler(Img, HandPointerGripEvent);
-			KinectRegion.AddHandPointerGripReleaseHandler(Img, HandPointerGripReleaseEvent);
+			/*KinectRegion.AddHandPointerEnterHandler(Img, HandPointerGripEnterEvent);
 
+			KinectRegion.AddHandPointerGripHandler(back, HandPointerGripEvent);
+			KinectRegion.AddHandPointerGripReleaseHandler(back, HandPointerGripReleaseEvent);
+			
 			KinectRegion.AddHandPointerGotCaptureHandler(Img, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(Img, HandPointerLostCaptureEvent);
 

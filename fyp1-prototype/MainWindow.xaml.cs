@@ -31,39 +31,89 @@ namespace fyp1_prototype
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
 
-			/*
-			KinectRegion.AddHandPointerEnterHandler(wpfbtn1, OnHandPointerEnter);
-			KinectRegion.AddHandPointerLeaveHandler(wpfbtn1, OnHandPointerLeave);
+			//	Hand pointer enter and leave event handler
+			KinectRegion.AddHandPointerEnterHandler(btn_login, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_login, OnHandPointerLeave);
 
-			KinectRegion.AddHandPointerEnterHandler(wpfbtn2, OnHandPointerEnter);
-			KinectRegion.AddHandPointerLeaveHandler(wpfbtn2, OnHandPointerLeave);
+			KinectRegion.AddHandPointerEnterHandler(btn_register, OnHandPointerEnter);
+			KinectRegion.AddHandPointerEnterHandler(btn_register, OnHandPointerEnter);
 
-			KinectRegion.AddHandPointerEnterHandler(wpfbtn3, OnHandPointerEnter);
-			KinectRegion.AddHandPointerLeaveHandler(wpfbtn3, OnHandPointerLeave);
+			KinectRegion.AddHandPointerLeaveHandler(btn_singlePlayer, OnHandPointerLeave);
+			KinectRegion.AddHandPointerEnterHandler(btn_singlePlayer, OnHandPointerEnter);
 
+			KinectRegion.AddHandPointerEnterHandler(btn_multiPlayer, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_multiPlayer, OnHandPointerLeave);
 
-			KinectRegion.AddHandPointerGotCaptureHandler(wpfbtn1, OnHandPointerGotCapture);
-			KinectRegion.AddHandPointerLostCaptureHandler(wpfbtn1, OnHandPointerLostCapture);
+			KinectRegion.AddHandPointerEnterHandler(btn_loadGame, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_loadGame, OnHandPointerLeave);
 
-			KinectRegion.AddHandPointerGotCaptureHandler(wpfbtn2, OnHandPointerGotCapture);
-			KinectRegion.AddHandPointerLostCaptureHandler(wpfbtn2, OnHandPointerLostCapture);
+			KinectRegion.AddHandPointerEnterHandler(btn_highScores, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_highScores, OnHandPointerLeave);
 
-			KinectRegion.AddHandPointerGotCaptureHandler(wpfbtn3, OnHandPointerGotCapture);
-			KinectRegion.AddHandPointerLostCaptureHandler(wpfbtn3, OnHandPointerLostCapture);
+			KinectRegion.AddHandPointerEnterHandler(btn_help, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_help, OnHandPointerLeave);
 
+			KinectRegion.AddHandPointerEnterHandler(btn_exit, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_exit, OnHandPointerLeave);
 
-			KinectRegion.AddHandPointerPressHandler(wpfbtn1, OnHandPointerPress);
-			KinectRegion.AddHandPointerPressReleaseHandler(wpfbtn1, OnHandPointerPressRelease);
+			//	Hand pointer got capture and lost capture event handler
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_login, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_login, OnHandPointerLostCapture);
 
-			KinectRegion.AddHandPointerPressHandler(wpfbtn2, OnHandPointerPress);
-			KinectRegion.AddHandPointerPressReleaseHandler(wpfbtn2, OnHandPointerPressRelease);
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_register, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_register, OnHandPointerLostCapture);
 
-			KinectRegion.AddHandPointerPressHandler(wpfbtn3, OnHandPointerPress);
-			KinectRegion.AddHandPointerPressReleaseHandler(wpfbtn3, OnHandPointerPressRelease);
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_singlePlayer, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_singlePlayer, OnHandPointerLostCapture);
 
-			KinectRegion.SetIsPressTarget(wpfbtn1, true);
-			KinectRegion.SetIsPressTarget(wpfbtn2, true);
-			KinectRegion.SetIsPressTarget(wpfbtn3, true);	*/
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_multiPlayer, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_multiPlayer, OnHandPointerLostCapture);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_loadGame, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_loadGame, OnHandPointerLostCapture);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_highScores, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_highScores, OnHandPointerLostCapture);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_help, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_help, OnHandPointerLostCapture);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(btn_exit, OnHandPointerGotCapture);
+			KinectRegion.AddHandPointerLostCaptureHandler(btn_exit, OnHandPointerLostCapture);
+
+			//	Hand Pointer press and press release handler
+			KinectRegion.AddHandPointerPressHandler(btn_login, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_login, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_register, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_register, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_singlePlayer, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_singlePlayer, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_multiPlayer, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_multiPlayer, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_loadGame, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_loadGame, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_highScores, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_highScores, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_help, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_help, OnHandPointerPressRelease);
+
+			KinectRegion.AddHandPointerPressHandler(btn_exit, OnHandPointerPress);
+			KinectRegion.AddHandPointerPressReleaseHandler(btn_exit, OnHandPointerPressRelease);
+
+			KinectRegion.SetIsPressTarget(btn_login, true);
+			KinectRegion.SetIsPressTarget(btn_register, true);
+			KinectRegion.SetIsPressTarget(btn_singlePlayer, true);
+			KinectRegion.SetIsPressTarget(btn_multiPlayer, true);
+			KinectRegion.SetIsPressTarget(btn_loadGame, true);
+			KinectRegion.SetIsPressTarget(btn_highScores, true);
+			KinectRegion.SetIsPressTarget(btn_help, true);
+			KinectRegion.SetIsPressTarget(btn_exit, true);
 		}
 	
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
@@ -112,44 +162,89 @@ namespace fyp1_prototype
 		}
 
 		private void OnHandPointerEnter(object sender, HandPointerEventArgs e)
-		{/*
-			if (KinectRegion.GetIsPrimaryHandPointerOver(wpfbtn1))
+		{
+			if (KinectRegion.GetIsPrimaryHandPointerOver(btn_login))
 			{
-				VisualStateManager.GoToState(wpfbtn1, "MouseOver", true);
+				VisualStateManager.GoToState(btn_login, "MouseOver", true);
 				e.Handled = true;
 			}
-			else if (KinectRegion.GetIsPrimaryHandPointerOver(wpfbtn2))
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_register))
 			{
-				VisualStateManager.GoToState(wpfbtn2, "MouseOver", true);
+				VisualStateManager.GoToState(btn_register, "MouseOver", true);
 				e.Handled = true;
 			}
-			else if (KinectRegion.GetIsPrimaryHandPointerOver(wpfbtn3))
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_singlePlayer))
 			{
-				VisualStateManager.GoToState(wpfbtn3, "MouseOver", true);
+				VisualStateManager.GoToState(btn_singlePlayer, "MouseOver", true);
 				e.Handled = true;
-			}*/
+			}
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_multiPlayer))
+			{
+				VisualStateManager.GoToState(btn_multiPlayer, "MouseOver", true);
+				e.Handled = true;
+			}
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_loadGame))
+			{
+				VisualStateManager.GoToState(btn_loadGame, "MouseOver", true);
+				e.Handled = true;
+			}
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_highScores))
+			{
+				VisualStateManager.GoToState(btn_highScores, "MouseOver", true);
+				e.Handled = true;
+			}
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_help))
+			{
+				VisualStateManager.GoToState(btn_help, "MouseOver", true);
+				e.Handled = true;
+			}
+			else if (KinectRegion.GetIsPrimaryHandPointerOver(btn_exit))
+			{
+				VisualStateManager.GoToState(btn_exit, "MouseOver", true);
+				e.Handled = true;
+			}
 		}
 
 		private void OnHandPointerLeave(object sender, HandPointerEventArgs e)
-		{/*
-			if (!KinectRegion.GetIsPrimaryHandPointerOver(wpfbtn1))
+		{
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_login))
 			{
-				VisualStateManager.GoToState(wpfbtn1, "Normal", true);
+				VisualStateManager.GoToState(btn_login, "Normal", true);
 			}
-			if (!KinectRegion.GetIsPrimaryHandPointerOver(wpfbtn2))
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_register))
 			{
-				VisualStateManager.GoToState(wpfbtn2, "Normal", true);
+				VisualStateManager.GoToState(btn_register, "Normal", true);
 			}
-			if (!KinectRegion.GetIsPrimaryHandPointerOver(wpfbtn3))
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_singlePlayer))
 			{
-				VisualStateManager.GoToState(wpfbtn3, "Normal", true);
+				VisualStateManager.GoToState(btn_singlePlayer, "Normal", true);
+			}
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_multiPlayer))
+			{
+				VisualStateManager.GoToState(btn_multiPlayer, "Normal", true);
+			}
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_loadGame))
+			{
+				VisualStateManager.GoToState(btn_loadGame, "Normal", true);
+			}
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_highScores))
+			{
+				VisualStateManager.GoToState(btn_highScores, "Normal", true);
+			}
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_help))
+			{
+				VisualStateManager.GoToState(btn_help, "Normal", true);
+			}
+			if (!KinectRegion.GetIsPrimaryHandPointerOver(btn_exit))
+			{
+				VisualStateManager.GoToState(btn_exit, "Normal", true);
 			}
 
 			if (capturedHandPointer == e.HandPointer)
 			{
 				capturedHandPointer = null;
 				e.Handled = true;
-			}*/
+			}
 		}
 
 		private void OnHandPointerGotCapture(object sender, HandPointerEventArgs e)
