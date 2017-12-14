@@ -9,6 +9,7 @@ using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
 using Microsoft.Kinect.Toolkit.Interaction;
 using System.Windows.Threading;
+using System.Linq;
 
 namespace fyp1_prototype
 {
@@ -23,15 +24,34 @@ namespace fyp1_prototype
 		private int test = 50;	//	X axis image drop starting point
 		private DispatcherTimer dispatcherTimer1 = new DispatcherTimer();
 		private int speed = 10;
-		
+
+		private Skeleton[] allSkeletons = new Skeleton[6];
+		private static int screenWidth = 1900;
+		private static int screenHeight = 1000;
+		KinectSensor sensor;
+
 		public DragDropImages(KinectSensorChooser kinectSensorChooser)
 		{
+			if (KinectSensor.KinectSensors.Count > 0)
+			{
+				sensor = KinectSensor.KinectSensors[0];
+				if (sensor.Status == KinectStatus.Connected)
+				{
+					sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+					sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(sensorAllFramesReady);
+
+					sensor.SkeletonStream.Enable();
+
+					sensor.Start();
+				}
+			}		
+
 			this.kinectSensorChooser = kinectSensorChooser;
-			this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			InitializeComponent();
 
-			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
-			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
+			//var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
+			//BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
 
 			//Press
 			KinectRegion.SetIsPressTarget(back, true);
@@ -264,15 +284,15 @@ namespace fyp1_prototype
 
 		private void dispatcherTimer_Tick1(object source, EventArgs ee)
 		{
-			for(int i = 0; i < canvas.Children.Count; i++)
+			for(int i = 5; i < canvas.Children.Count; i++)
 			{
 				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 				//var p = Canvas.GetTop(canvas.Children[i]);
 				Canvas.SetTop(canvas.Children[i], p.Y + speed);
 
 				//	Define speed / difficulty
-				//if (canvas.Children.Count == 3)
-				//speed = 30;
+				if (canvas.Children.Count == 8)
+					speed = 70;
 
 				//	If the image touched edge of window then stop it
 				if (Canvas.GetTop(canvas.Children[i]) > 700) //840 > height size is 200
@@ -306,6 +326,122 @@ namespace fyp1_prototype
 
 				return bitmapimage;
 			}
+		}
+
+
+
+		private void sensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
+		{
+			Skeleton first = GetFirstSkeleton(e);
+
+			if (first == null)
+			{
+				return;
+			}
+
+			ScalePosition(handCursor, first.Joints[JointType.HandRight]);
+
+			ProcessGesture(first.Joints[JointType.HandRight]);
+
+			GetCameraPoint(first, e);
+
+			throw new NotImplementedException();
+		}
+
+		Skeleton GetFirstSkeleton(AllFramesReadyEventArgs e)
+		{
+			using (SkeletonFrame skeletonFrameData = e.OpenSkeletonFrame())
+			{
+				if (skeletonFrameData == null)
+				{
+					return null;
+				}
+
+				skeletonFrameData.CopySkeletonDataTo(allSkeletons);
+
+				Skeleton first = (from s in allSkeletons
+								  where s.TrackingState == SkeletonTrackingState.Tracked
+								  select s).FirstOrDefault();
+
+				return first;
+			}
+		}
+
+		private void ScalePosition(FrameworkElement element, Joint joint)
+		{
+			//convert the value to X/Y
+			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
+			SkeletonPoint point = new SkeletonPoint();
+			point.X = ScaleVector(screenWidth, joint.Position.X);
+			point.Y = ScaleVector(screenHeight, -joint.Position.Y);
+			point.Z = joint.Position.Z;
+
+			Joint scaledJoint = joint;
+			//Joint scaledJoint = joint.ScaleTo(1920, 1080);
+
+			scaledJoint.TrackingState = JointTrackingState.Tracked;
+			scaledJoint.Position = point;
+
+			Canvas.SetLeft(element, scaledJoint.Position.X);
+			//Canvas.SetTop(element, scaledJoint.Position.Y);
+
+		}
+
+		private float ScaleVector(int length, float position)
+		{
+			float value = (((((float)length) / 1f) / 2f) * position) + (length / 2);
+			if (value > length)
+			{
+				return (float)length;
+			}
+			if (value < 0f)
+			{
+				return 0f;
+			}
+			return value;
+		}
+
+		private void ProcessGesture(Joint rightHand)
+		{
+			SkeletonPoint point = new SkeletonPoint();
+
+			point.X = ScaleVector(screenWidth, rightHand.Position.X);
+			point.Y = ScaleVector(screenHeight, -rightHand.Position.Y);
+			point.Z = rightHand.Position.Z;
+
+			rightHand.Position = point;
+		}
+
+		void GetCameraPoint(Skeleton first, AllFramesReadyEventArgs e)
+		{
+			using (DepthImageFrame depth = e.OpenDepthImageFrame())
+			{
+				if (depth == null)
+				{
+					return;
+				}
+
+				DepthImagePoint rightDepthPoint =
+					depth.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position);
+
+				ColorImagePoint rightColorPoint =
+					depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
+					ColorImageFormat.RgbResolution640x480Fps30);
+
+				CameraPosition(handCursor, rightColorPoint);
+			}
+		}
+
+		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
+		{
+			Canvas.SetLeft(element, point.X - element.Width / 2);
+			Canvas.SetTop(element, point.Y - element.Height / 2);
+		}
+
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			if (sensor != null)
+				sensor.Stop();
 		}
 	}
 }

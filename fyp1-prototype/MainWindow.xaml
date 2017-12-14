@@ -6,7 +6,7 @@
 		xmlns:k="http://schemas.microsoft.com/kinect/2013"
         xmlns:local="clr-namespace:fyp1_prototype"
         mc:Ignorable="d"
-        Title="Kinect For Educational Game" MinHeight="620" MinWidth="740" Height="900" Width="1200" WindowState="Maximized" Icon="grab.png" Closing="Window_Closing">
+        Title="Kinect For Educational Game" MinHeight="620" MinWidth="740" Height="900" Width="1200" WindowState="Maximized" Icon="Resources/grab.png" Closing="Window_Closing">
 	<Grid>
 		<Border BorderThickness="5" BorderBrush="Black"></Border>
 		<k:KinectSensorChooserUI Name="kinectSensorDisplay" HorizontalAlignment="Center" VerticalAlignment="Top"></k:KinectSensorChooserUI>

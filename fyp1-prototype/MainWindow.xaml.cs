@@ -7,6 +7,7 @@ using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
 using Microsoft.Kinect.Toolkit.Interaction;
 using System.Timers;
+using System.Linq;
 
 namespace fyp1_prototype
 {
