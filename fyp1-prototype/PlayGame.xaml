@@ -6,11 +6,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:fyp1_prototype"
         mc:Ignorable="d"
-        Title="Play Game" Height="900" Width="1200" Icon="Resources/grab.png" WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" StateChanged="Window_StateChanged" Closed="Window_Closed" >
+        Title="Play Game" Height="900" Width="1200" Icon="Resources/grab.png" WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" StateChanged="Window_StateChanged" Closed="Window_Closed" Loaded="Window_Loaded" >
     <Grid>
 		<Border BorderThickness="5" BorderBrush="Black"></Border>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
-		<k:KinectRegion Name="kinectKinectRegion">
+		<k:KinectRegion Name="kinectKinectRegion" CursorExtendedColor1="Red" Cursor="">
 			<Grid>
 				<Canvas Name="canvas">
 					<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0">Back</Button>
@@ -18,6 +18,9 @@
 					<Image Canvas.Left="140" Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
 					<Image Canvas.Left="560" Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill" Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
 					<Image Canvas.Left="980" Canvas.Bottom="0"	Name="brownBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/brownbin.png"		Panel.ZIndex="3"/>
+					<Viewbox>
+						<TextBlock Name="tb" Text="Initializing..."/>
+					</Viewbox>
 				</Canvas>
 			</Grid>
 		</k:KinectRegion>
