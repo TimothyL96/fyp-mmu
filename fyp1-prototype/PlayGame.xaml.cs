@@ -87,39 +87,7 @@ namespace fyp1_prototype
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			InitializeComponent();
 
-			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
-			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
-
-			//Press
-			
-			KinectRegion.SetIsPressTarget(back, true);
-			Cursor a = kinectKinectRegion.Cursor;
-			KinectRegion.AddHandPointerEnterHandler(back, HandPointerEnterEvent);
-			KinectRegion.AddHandPointerLeaveHandler(back, HandPointerLeaveEvent);
-
-			KinectRegion.AddHandPointerPressHandler(back, HandPointerPressEvent);
-			KinectRegion.AddHandPointerPressReleaseHandler(back, HandPointerPressReleaseEvent);
-
-			KinectRegion.AddHandPointerGotCaptureHandler(back, HandPointerCaptureEvent);
-			KinectRegion.AddHandPointerLostCaptureHandler(back, HandPointerLostCaptureEvent);
-
-			//Grip
-			KinectRegion.SetIsGripTarget(back, true);
-
-			KinectRegion.AddHandPointerGripHandler(back, HandPointerPressEvent);
 			KinectRegion.AddHandPointerGripReleaseHandler(back, HandPointerPressReleaseEvent);
-
-			/*KinectRegion.AddHandPointerEnterHandler(Img, HandPointerGripEnterEvent);
-
-			KinectRegion.AddHandPointerGripHandler(back, HandPointerGripEvent);
-			KinectRegion.AddHandPointerGripReleaseHandler(back, HandPointerGripReleaseEvent);
-			
-			KinectRegion.AddHandPointerGotCaptureHandler(Img, HandPointerCaptureEvent);
-			KinectRegion.AddHandPointerLostCaptureHandler(Img, HandPointerLostCaptureEvent);
-
-			KinectRegion.AddQueryInteractionStatusHandler(Img, QueryInteractionStatusEvent);
-
-			KinectRegion.AddHandPointerMoveHandler(Img, HandPointerMoveEvent);*/
 
 			//	Start creating images
 			var dispatcherTimer = new System.Timers.Timer(1000);
@@ -194,7 +162,9 @@ namespace fyp1_prototype
 						var lastHandEvents = hand.HandType == InteractionHandType.Left
 													? _lastLeftHandEvents
 													: _lastRightHandEvents;
-     
+						if (lastHandEvents == _lastLeftHandEvents)
+							continue;
+
 						if (hand.HandEventType != InteractionHandEventType.None)
 							lastHandEvents[userID] = hand.HandEventType;
      
@@ -217,6 +187,14 @@ namespace fyp1_prototype
 						dump.AppendLine("    RawX: " + hand.RawX.ToString("N3"));
 						dump.AppendLine("    RawY: " + hand.RawY.ToString("N3"));
 						dump.AppendLine("    RawZ: " + hand.RawZ.ToString("N3"));
+
+						if (lastHandEvent == InteractionHandEventType.Grip)
+							handCursor.Source = new BitmapImage(new Uri("Resources/bluebin.png", UriKind.Relative));
+						else if (lastHandEvent == InteractionHandEventType.GripRelease)
+							handCursor.Source = new BitmapImage(new Uri("Resources/grab.png", UriKind.Relative));
+
+						if (hand.IsPressed)
+							handCursor.Source = new BitmapImage(new Uri("Resources/brownbin.png", UriKind.Relative));
 					}
 				}
      
@@ -497,7 +475,7 @@ namespace fyp1_prototype
 
 		private void dispatcherTimer_Tick1(object source, EventArgs ee)
 		{
-			for(int i = 5; i < canvas.Children.Count; i++)
+			for(int i = 6; i < canvas.Children.Count; i++)
 			{
 				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 				//var p = Canvas.GetTop(canvas.Children[i]);
@@ -540,8 +518,6 @@ namespace fyp1_prototype
 				return bitmapimage;
 			}
 		}
-
-
 
 		private void sensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
@@ -651,8 +627,8 @@ namespace fyp1_prototype
 
 		private void Window_Closed(object sender, EventArgs e)
 		{
-			//if (sensor != null)
-				//sensor.Stop();
+			if (sensor != null)
+				sensor.Stop();
 		}
 	}
 }

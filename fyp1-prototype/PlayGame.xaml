@@ -10,19 +10,17 @@
     <Grid>
 		<Border BorderThickness="5" BorderBrush="Black"></Border>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
-		<k:KinectRegion Name="kinectKinectRegion" CursorExtendedColor1="Red" Cursor="">
-			<Grid>
-				<Canvas Name="canvas">
-					<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0">Back</Button>
-					<Image Canvas.Left="500" Canvas.Bottom="500" Name="handCursor"	Stretch="Fill" Height="120" Width="100" Source="Resources/grab.png"			Panel.ZIndex="5"/>
-					<Image Canvas.Left="140" Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
-					<Image Canvas.Left="560" Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill" Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
-					<Image Canvas.Left="980" Canvas.Bottom="0"	Name="brownBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/brownbin.png"		Panel.ZIndex="3"/>
-					<Viewbox>
-						<TextBlock Name="tb" Text="Initializing..."/>
-					</Viewbox>
-				</Canvas>
-			</Grid>
-		</k:KinectRegion>
+		<Grid>
+			<Canvas Name="canvas">
+				<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0">Back</Button>
+				<Image Canvas.Left="500" Canvas.Bottom="500" Name="handCursor"	Stretch="Fill" Height="100" Width="80" Source="Resources/grab.png"			Panel.ZIndex="5"/>
+				<Image Canvas.Left="140" Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
+				<Image Canvas.Left="560" Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill" Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
+				<Image Canvas.Left="980" Canvas.Bottom="0"	Name="brownBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/brownbin.png"		Panel.ZIndex="3"/>
+				<Viewbox>
+					<TextBlock Name="tb" Text="Initializing..."/>
+				</Viewbox>
+			</Canvas>
+		</Grid>
 	</Grid>
 </Window>
