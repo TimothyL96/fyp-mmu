@@ -26,8 +26,14 @@ namespace fyp1_prototype
 
 		private bool isGripinInteraction = false;
 
-		private int test = 50;	//	X axis image drop starting point
-		private int speed = 10;
+		private int horizontalLength = 50;	//	X axis image drop starting point
+		private int verticalLength = 10;
+
+		private int horizontalMaxLength = 750;
+		private int verticalMaxLength = 1750;
+
+		private int imageWidth = 200;
+		private int imageHeight = 200;
 
 		private DispatcherTimer timerCreateImage = new DispatcherTimer();
 		private DispatcherTimer timerPushImage = new DispatcherTimer();
@@ -159,23 +165,23 @@ namespace fyp1_prototype
 		private void Tick_CreateImage(object source, EventArgs e)
 		{
 			Image image;
-			Application.Current.Dispatcher.Invoke((Action)delegate
+			Application.Current.Dispatcher.Invoke(delegate
 			{
 				image = new Image
 				{
-					Width = 200,
-					Height = 200,
+					Width = imageWidth,
+					Height = imageHeight,
 					Source = BitmapToImageSource(Properties.Resources.pepsi330ml)
 				};
 
 				canvas.Children.Add(image);
-				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], test);
+				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], horizontalLength);
 				var p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
 
-				test += 150;
+				horizontalLength += 150;
 
-				if (test > 1750) //1540 > width size is 200
-					test = 50;
+				if (horizontalLength > verticalMaxLength) //1540 > width size is 200
+					horizontalLength = 50;	//Reset to the most left of screen
 
 				//	Start pushing images down
 				timerPushImage.Tick += new EventHandler(Tick_PushImage);
@@ -184,20 +190,19 @@ namespace fyp1_prototype
 			});
 		}
 
-		private void Tick_PushImage(object source, EventArgs ee)
+		private void Tick_PushImage(object source, EventArgs e)
 		{
 			for (int i = 6; i < canvas.Children.Count; i++)
 			{
 				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-				//var p = Canvas.GetTop(canvas.Children[i]);
-				Canvas.SetTop(canvas.Children[i], p.Y + speed);
+				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
 
 				//	Define speed / difficulty
 				if (canvas.Children.Count == 8)
-					speed = 5;
+					verticalLength = 5;
 
 				//	If the image touched edge of window then stop it
-				if (Canvas.GetTop(canvas.Children[i]) > 750) //840 > height size is 200
+				if (Canvas.GetTop(canvas.Children[i]) > horizontalMaxLength) //840 > height size is 200
 				{
 					canvas.Children.Remove(canvas.Children[i]);
 				}
@@ -400,7 +405,7 @@ namespace fyp1_prototype
 			}
 		}
 
-		private void sensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
+		private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 			Skeleton first = GetFirstSkeleton(e);
 
@@ -509,7 +514,7 @@ namespace fyp1_prototype
 		private void Window_Closing(object sender, EventArgs e)
 		{
 			//if (sensor != null)
-			//sensor.Stop();
+				//sensor.Stop();
 
 			kinectSensorChooser.Stop();
 		}
