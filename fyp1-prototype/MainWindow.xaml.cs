@@ -154,11 +154,6 @@ namespace fyp1_prototype
 				kinectKinectRegion.KinectSensor = e.NewSensor;
 		}
 
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			kinectSensorChooser.Stop();
-		}
-
 		private void OnHandPointerEnter(object sender, HandPointerEventArgs e)
 		{
 			if (KinectRegion.GetIsPrimaryHandPointerOver(btn_login))
@@ -318,45 +313,12 @@ namespace fyp1_prototype
 			}*/
 		}
 
-		private void OnPressWpfBtn2()
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			DragDropImages two = new DragDropImages();
-			two.ShowDialog();
+			kinectSensorChooser.Stop();
 		}
 
-		private void OnPressWpfBtn3()
-		{
-			HighScore one = new HighScore(kinectSensorChooser);
-			one.ShowDialog();
-		}
-
-		private void wpfbtn2_Click(object sender, RoutedEventArgs e)
-		{
-			Image image = new Image();
-			image.Width = 150;
-			image.Height = 150;
-			//image.Source = BitmapToImageSource(Properties.Resources.test);
-			//canvas.Children.Add(image);
-		}
-
-		private void wpfbtn3_Click(object sender, RoutedEventArgs e)
-		{
-			
-			//Canvas.SetLeft(canvas.Children[0], p.X + 10);
-
-			var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-			//dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-			dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
-			dispatcherTimer.Start();
-		}
-
-		private void dispatcherTimer_Tick(object source, EventArgs e)
-		{
-			//var p = canvas.Children[0].TranslatePoint(new Point(0, 0), canvas);
-			//Canvas.SetTop(canvas.Children[0], p.Y + 10);
-		}
-
+		//	Below are all temporary click functions
 		private void close(object sender, RoutedEventArgs e)
 		{
 			this.Close();
@@ -374,5 +336,6 @@ namespace fyp1_prototype
 			dragDropImages.Owner = Application.Current.MainWindow;
 			dragDropImages.Show();
 		}
+
 	}
 }

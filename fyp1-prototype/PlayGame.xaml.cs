@@ -24,8 +24,6 @@ namespace fyp1_prototype
 		KinectSensor sensor;
 		KinectSensorChooser kinectSensorChooser;
 
-		private bool isGripinInteraction = false;
-
 		private int horizontalLength = 50;	//	X axis image drop starting point
 		private int verticalLength = 10;
 
@@ -321,24 +319,6 @@ namespace fyp1_prototype
 					// DepthFrame functions may throw when the sensor gets
 					// into a bad state.  Ignore the frame in that case.
 				}
-			}
-		}
-
-		//When Hand Pointer Moves
-		private void HandPointerMoveEvent(object sender, HandPointerEventArgs e)
-		{
-			if (this.Equals(e.HandPointer.Captured))
-			{
-				e.Handled = true;
-
-				//var currentPosition = e.HandPointer.GetPosition(Img);
-
-				if (isGripinInteraction == false || !e.HandPointer.IsInteractive)
-					return;
-				
-				Image image = e.Source as Image;
-				DataObject data = new DataObject(typeof(ImageSource), image.Source);
-				DragDrop.DoDragDrop(image, data, DragDropEffects.Copy);
 			}
 		}
 
