@@ -5,9 +5,6 @@ using System.Windows.Data;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
-using Microsoft.Kinect.Toolkit.Interaction;
-using System.Timers;
-using System.Linq;
 
 namespace fyp1_prototype
 {
@@ -323,7 +320,7 @@ namespace fyp1_prototype
 
 		private void OnPressWpfBtn2()
 		{
-			DragDropImages two = new DragDropImages(kinectSensorChooser);
+			DragDropImages two = new DragDropImages();
 			two.ShowDialog();
 		}
 
@@ -373,7 +370,7 @@ namespace fyp1_prototype
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
-			DragDropImages dragDropImages = new DragDropImages(kinectSensorChooser);
+			DragDropImages dragDropImages = new DragDropImages();
 			dragDropImages.Owner = Application.Current.MainWindow;
 			dragDropImages.Show();
 		}

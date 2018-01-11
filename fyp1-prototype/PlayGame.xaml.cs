@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Kinect;
@@ -10,9 +9,7 @@ using Microsoft.Kinect.Toolkit.Controls;
 using Microsoft.Kinect.Toolkit.Interaction;
 using System.Windows.Threading;
 using System.Linq;
-using System.Windows.Input;
 using System.Threading.Tasks;
-using System.IO;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Text;
@@ -24,21 +21,83 @@ namespace fyp1_prototype
 	/// </summary>
 	public partial class DragDropImages : Window
 	{
-		private KinectSensorChooser kinectSensorChooser;
-		private HandPointer capturedHandPointer;
+		KinectSensor sensor;
+		KinectSensorChooser kinectSensorChooser;
+
 		private bool isGripinInteraction = false;
+
 		private int test = 50;	//	X axis image drop starting point
-		private DispatcherTimer dispatcherTimer1 = new DispatcherTimer();
 		private int speed = 10;
+
+		private DispatcherTimer timerCreateImage = new DispatcherTimer();
+		private DispatcherTimer timerPushImage = new DispatcherTimer();
 
 		private Skeleton[] allSkeletons = new Skeleton[6];
 		private static int screenWidth = 2040;// (int)SystemParameters.PrimaryScreenWidth;
 		private static int screenHeight = 1040;// (int)SystemParameters.PrimaryScreenHeight;
-		KinectSensor sensor;
 
 		private InteractionStream _interactionStream;
 		private Skeleton[] _skeletons; //the skeletons 
 		private UserInfo[] _userInfos; //the information about the interactive users
+
+		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
+		private Dictionary<int, InteractionHandEventType> _lastRightHandEvents = new Dictionary<int, InteractionHandEventType>();
+
+		DroppingObjectManager _dom = new DroppingObjectManager();
+
+		//	Constructor
+		public DragDropImages()
+		{
+			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			InitializeComponent();
+
+			kinectSensorChooser = new KinectSensorChooser();
+			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
+			kinectSensorChooser.Start();
+		}
+
+		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
+		{
+			bool error = false;
+
+			if (e.OldSensor != null)
+			{
+				try
+				{
+					e.OldSensor.DepthStream.Range = DepthRange.Default;
+					e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
+					e.OldSensor.DepthStream.Disable();
+					e.OldSensor.SkeletonStream.Disable();
+				}
+				catch (InvalidOperationException)
+				{
+					error = true;
+				}
+			}
+
+			if (e.NewSensor != null)
+			{
+				try
+				{
+					e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+					e.NewSensor.DepthStream.Range = DepthRange.Near;
+					e.NewSensor.SkeletonStream.Enable();
+					e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
+					e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+				}
+				catch (InvalidOperationException)
+				{
+					error = true;
+					throw;
+				}
+			}
+
+			if (!error)
+			{
+				sensor = e.NewSensor;
+				InitializeSkeleton();
+			}
+		}
 
 		public interface IInteractionClient
 		{
@@ -54,54 +113,24 @@ namespace fyp1_prototype
 		{
 			public InteractionInfo GetInteractionInfoAtLocation(int skeletonTrackingId, InteractionHandType handType, double x, double y)
 			{
-				var result = new InteractionInfo();
-				result.IsGripTarget = true;
-				result.IsPressTarget = true;
-				result.PressAttractionPointX = 0.5;
-				result.PressAttractionPointY = 0.5;
-				result.PressTargetControlId = 1;
+				var result = new InteractionInfo
+				{
+					IsGripTarget = true,
+					IsPressTarget = true,
+					PressAttractionPointX = 0.5,
+					PressAttractionPointY = 0.5,
+					PressTargetControlId = 1
+				};
 
 				return result;
 			}
 		}
 
-		public DragDropImages(KinectSensorChooser kinectSensorChooser)
-		{
-			//Cursor cursor = new Cursor(Path.GetFullPath("Resource\\grab.cur"));
-			
-			if (KinectSensor.KinectSensors.Count > 0)
-			{
-				sensor = KinectSensor.KinectSensors[0];
-				if (sensor.Status == KinectStatus.Connected)
-				{
-					sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-					sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(sensorAllFramesReady);
-
-					sensor.SkeletonStream.Enable();
-
-					//sensor.Start();
-				}
-			}		
-
-			this.kinectSensorChooser = kinectSensorChooser;
-			WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			InitializeComponent();
-
-			KinectRegion.AddHandPointerGripReleaseHandler(back, HandPointerPressReleaseEvent);
-
-			//	Start creating images
-			var dispatcherTimer = new System.Timers.Timer(1000);
-			dispatcherTimer.Elapsed += dispatcherTimer_Tick;
-			dispatcherTimer.Start();
-			// new DroppingObjectManager().Start();
-		}
-
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private void InitializeSkeleton()
 		{
 			if (DesignerProperties.GetIsInDesignMode(this))
 				return;
 
-			sensor = KinectSensor.KinectSensors.FirstOrDefault();
 			if (sensor == null)
 			{
 				Close();
@@ -110,32 +139,77 @@ namespace fyp1_prototype
 
 			_skeletons = new Skeleton[sensor.SkeletonStream.FrameSkeletonArrayLength];
 			_userInfos = new UserInfo[InteractionFrame.UserInfoArrayLength];
-			
-	        sensor.DepthStream.Range = DepthRange.Near;
-			sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-			   
-			sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-			sensor.SkeletonStream.EnableTrackingInNearRange = true;
-			sensor.SkeletonStream.Enable();
 
 			_interactionStream = new InteractionStream(sensor, new DummyInteractionClient());
 			_interactionStream.InteractionFrameReady += InteractionStreamOnInteractionFrameReady;
 			   
 			sensor.DepthFrameReady += SensorOnDepthFrameReady;
 			sensor.SkeletonFrameReady += SensorOnSkeletonFrameReady;
-			   
-			sensor.Start();
+			
+			if (!sensor.IsRunning)
+				sensor.Start();
+
+			//	Start creating images
+			timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
+			timerCreateImage.Interval = TimeSpan.FromMilliseconds(1000);
+			timerCreateImage.Start();
+			// new DroppingObjectManager().Start();
 		}
 
-		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
-		private Dictionary<int, InteractionHandEventType> _lastRightHandEvents = new Dictionary<int, InteractionHandEventType>();
-      
-		 private void InteractionStreamOnInteractionFrameReady(object sender, InteractionFrameReadyEventArgs args)
-		 {
-			 using (var iaf = args.OpenInteractionFrame()) //dispose as soon as possible
-			 {
-				 if (iaf == null)
-					 return;
+		private void Tick_CreateImage(object source, EventArgs e)
+		{
+			Image image;
+			Application.Current.Dispatcher.Invoke((Action)delegate
+			{
+				image = new Image
+				{
+					Width = 200,
+					Height = 200,
+					Source = BitmapToImageSource(Properties.Resources.pepsi330ml)
+				};
+
+				canvas.Children.Add(image);
+				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], test);
+				var p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
+
+				test += 150;
+
+				if (test > 1750) //1540 > width size is 200
+					test = 50;
+
+				//	Start pushing images down
+				timerPushImage.Tick += new EventHandler(Tick_PushImage);
+				timerPushImage.Interval = TimeSpan.FromMilliseconds(50);
+				timerPushImage.Start();
+			});
+		}
+
+		private void Tick_PushImage(object source, EventArgs ee)
+		{
+			for (int i = 6; i < canvas.Children.Count; i++)
+			{
+				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
+				//var p = Canvas.GetTop(canvas.Children[i]);
+				Canvas.SetTop(canvas.Children[i], p.Y + speed);
+
+				//	Define speed / difficulty
+				if (canvas.Children.Count == 8)
+					speed = 5;
+
+				//	If the image touched edge of window then stop it
+				if (Canvas.GetTop(canvas.Children[i]) > 750) //840 > height size is 200
+				{
+					canvas.Children.Remove(canvas.Children[i]);
+				}
+			}
+		}
+
+		private void InteractionStreamOnInteractionFrameReady(object sender, InteractionFrameReadyEventArgs args)
+		{
+			using (var iaf = args.OpenInteractionFrame()) //dispose as soon as possible
+			{
+				if (iaf == null)
+					return;
      
 				iaf.CopyInteractionDataTo(_userInfos);
 			}
@@ -245,147 +319,6 @@ namespace fyp1_prototype
 			}
 		}
 
-		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
-		{
-			if (e.HandPointer.GetIsOver(back) && e.HandPointer.IsPrimaryHandOfUser)
-				VisualStateManager.GoToState(back, "MouseOver", true);
-
-			e.Handled = true;
-		}
-
-		private void HandPointerLeaveEvent(object sender, HandPointerEventArgs e)
-		{
-			if (!e.HandPointer.GetIsOver(back) && e.HandPointer.IsPrimaryHandOfUser)
-				VisualStateManager.GoToState(back, "Normal", true);
-
-			if (capturedHandPointer == e.HandPointer)
-			{
-				capturedHandPointer = null;
-				e.Handled = true;
-			}
-		}
-
-		private void HandPointerPressEvent(object sender, HandPointerEventArgs e)
-		{
-			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser && e.HandPointer.IsPrimaryHandOfUser)
-			{
-				if (e.HandPointer.GetIsOver(back))
-				{
-					e.HandPointer.Capture(back);
-					capturedHandPointer = e.HandPointer;
-					e.Handled = true;
-				}
-			}
-		}
-
-		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
-		{
-			if (capturedHandPointer == e.HandPointer)
-			{
-				if (e.HandPointer.GetIsOver(back))
-				{
-
-					this.Close();
-					VisualStateManager.GoToState(back, "MouseOver", true);
-				}
-				else
-				{
-					VisualStateManager.GoToState(back, "Normal", true);
-				}
-				e.HandPointer.Capture(null);
-				e.Handled = true;
-			}
-		}
-
-		private void HandPointerCaptureEvent(object sender, HandPointerEventArgs e)
-		{
-			if (capturedHandPointer != null)
-			{
-				capturedHandPointer.Capture(null);
-			}
-			capturedHandPointer = e.HandPointer;
-			e.Handled = true;
-		}
-
-		private void HandPointerLostCaptureEvent(object sender, HandPointerEventArgs e)
-		{
-			if (capturedHandPointer == e.HandPointer)
-			{
-				capturedHandPointer = null;
-				isGripinInteraction = false;
-				e.Handled = true;
-			}
-		}
-
-		private void HandPointerGripEnterEvent(object sender, HandPointerEventArgs e)
-		{
-			//if (e.HandPointer.GetIsOver(Img) && e.HandPointer.IsPrimaryHandOfUser)
-				e.Handled = true;
-		}
-
-		private void HandPointerGripEvent(object sender, HandPointerEventArgs e)
-		{
-			if (e.HandPointer.IsPrimaryUser && e.HandPointer.IsPrimaryHandOfUser && e.HandPointer.IsInteractive)
-			{
-				if (e.HandPointer == null)
-					return;
-
-				if (capturedHandPointer != e.HandPointer)
-				{
-					if (e.HandPointer.Captured == null)
-					{
-						//e.HandPointer.Capture(Img);
-					}
-					else
-					{
-						// Some other control has capture, ignore grip
-						return;
-					}
-					capturedHandPointer = e.HandPointer;
-				}
-
-				isGripinInteraction = true;
-				e.Handled = true;
-			}
-		}
-
-		private void HandPointerGripReleaseEvent(object sender, HandPointerEventArgs e)
-		{
-			//if (Img.Equals(e.HandPointer.Captured))
-			{
-				isGripinInteraction = false;
-				e.HandPointer.Capture(null);
-				e.Handled = true;
-			}
-		}
-
-		private void QueryInteractionStatusEvent(object sender, QueryInteractionStatusEventArgs e)
-		{
-			/*if (Img.Equals(e.HandPointer.Captured))
-			{ 
-				e.IsInGripInteraction = lastGripState == GripState.Gripped;
-				e.Handled = true;
-			}*/
-
-			//	If a grip is detected then change the cursor image to grip
-			if (e.HandPointer.HandEventType == HandEventType.Grip)
-			{
-				isGripinInteraction = true;
-			}
-
-			//	If grip release is detected then change the cursor image to open
-			else if (e.HandPointer.HandEventType == HandEventType.GripRelease)
-			{
-				isGripinInteraction = false;
-			}
-
-			// If no change in state then do not change the cursor
-			else if (e.HandPointer.HandEventType == HandEventType.None)
-			{
-				e.IsInGripInteraction = isGripinInteraction;
-			}
-		}
-
 		//When Hand Pointer Moves
 		private void HandPointerMoveEvent(object sender, HandPointerEventArgs e)
 		{
@@ -402,38 +335,6 @@ namespace fyp1_prototype
 				DataObject data = new DataObject(typeof(ImageSource), image.Source);
 				DragDrop.DoDragDrop(image, data, DragDropEffects.Copy);
 			}
-		}
-
-		DroppingObjectManager _dom = new DroppingObjectManager();
-
-		private void dispatcherTimer_Tick(object source, EventArgs e)
-		{
-			Image image;
-			Application.Current.Dispatcher.Invoke((Action)delegate {
-
-
-				image = new Image();
-				image.Width = 200;
-				image.Height = 200;
-				image.Source = BitmapToImageSource(Properties.Resources.test);
-
-				
-				
-				canvas.Children.Add(image);
-				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], test);
-				var p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
-
-				test += 150;
-
-				if (test > 1750) //1540 > width size is 200
-					test = 50;
-
-				//	Start pushing images down
-				dispatcherTimer1.Tick += new EventHandler(dispatcherTimer_Tick1);
-				dispatcherTimer1.Interval = TimeSpan.FromMilliseconds(50);
-				dispatcherTimer1.Start();
-			});
-
 		}
 
 		public class DroppingObjectManager
@@ -471,26 +372,6 @@ namespace fyp1_prototype
 		public class DroppingObject : Image
 		{
 
-		}
-
-		private void dispatcherTimer_Tick1(object source, EventArgs ee)
-		{
-			for(int i = 6; i < canvas.Children.Count; i++)
-			{
-				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-				//var p = Canvas.GetTop(canvas.Children[i]);
-				Canvas.SetTop(canvas.Children[i], p.Y + speed);
-
-				//	Define speed / difficulty
-				if (canvas.Children.Count == 8)
-					speed = 5;
-
-				//	If the image touched edge of window then stop it
-				if (Canvas.GetTop(canvas.Children[i]) > 750) //840 > height size is 200
-				{
-					canvas.Children.Remove(canvas.Children[i]);
-				}
-			}
 		}
 
 		//	Disable maximizing window
@@ -625,10 +506,12 @@ namespace fyp1_prototype
 			//Canvas.SetTop(element, point.Y * 1.125 - element.Height / 2);
 		}
 
-		private void Window_Closed(object sender, EventArgs e)
+		private void Window_Closing(object sender, EventArgs e)
 		{
-			if (sensor != null)
-				sensor.Stop();
+			//if (sensor != null)
+			//sensor.Stop();
+
+			kinectSensorChooser.Stop();
 		}
 	}
 }
