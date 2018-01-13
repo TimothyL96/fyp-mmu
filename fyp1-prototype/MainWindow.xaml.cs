@@ -338,6 +338,9 @@ namespace fyp1_prototype
 				else if (e.HandPointer.GetIsOver(btn_help))
 				{
 					VisualStateManager.GoToState(btn_help, "MouseOver", true);
+
+					Help help = new Help(kinectSensorChooser);
+					help.Show();
 				}
 				else if (e.HandPointer.GetIsOver(btn_exit))
 				{
@@ -386,5 +389,10 @@ namespace fyp1_prototype
 			dragDropImages.Show();
 		}
 
+		private void help(object sender, RoutedEventArgs e)
+		{
+			Help help = new Help(kinectSensorChooser);
+			help.Show();
+		}
 	}
 }

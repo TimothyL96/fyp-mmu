@@ -18,7 +18,7 @@ namespace fyp1_prototype
 		public HighScore(KinectSensorChooser kinectSensorChooser)
 		{
 			this.kinectSensorChooser = kinectSensorChooser;
-			this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			InitializeComponent();
 
 			back.FontSize = 24;
