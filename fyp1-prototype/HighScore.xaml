@@ -17,13 +17,13 @@
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}" >
     <Grid>
-		<Border BorderThickness="5" BorderBrush="Black"></Border>
+		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
-				<materialDesign:Card Padding="32" Margin="16">
+				<!--<materialDesign:Card Padding="32" Margin="16">
 					<TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">My First Material Design App</TextBlock>
-				</materialDesign:Card>
+				</materialDesign:Card>-->
 				
 				<Grid>
 					<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0">Back</Button>

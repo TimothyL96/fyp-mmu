@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Play Game" Height="900" Width="1200" Icon="Resources/grab.png" WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" StateChanged="Window_StateChanged" Closing="Window_Closing" >
     <Grid>
-		<Border BorderThickness="5" BorderBrush="Black"></Border>
+		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
 		<Grid>
 			<Canvas Name="canvas">

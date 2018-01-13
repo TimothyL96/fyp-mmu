@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Kinect For Educational Game" MinHeight="620" MinWidth="740" Height="900" Width="1200" WindowState="Maximized" Icon="Resources/grab.png" Closing="Window_Closing">
 	<Grid>
-		<Border BorderThickness="5" BorderBrush="Black"></Border>
+		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectSensorChooserUI Name="kinectSensorDisplay" HorizontalAlignment="Center" VerticalAlignment="Top"></k:KinectSensorChooserUI>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
 		<k:KinectRegion x:Name="kinectKinectRegion">
@@ -49,17 +49,16 @@
 					</Grid.ColumnDefinitions>
 					
 					<!--Login and Register button-->
-					<Button Content="Login"			x:Name="btn_login"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="07" Grid.Row="01"/>
-					<Button Content="Register"		x:Name="btn_register"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="01"/>
+					<Button Content="Login"			x:Name="btn_login"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="07" Grid.Row="01"						Height="50"/>
+					<Button Content="Register"		x:Name="btn_register"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="01"						Height="50"/>
 					
 					<!--Main buttons-->
-					<Button Content="Single Player" x:Name="btn_singlePlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="03" Click="singlePlayer"/>
-					<Button Content="Multi Player"	x:Name="btn_multiPlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="05"/>
-					<Button Content="Load Game"		x:Name="btn_loadGame"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="07"/>
-					<Button Content="High Scores"	x:Name="btn_highScores"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="09" Click="highscore"/>
-					<Button Content="Help"			x:Name="btn_help"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="11"/>
-					<Button Content="Exit"			x:Name="btn_exit"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="13" Click="close"/>
-				
+					<Button Content="Single Player" x:Name="btn_singlePlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="03" Click="singlePlayer"	Height="50"/>
+					<Button Content="Multi Player"	x:Name="btn_multiPlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="05"						Height="50"/>
+					<Button Content="Load Game"		x:Name="btn_loadGame"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="07"						Height="50"/>
+					<Button Content="High Scores"	x:Name="btn_highScores"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="09" Click="highscore"		Height="50"/>
+					<Button Content="Help"			x:Name="btn_help"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="11"						Height="50"/>
+					<Button Content="Exit"			x:Name="btn_exit"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="13" Click="close"			Height="50"/>
 				</Grid>
 			</Grid>
 		</k:KinectRegion>
