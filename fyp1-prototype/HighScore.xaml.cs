@@ -2,10 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
-using Microsoft.Kinect.Toolkit.Interaction;
 
 namespace fyp1_prototype
 {
@@ -28,18 +26,22 @@ namespace fyp1_prototype
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
 
-			var text = new Label();
-			text.Content = "Name\t\t\t\t\t\t\t\t\t" + "Score";
-			text.FontWeight = FontWeights.Bold;
-			text.FontSize = 26;
-			scrollContent.Children.Add(text);
+			var textHeader = new Label
+			{
+				Content = "Name\t\t\t\t\t\t\t\t\t" + "Score",
+				FontWeight = FontWeights.Bold,
+				FontSize = 26
+			};
+			scrollContent.Children.Add(textHeader);
 
 			for (int i = 35; i != 0; i--)
 			{
-				var text1 = new Label();
-				text1.FontSize = 26;
-				text1.Content = "AlliAlli\t\t\t\t\t\t\t\t\t" + i * i;
-				scrollContent.Children.Add(text1);
+				var textBody = new Label
+				{
+					FontSize = 26,
+					Content = "AlliAlli\t\t\t\t\t\t\t\t\t" + i * i
+				};
+				scrollContent.Children.Add(textBody);
 			}
 
 			KinectRegion.SetIsPressTarget(back, true);
