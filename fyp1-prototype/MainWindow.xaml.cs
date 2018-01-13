@@ -313,6 +313,12 @@ namespace fyp1_prototype
 				else if (e.HandPointer.GetIsOver(btn_singlePlayer))
 				{
 					VisualStateManager.GoToState(btn_singlePlayer, "MouseOver", true);
+
+					DragDropImages dragDropImages = new DragDropImages
+					{
+						Owner = Application.Current.MainWindow
+					};
+					dragDropImages.Show();
 				}
 				else if (e.HandPointer.GetIsOver(btn_multiPlayer))
 				{
@@ -325,6 +331,9 @@ namespace fyp1_prototype
 				else if (e.HandPointer.GetIsOver(btn_highScores))
 				{
 					VisualStateManager.GoToState(btn_highScores, "MouseOver", true);
+
+					HighScore highScore = new HighScore(kinectSensorChooser);
+					highScore.Show();
 				}
 				else if (e.HandPointer.GetIsOver(btn_help))
 				{
@@ -333,6 +342,8 @@ namespace fyp1_prototype
 				else if (e.HandPointer.GetIsOver(btn_exit))
 				{
 					VisualStateManager.GoToState(btn_exit, "MouseOver", true);
+
+					this.Close();
 				}
 				else
 				{
@@ -368,8 +379,10 @@ namespace fyp1_prototype
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
-			DragDropImages dragDropImages = new DragDropImages();
-			dragDropImages.Owner = Application.Current.MainWindow;
+			DragDropImages dragDropImages = new DragDropImages
+			{
+				Owner = Application.Current.MainWindow
+			};
 			dragDropImages.Show();
 		}
 
