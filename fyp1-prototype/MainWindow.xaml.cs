@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
@@ -259,58 +258,95 @@ namespace fyp1_prototype
 		}
 
 		private void OnHandPointerPress(object sender, HandPointerEventArgs e)
-		{/*
+		{
 			if (capturedHandPointer == null && e.HandPointer.IsPrimaryUser && e.HandPointer.IsPrimaryHandOfUser)
 			{
-				if (e.HandPointer.GetIsOver(wpfbtn1))
+				if (e.HandPointer.GetIsOver(btn_login))
 				{
-					statusHolder.Content = "WPF BUTTON One Press";
-					e.HandPointer.Capture(wpfbtn1);
+					e.HandPointer.Capture(btn_login);
 				}
-				else if (e.HandPointer.GetIsOver(wpfbtn2))
+				else if (e.HandPointer.GetIsOver(btn_register))
 				{
-					statusHolder.Content = "WPF BUTTON Two Press";
-					e.HandPointer.Capture(wpfbtn2);
+					e.HandPointer.Capture(btn_register);
 				}
-				else if (e.HandPointer.GetIsOver(wpfbtn3))
+				else if (e.HandPointer.GetIsOver(btn_singlePlayer))
 				{
-					statusHolder.Content = "WPF BUTTON Three Press";
-					e.HandPointer.Capture(wpfbtn3);
+					e.HandPointer.Capture(btn_singlePlayer);
+				}
+				else if (e.HandPointer.GetIsOver(btn_multiPlayer))
+				{
+					e.HandPointer.Capture(btn_multiPlayer);
+				}
+				else if (e.HandPointer.GetIsOver(btn_loadGame))
+				{
+					e.HandPointer.Capture(btn_loadGame);
+				}
+				else if (e.HandPointer.GetIsOver(btn_highScores))
+				{
+					e.HandPointer.Capture(btn_highScores);
+				}
+				else if (e.HandPointer.GetIsOver(btn_help))
+				{
+					e.HandPointer.Capture(btn_help);
+				}
+				else if (e.HandPointer.GetIsOver(btn_exit))
+				{
+					e.HandPointer.Capture(btn_exit);
 				}
 				e.Handled = true;
-			}*/
+			}
 		}
 
 		private void OnHandPointerPressRelease(object sender, HandPointerEventArgs e)
-		{/*
+		{
 			if (capturedHandPointer == e.HandPointer)
 			{
 				e.HandPointer.Capture(null);
-				if (e.HandPointer.GetIsOver(wpfbtn1))
+				if (e.HandPointer.GetIsOver(btn_login))
 				{
-					statusHolder.Content = "WPF BUTTON One Press Release";
-					VisualStateManager.GoToState(wpfbtn1, "MouseOver", true);
+					VisualStateManager.GoToState(btn_login, "MouseOver", true);
 				}
-				else if (e.HandPointer.GetIsOver(wpfbtn2))
+				else if (e.HandPointer.GetIsOver(btn_register))
 				{
-					OnPressWpfBtn2();
-					statusHolder.Content = "WPF BUTTON Two Press Release";
-					VisualStateManager.GoToState(wpfbtn2, "MouseOver", true);
+					VisualStateManager.GoToState(btn_register, "MouseOver", true);
 				}
-				else if (e.HandPointer.GetIsOver(wpfbtn3))
+				else if (e.HandPointer.GetIsOver(btn_singlePlayer))
 				{
-					OnPressWpfBtn3();
-					statusHolder.Content = "WPF BUTTON Three Press Release";
-					VisualStateManager.GoToState(wpfbtn3, "MouseOver", true);
+					VisualStateManager.GoToState(btn_singlePlayer, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(btn_multiPlayer))
+				{
+					VisualStateManager.GoToState(btn_multiPlayer, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(btn_loadGame))
+				{
+					VisualStateManager.GoToState(btn_loadGame, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(btn_highScores))
+				{
+					VisualStateManager.GoToState(btn_highScores, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(btn_help))
+				{
+					VisualStateManager.GoToState(btn_help, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(btn_exit))
+				{
+					VisualStateManager.GoToState(btn_exit, "MouseOver", true);
 				}
 				else
 				{
-					VisualStateManager.GoToState(wpfbtn1, "Normal", true);
-					VisualStateManager.GoToState(wpfbtn2, "Normal", true);
-					VisualStateManager.GoToState(wpfbtn3, "Normal", true);
+					VisualStateManager.GoToState(btn_login, "Normal", true);
+					VisualStateManager.GoToState(btn_register, "Normal", true);
+					VisualStateManager.GoToState(btn_singlePlayer, "Normal", true);
+					VisualStateManager.GoToState(btn_multiPlayer, "Normal", true);
+					VisualStateManager.GoToState(btn_loadGame, "Normal", true);
+					VisualStateManager.GoToState(btn_highScores, "Normal", true);
+					VisualStateManager.GoToState(btn_help, "Normal", true);
+					VisualStateManager.GoToState(btn_exit, "Normal", true);
 				}
 				e.Handled = true;
-			}*/
+			}
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
