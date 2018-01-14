@@ -31,6 +31,14 @@ namespace fyp1_prototype
 
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
+
+			var textHeader = new Label
+			{
+				Content = "This is a freakin guide\nThis is a line space\nThis is the complete guide!!!",
+				FontWeight = FontWeights.Bold,
+				FontSize = 26
+			};
+			scrollContent.Children.Add(textHeader);
 		}
 	}
 }
