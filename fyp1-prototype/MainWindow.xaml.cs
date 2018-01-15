@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using Microsoft.Kinect;
@@ -111,6 +112,8 @@ namespace fyp1_prototype
 			KinectRegion.SetIsPressTarget(btn_highScores, true);
 			KinectRegion.SetIsPressTarget(btn_help, true);
 			KinectRegion.SetIsPressTarget(btn_exit, true);
+
+			new DBConnector();
 		}
 	
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)

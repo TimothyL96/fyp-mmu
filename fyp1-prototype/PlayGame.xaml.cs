@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
@@ -266,12 +265,19 @@ namespace fyp1_prototype
 						dump.AppendLine("    RawZ: " + hand.RawZ.ToString("N3"));
 
 						if (lastHandEvent == InteractionHandEventType.Grip)
-							handCursor.Source = new BitmapImage(new Uri("Resources/bluebin.png", UriKind.Relative));
+						{
+
+						}
 						else if (lastHandEvent == InteractionHandEventType.GripRelease)
-							handCursor.Source = new BitmapImage(new Uri("Resources/grab.png", UriKind.Relative));
+						{
+
+						}
 
 						if (hand.IsPressed)
-							handCursor.Source = new BitmapImage(new Uri("Resources/brownbin.png", UriKind.Relative));
+						{
+
+						}
+						//handCursor.Source = new BitmapImage(new Uri("Resources/brownbin.png", UriKind.Relative));
 					}
 				}
      
