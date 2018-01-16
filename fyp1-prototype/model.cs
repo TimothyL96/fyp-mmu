@@ -72,7 +72,7 @@ namespace fyp1_prototype
 	}
 
 	//	Item class
-	public class Item
+	public class Items
 	{
 		[Column("ID")]
 		public int Id { get; set; }
@@ -88,13 +88,16 @@ namespace fyp1_prototype
 	public class DatabaseContext : DbContext
 	{
 		public DbSet<Player> Players { get; set; }
+		public DbSet<Game> Game { get; set; }
+		public DbSet<Score> Score { get; set; }
+		public DbSet<Item> Item { get; set; }
 	}
 
-	//	Public function to interact with DbContext
-	public class DBConnector
+	//	Player class with public functions to interact with DbContext
+	public class PlayersRepository
 	{
 		//	Constructor
-		public DBConnector()
+		public PlayersRepository()
 		{
 
 		}
@@ -177,5 +180,23 @@ namespace fyp1_prototype
 			}
 			dc.SaveChanges();
 		}
+	}
+
+	//	Game class with public functions to interact with DbContext
+	public class GameRepository
+	{
+
+	}
+
+	//	Score class with public functions to interact with DbContext
+	public class ScoreRepository
+	{
+
+	}
+
+	//	Item class with public functions to interact with DbContext
+	public class ItemsRepository
+	{
+
 	}
 }

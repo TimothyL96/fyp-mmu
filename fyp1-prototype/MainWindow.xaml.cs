@@ -113,7 +113,7 @@ namespace fyp1_prototype
 			KinectRegion.SetIsPressTarget(btn_help, true);
 			KinectRegion.SetIsPressTarget(btn_exit, true);
 
-			new DBConnector();
+			new PlayersRepository();
 		}
 	
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
