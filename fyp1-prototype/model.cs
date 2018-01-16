@@ -4,12 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace fyp1_prototype
 {
 	//	Class for table data / table columns
+	//	Player class
 	public class Player
 	{
 		[Key]
@@ -29,6 +28,62 @@ namespace fyp1_prototype
 		public string Password { get; set; }
 	}
 
+	//	Game class
+	public class Game
+	{
+		[Key]
+		[Column("ID")]
+		public int Id { get; set; }
+
+		[Column("lives")]
+		public int Lives{ get; set; }
+
+		[Column("playerGame")]
+		public int PlayerGame{ get; set; }
+
+		[Column("datetime")]
+		public string DateTime { get; set; }
+
+		[Column("time")]
+		public string Time { get; set; }
+
+		[Column("score")]
+		public int Score { get; set; }
+
+		[Column("itemGame")]
+		public int ItemGame { get; set; }
+	}
+
+	//	Score class
+	public class Score
+	{
+		[Key]
+		[Column("ID")]
+		public int Id { get; set; }
+
+		[Column("value")]
+		public int Value { get; set; }
+
+		[Column("datetime")]
+		public string DateTime { get; set; }
+
+		[Column("playerScore")]
+		public int PlayerScore { get; set; }
+	}
+
+	//	Item class
+	public class Item
+	{
+		[Column("ID")]
+		public int Id { get; set; }
+
+		[Column("item_image_link")]
+		public string ItemImageLink { get; set; }
+
+		[Column("item_type")]
+		public int ItemType { get; set; }
+	}
+
 	//	DbContext class to access tables
 	public class DatabaseContext : DbContext
 	{
@@ -41,7 +96,7 @@ namespace fyp1_prototype
 		//	Constructor
 		public DBConnector()
 		{
-			AddPlayer("tim2");
+
 		}
 
 		//	Data transfer object (To save all column data)

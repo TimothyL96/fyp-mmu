@@ -277,7 +277,7 @@ namespace fyp1_prototype
 						{
 
 						}
-						//handCursor.Source = new BitmapImage(new Uri("Resources/brownbin.png", UriKind.Relative));
+						//Reference: handCursor.Source = new BitmapImage(new Uri("Resources/brownbin.png", UriKind.Relative));
 					}
 				}
      
