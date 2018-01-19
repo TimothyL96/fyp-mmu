@@ -90,7 +90,7 @@ namespace fyp1_prototype
 		public DbSet<Player> Players { get; set; }
 		public DbSet<Game> Game { get; set; }
 		public DbSet<Score> Score { get; set; }
-		public DbSet<Item> Item { get; set; }
+		public DbSet<Items> Items { get; set; }
 	}
 
 	//	Player class with public functions to interact with DbContext
@@ -103,19 +103,19 @@ namespace fyp1_prototype
 		}
 
 		//	Data transfer object (To save all column data)
-		public class PlayerNameDto
+		public class PlayerDto
 		{
 			public int Id { get; set; }
 			public string Username { get; set; }
 			public int Score { get; set; }
 			public string Date { get; set; }
+			public string Password { get; set; }
 		}
 
 		//	Get all players
 		public List<Player> GetAllPlayers()
 		{
 			DatabaseContext dc = new DatabaseContext();
-			dc.Database.Log = Console.WriteLine;
 			return dc.Players.ToList();
 		}
 
@@ -125,16 +125,26 @@ namespace fyp1_prototype
 			DatabaseContext dc = new DatabaseContext();
 			return dc
 				.Players
-				.Where(player => player.Id == 123)
+				.Where(player => player.Id == id)
 				.ToList();
 		}
 
-		//	Get specific data of players with Data Transfer Object
-		public List<PlayerNameDto> GetAllPlayersName()
+		//	Get player with specific Username
+		public List<Player> GetPlayerWithUsername(string username)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc
+				.Players
+				.Where(player => player.Username == username)
+				.ToList();
+		}
+
+		//	Get specific data of players with Data Transfer Object (Get specific column)
+		public List<PlayerDto> GetAllPlayersName()
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc.Players
-				.Select(player => new PlayerNameDto()
+				.Select(player => new PlayerDto()
 				{
 					Id = player.Id,
 					Username = player.Username,
@@ -143,26 +153,23 @@ namespace fyp1_prototype
 				.ToList();
 		}
 
+		//	Get all scores of all players
+		public List<int> GetAllPlayersScore()
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc.Players.Select(player => player.Score).ToList();
+		}
+
 		//	Add player to table
-		public void AddPlayer(string name)
+		public void AddPlayer(string name, string password)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			dc.Players.Add(new Player()
 			{
 				Username = name,
-				Date = "2018-01-15",
+				Date = DateTime.Now.ToString("YYYY-MM-DD"),
 				Password = "123456"
 			});
-			dc.SaveChanges();
-		}
-
-		//	Modify a player's data
-		public void ModifyPlayer()
-		{
-			DatabaseContext dc = new DatabaseContext();
-			var user = dc.Players
-				.FirstOrDefault(u => u.Id == 1);
-			user.Score = 100;
 			dc.SaveChanges();
 		}
 
@@ -176,8 +183,19 @@ namespace fyp1_prototype
 
 			foreach (var player in players)
 			{
-				player.Score = 99999;
+				//player.Score = 99999;
 			}
+			dc.SaveChanges();
+		}
+
+		//	Modify a player's score
+		public void ModifyPlayerScore(int id, int score)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			var player = dc
+				.Players
+				.FirstOrDefault(p => p.Id == id);
+			player.Score = score;
 			dc.SaveChanges();
 		}
 	}
@@ -185,18 +203,76 @@ namespace fyp1_prototype
 	//	Game class with public functions to interact with DbContext
 	public class GameRepository
 	{
+		public GameRepository()
+		{
 
+		}
+
+		public class GameDto
+		{
+			public int Id { get; set; }
+			public int Lives { get; set; }
+			public int PlayerGame { get; set; }
+			public string DateTime { get; set; }
+			public string Time { get; set; }
+			public int Score { get; set; }
+			public int ItemGame { get; set; }
+		}
 	}
 
 	//	Score class with public functions to interact with DbContext
 	public class ScoreRepository
 	{
+		public ScoreRepository()
+		{
 
+		}
+
+		public class ScoreDto
+		{
+			public int Id { get; set; }
+			public int Value { get; set; }
+			public string DateTime { get; set; }
+			public int PlayerScore { get; set; }
+		}
 	}
 
 	//	Item class with public functions to interact with DbContext
 	public class ItemsRepository
 	{
+		public ItemsRepository()
+		{
 
+		}
+
+		public class ItemsDto
+		{
+			public int Id { get; set; }
+			public string Item_Image_Link { get; set; }
+			public int Item_Type { get; set; }
+		}
+
+		//	Get item of specific ID
+		public List<ItemsDto> GetItem(int id)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc
+				.Items
+				.Select(item => new ItemsDto()
+				{
+					Id = item.Id,
+					Item_Image_Link = item.ItemImageLink,
+					Item_Type = item.ItemType
+				})
+				.Where(item => item.Id == id)
+				.ToList();
+		}
+
+		//	Get total count
+		public int GetCount()
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc.Items.Count();
+		}
 	}
 }
