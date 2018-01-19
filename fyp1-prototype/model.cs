@@ -113,29 +113,52 @@ namespace fyp1_prototype
 		}
 
 		//	Get all players
-		public List<Player> GetAllPlayers()
+		public List<PlayerDto> GetAllPlayers()
 		{
 			DatabaseContext dc = new DatabaseContext();
-			return dc.Players.ToList();
+			return dc.Players.Select(player => new PlayerDto()
+			{
+				Id = player.Id,
+				Username = player.Username,
+				Score = player.Score,
+				Date = player.Date,
+				Password = player.Password
+			}).ToList();
 		}
 
 		//	Get player with specific ID
-		public List<Player> GetPlayerWithId(int id)
+		public List<PlayerDto> GetPlayerWithId(int id)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc
 				.Players
 				.Where(player => player.Id == id)
+				.Select(player => new PlayerDto()
+				{
+					Id = player.Id,
+					Username = player.Username,
+					Score = player.Score,
+					Date = player.Date,
+					Password = player.Password
+				})
 				.ToList();
 		}
 
 		//	Get player with specific Username
-		public List<Player> GetPlayerWithUsername(string username)
+		public List<PlayerDto> GetPlayerWithUsername(string username)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc
 				.Players
 				.Where(player => player.Username == username)
+				.Select(player => new PlayerDto()
+				{
+					Id = player.Id,
+					Username = player.Username,
+					Score = player.Score,
+					Date = player.Date,
+					Password = player.Password
+				})
 				.ToList();
 		}
 
@@ -218,9 +241,57 @@ namespace fyp1_prototype
 			public int Score { get; set; }
 			public int ItemGame { get; set; }
 		}
+
+		public void AddGame(int id, int lives, int playerGame, string time, int score, int itemGame)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			dc.Game.Add(new Game()
+			{
+				Id = id,
+				Lives = lives,
+				PlayerGame = playerGame,
+				DateTime = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS"),
+				Time = time,
+				Score = score,
+				ItemGame = itemGame
+			});
+			dc.SaveChanges();
+		}
+
+		public void ModifyGame(int id, int lives, int playerGame, string time, int score, int itemGame)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			var game = dc.Game.FirstOrDefault(g => g.PlayerGame == playerGame);
+			game.Id = id;
+			game.Lives = lives;
+			game.DateTime = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS");
+			game.Time = time;
+			game.Score = score;
+			game.ItemGame = itemGame;
+			dc.SaveChanges();
+		}
+
+		public List<GameDto> GetGame(int playerGame)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc
+				.Game
+				.Where(game => game.PlayerGame == playerGame)
+				.Select(game => new GameDto()
+				{
+					Id = game.Id,
+					Lives = game.Lives,
+					PlayerGame = game.Lives,
+					DateTime = game.DateTime,
+					Time = game.Time,
+					Score = game.Score,
+					ItemGame = game.ItemGame
+				})
+				.ToList();
+		}
 	}
 
-	//	Score class with public functions to interact with DbContext
+	// Score class with public functions to interact with DbContext
 	public class ScoreRepository
 	{
 		public ScoreRepository()
@@ -298,6 +369,7 @@ namespace fyp1_prototype
 		//	Get total count
 		public int GetCount()
 		{
+			new ScoreRepository();
 			DatabaseContext dc = new DatabaseContext();
 			return dc.Items.Count();
 		}
