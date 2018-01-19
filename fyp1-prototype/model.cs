@@ -233,8 +233,35 @@ namespace fyp1_prototype
 			public int Id { get; set; }
 			public int Value { get; set; }
 			public string DateTime { get; set; }
-			public int PlayerScore { get; set; }
+			public int PlayerScore { get; set; }	//	Player ID foreign key
 		}
+
+		public void AddScore(int score, int playerID)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			dc.Score.Add(new Score()
+			{
+				Value = score,
+				DateTime = DateTime.Now.ToString(),
+				PlayerScore = playerID
+			});
+			dc.SaveChanges();
+		}
+
+		public List<ScoreDto> GetAllScore()
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc
+				.Score
+				.Select(score => new ScoreDto()
+				{
+					Value = score.Value,
+					DateTime = score.DateTime,
+					PlayerScore = score.PlayerScore
+				})
+				.ToList();
+		}
+
 	}
 
 	//	Item class with public functions to interact with DbContext
