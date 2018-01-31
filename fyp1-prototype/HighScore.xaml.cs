@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -34,12 +35,17 @@ namespace fyp1_prototype
 			};
 			scrollContent.Children.Add(textHeader);
 
-			for (int i = 35; i != 0; i--)
+			ScoreRepository sro = new ScoreRepository();
+			PlayersRepository pro = new PlayersRepository();
+
+			var highscore = sro.GetAllScore();
+			for (int i = highscore.Count - 1; i >= 0; i--)
 			{
+				string name = pro.GetPlayerWithId(highscore[i].PlayerScore)[0].Username;
 				var textBody = new Label
 				{
 					FontSize = 26,
-					Content = "AlliAlli\t\t\t\t\t\t\t\t\t" + i * i
+					Content = name + "\t\t\t\t\t\t\t\t\t" + highscore[i].Value
 				};
 				scrollContent.Children.Add(textBody);
 			}

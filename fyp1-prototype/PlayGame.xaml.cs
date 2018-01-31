@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Data;
+using System.Diagnostics;
 
 namespace fyp1_prototype
 {
@@ -53,6 +55,13 @@ namespace fyp1_prototype
 		private const int itemHeight = 30;
 		private const int itemChildrenStart = 6;
 
+		private int currentLives = 3;
+		private int currentScore = 0;
+		Stopwatch watch = Stopwatch.StartNew();
+		private string currentTime;
+		private int playerID;
+		private int itemGame;
+
 		DroppingObjectManager _dom = new DroppingObjectManager();
 
 		//	Constructor
@@ -64,6 +73,14 @@ namespace fyp1_prototype
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 			kinectSensorChooser.Start();
+
+			//	Bind score to currentScore
+			var scoreBinding = new Binding("") { Source = "Score: " + currentScore };
+			score.SetBinding(TextBlock.TextProperty, scoreBinding);
+
+			//	Bind lives to currentLives
+			var livesBinding = new Binding("") { Source = "Lives: " + currentLives };
+			lives.SetBinding(TextBlock.TextProperty, livesBinding);
 		}
 
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
@@ -318,6 +335,17 @@ namespace fyp1_prototype
 								if (back.Height + Canvas.GetTop(back) >= Canvas.GetTop(handCursor) && Canvas.GetTop(handCursor) >= Canvas.GetTop(back))
 								{
 									//	Save Game
+									watch.Stop();
+									currentTime = watch.ToString();
+									GameRepository gro = new GameRepository();
+									if (gro.GetGame(playerID).Count == 0)
+									{
+										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
+									}
+									else
+									{
+										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
+									}
 									Close();
 								}
 							}
@@ -545,7 +573,6 @@ namespace fyp1_prototype
 		{
 			//if (sensor != null)
 				//sensor.Stop();
-
 			kinectSensorChooser.Stop();
 		}
 

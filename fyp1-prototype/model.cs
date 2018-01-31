@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 
 namespace fyp1_prototype
 {
 	//	Class for table data / table columns
 	//	Player class
-	public class Player
+	public class Players
 	{
 		[Key]
 		[Column("ID")]
@@ -87,10 +88,16 @@ namespace fyp1_prototype
 	//	DbContext class to access tables
 	public class DatabaseContext : DbContext
 	{
-		public DbSet<Player> Players { get; set; }
+		public DbSet<Players> Players { get; set; }
 		public DbSet<Game> Game { get; set; }
 		public DbSet<Score> Score { get; set; }
 		public DbSet<Items> Items { get; set; }
+
+		//	Remove Pluralization
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+		}
 	}
 
 	//	Player class with public functions to interact with DbContext
@@ -141,6 +148,7 @@ namespace fyp1_prototype
 					Date = player.Date,
 					Password = player.Password
 				})
+				.OrderBy(pl => pl.Score) //	Ordering not working
 				.ToList();
 		}
 
@@ -187,7 +195,7 @@ namespace fyp1_prototype
 		public void AddPlayer(string name, string password)
 		{
 			DatabaseContext dc = new DatabaseContext();
-			dc.Players.Add(new Player()
+			dc.Players.Add(new Players()
 			{
 				Username = name,
 				Date = DateTime.Now.ToString("YYYY-MM-DD"),
@@ -242,12 +250,11 @@ namespace fyp1_prototype
 			public int ItemGame { get; set; }
 		}
 
-		public void AddGame(int id, int lives, int playerGame, string time, int score, int itemGame)
+		public void AddGame(int lives, int playerGame, string time, int score, int itemGame)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			dc.Game.Add(new Game()
 			{
-				Id = id,
 				Lives = lives,
 				PlayerGame = playerGame,
 				DateTime = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS"),
@@ -258,11 +265,10 @@ namespace fyp1_prototype
 			dc.SaveChanges();
 		}
 
-		public void ModifyGame(int id, int lives, int playerGame, string time, int score, int itemGame)
+		public void ModifyGame(int lives, int playerGame, string time, int score, int itemGame)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			var game = dc.Game.FirstOrDefault(g => g.PlayerGame == playerGame);
-			game.Id = id;
 			game.Lives = lives;
 			game.DateTime = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS");
 			game.Time = time;
@@ -332,7 +338,6 @@ namespace fyp1_prototype
 				})
 				.ToList();
 		}
-
 	}
 
 	//	Item class with public functions to interact with DbContext
