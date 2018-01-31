@@ -178,15 +178,16 @@
     <Resource Include="Resources\orangebin.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\grab.cur">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\pepsi330ml.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\handCursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pointer.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

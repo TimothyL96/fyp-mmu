@@ -46,6 +46,13 @@ namespace fyp1_prototype
 		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
 		private Dictionary<int, InteractionHandEventType> _lastRightHandEvents = new Dictionary<int, InteractionHandEventType>();
 
+		private int handCursorOn = -1;
+		private double handCursorOnLeftDistant;
+		private double handCursoronTopDistant;
+		private const int itemWidth = 30;
+		private const int itemHeight = 30;
+		private const int itemChildrenStart = 6;
+
 		DroppingObjectManager _dom = new DroppingObjectManager();
 
 		//	Constructor
@@ -189,8 +196,11 @@ namespace fyp1_prototype
 
 		private void Tick_PushImage(object source, EventArgs e)
 		{
-			for (int i = 6; i < canvas.Children.Count; i++)
+			for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 			{
+				if (i == handCursorOn)
+					continue;
+
 				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
 
@@ -266,18 +276,52 @@ namespace fyp1_prototype
 
 						if (lastHandEvent == InteractionHandEventType.Grip)
 						{
+							//	If hand gripped, show gripped cursor and move the item with the cursor
+							handCursor.Source = new BitmapImage(new Uri("Resources/pointer.png", UriKind.Relative));
 
+							//	Find the item number of which the hand cursor is on
+							if (handCursorOn == -1)
+							{
+								for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
+								{
+									var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
+									if (Canvas.GetLeft(handCursor) >= p.X && Canvas.GetLeft(handCursor) >= p.X + itemWidth && Canvas.GetTop(handCursor) >= p.Y && Canvas.GetTop(handCursor) >= itemHeight)
+									{
+										handCursorOn = i;
+										handCursorOnLeftDistant = p.X - Canvas.GetLeft(canvas.Children[i]);
+										handCursoronTopDistant = p.Y - Canvas.GetTop(canvas.Children[i]);
+										break;
+									}
+								}
+							}
+
+							//	Move the item with the hand cursor
+							if (handCursorOn != -1)
+							{
+								Canvas.SetLeft(canvas.Children[handCursorOn], Canvas.GetLeft(handCursor) + handCursorOnLeftDistant);
+								Canvas.SetTop(canvas.Children[handCursorOn], Canvas.GetTop(handCursor) + handCursoronTopDistant);
+							}
 						}
 						else if (lastHandEvent == InteractionHandEventType.GripRelease)
 						{
-
+							//	If hand grip released, show normal cursor
+							handCursor.Source = new BitmapImage(new Uri("Resources/hand.png", UriKind.Relative));
+							handCursorOn = -1;
 						}
-
-						if (hand.IsPressed)
+						else if (hand.IsPressed)
 						{
-
+							//	If hand pressed the back, go back
+							//	Left and Right check:
+							if (back.Width + Canvas.GetLeft(back) >= Canvas.GetLeft(handCursor) && Canvas.GetLeft(handCursor) >= Canvas.GetLeft(back))
+							{
+								//	Top and Bottom check:
+								if (back.Height + Canvas.GetTop(back) >= Canvas.GetTop(handCursor) && Canvas.GetTop(handCursor) >= Canvas.GetTop(back))
+								{
+									//	Save Game
+									Close();
+								}
+							}
 						}
-						//Reference: handCursor.Source = new BitmapImage(new Uri("Resources/brownbin.png", UriKind.Relative));
 					}
 				}
      
@@ -503,6 +547,12 @@ namespace fyp1_prototype
 				//sensor.Stop();
 
 			kinectSensorChooser.Stop();
+		}
+
+		//	Temporary click function
+		private void back_Click(object sender, RoutedEventArgs e)
+		{
+			Close();
 		}
 	}
 }

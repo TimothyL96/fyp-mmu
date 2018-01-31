@@ -19,7 +19,7 @@ namespace fyp1_prototype
 		public MainWindow()
 		{
 			InitializeComponent();
-
+			
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 			kinectSensorDisplay.KinectSensorChooser = kinectSensorChooser;
