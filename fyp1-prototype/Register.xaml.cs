@@ -74,6 +74,16 @@ namespace fyp1_prototype
 					//	Close after successful registration
 					Close();
 				}
+				else
+				{
+					//	Feedback to user that the entered username is not available
+					MessageBox.Show("Username already taken! Try another");
+				}
+			}
+			else
+			{
+				//	Feedback to user that the passwords do not match
+				MessageBox.Show("Password do not match! Try again");
 			}
 		}
 	}

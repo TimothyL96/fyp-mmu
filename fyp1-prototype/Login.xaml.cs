@@ -73,6 +73,9 @@ namespace fyp1_prototype
 				{
 					//	Show dialog that the login is not successful
 					MessageBox.Show("Password is incorrect!");
+
+					//	Clear the incorrect password
+					passwordBox.Password = "";
 				}
 			}
 			else

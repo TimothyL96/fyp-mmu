@@ -41,7 +41,13 @@ namespace fyp1_prototype
 			var highscore = sro.GetAllScore();
 			for (int i = highscore.Count - 1; i >= 0; i--)
 			{
-				string name = pro.GetPlayerWithId(highscore[i].PlayerScore)[0].Username;
+				List<PlayersRepository.PlayerDto> user = pro.GetPlayerWithId(highscore[i].PlayerScore);
+				string name = "";
+				if (user.Count == 1)
+				{
+					name = user[0].Username;
+				}
+
 				var textBody = new Label
 				{
 					FontSize = 26,
