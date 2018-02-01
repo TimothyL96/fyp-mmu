@@ -19,6 +19,6 @@
 		<PasswordBox Height="26" HorizontalAlignment="Left" Margin="143,60,0,0" Name="passwordBox" VerticalAlignment="Top" Width="222" />
 
 		<Button Content="Back" Margin="40 105 0 0" Name="btnCancelLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40" Click="goback"/>
-		<Button Content="Login" Margin="223 105 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40"/>
+		<Button Content="Login" Margin="223 105 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40" Click="login" IsDefault="True"/>
 	</Grid>
 </Window>

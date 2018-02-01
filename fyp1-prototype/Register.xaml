@@ -23,6 +23,6 @@
 		<PasswordBox Height="26" HorizontalAlignment="Left" Margin="143,100,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="222" />
 
 		<Button Content="Back" Margin="40 140 0 0" Name="btnCancelRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40" Click="goback"/>
-		<Button Content="Register" Margin="223 140 0 0" Name="btnRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40"/>
+		<Button Content="Register" Margin="223 140 0 0" Name="btnRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40" Click="register" IsDefault="True"/>
 	</Grid>
 </Window>

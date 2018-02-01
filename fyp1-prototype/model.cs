@@ -171,7 +171,7 @@ namespace fyp1_prototype
 		}
 
 		//	Get specific data of players with Data Transfer Object (Get specific column)
-		public List<PlayerDto> GetAllPlayersName()
+		public List<PlayerDto> GetAllPlayerSpecificColumn()
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc.Players
@@ -191,6 +191,13 @@ namespace fyp1_prototype
 			return dc.Players.Select(player => player.Score).ToList();
 		}
 
+		//	Get all usernames
+		public List<string> GetAllPlayersUsername()
+		{
+			DatabaseContext dc = new DatabaseContext();
+			return dc.Players.Select(p => p.Username).ToList();
+		}
+
 		//	Add player to table
 		public void AddPlayer(string name, string password)
 		{
@@ -198,8 +205,8 @@ namespace fyp1_prototype
 			dc.Players.Add(new Players()
 			{
 				Username = name,
-				Date = DateTime.Now.ToString("YYYY-MM-DD"),
-				Password = "123456"
+				Date = DateTime.Now.ToString("yyyy-MM-dd"),
+				Password = password
 			});
 			dc.SaveChanges();
 		}
