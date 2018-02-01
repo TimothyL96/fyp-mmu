@@ -53,8 +53,8 @@
 					</Grid.ColumnDefinitions>
 					
 					<!--Login and Register button-->
-					<Button Content="Login"			x:Name="btn_login"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="07" Grid.Row="01"						Height="80"/>
-					<Button Content="Register"		x:Name="btn_register"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="01"						Height="80"/>
+					<Button Content="Login"			x:Name="btn_login"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="07" Grid.Row="01" Click="login"			Height="80"/>
+					<Button Content="Register"		x:Name="btn_register"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="01" Click="register"		Height="80"/>
 					
 					<!--Main buttons-->
 					<Button Content="Single Player" x:Name="btn_singlePlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="03" Click="singlePlayer"	Height="80"/>

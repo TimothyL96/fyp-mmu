@@ -19,8 +19,10 @@ namespace fyp1_prototype
 		public MainWindow()
 		{
 			InitializeComponent();
-			
-			kinectSensorChooser = new KinectSensorChooser();
+
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 			kinectSensorDisplay.KinectSensorChooser = kinectSensorChooser;
 
@@ -300,6 +302,7 @@ namespace fyp1_prototype
 			}
 		}
 
+        //  Execute press function
 		private void OnHandPointerPressRelease(object sender, HandPointerEventArgs e)
 		{
 			if (capturedHandPointer == e.HandPointer)
@@ -369,10 +372,12 @@ namespace fyp1_prototype
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			kinectSensorChooser.Stop();
+
+            Application.Current.Shutdown();
 		}
 
-		//	Below are all temporary click functions
-		private void close(object sender, RoutedEventArgs e)
+        //	Below are all temporary click functions
+        private void close(object sender, RoutedEventArgs e)
 		{
 			this.Close();
 		}
@@ -396,6 +401,18 @@ namespace fyp1_prototype
 		{
 			Help help = new Help(kinectSensorChooser);
 			help.Show();
+		}
+
+        private void login(object sender, RoutedEventArgs e)
+        {
+            Login login = new Login();
+            login.ShowDialog();
+        }
+
+		private void register(object sender, RoutedEventArgs e)
+		{
+			Register register = new Register();
+			register.ShowDialog();
 		}
 	}
 }

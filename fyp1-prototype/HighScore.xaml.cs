@@ -18,11 +18,11 @@ namespace fyp1_prototype
 
 		public HighScore(KinectSensorChooser kinectSensorChooser)
 		{
-			this.kinectSensorChooser = kinectSensorChooser;
-			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			InitializeComponent();
 
-			back.FontSize = 24;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            back.FontSize = 24;
 
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
@@ -140,5 +140,5 @@ namespace fyp1_prototype
 				this.WindowState = WindowState.Normal;
 			}
 		}
-	}
+    }
 }

@@ -27,7 +27,9 @@ namespace fyp1_prototype
 		{
 			InitializeComponent();
 
-			this.kinectSensorChooser = kinectSensorChooser;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            this.kinectSensorChooser = kinectSensorChooser;
 
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
@@ -54,5 +56,5 @@ namespace fyp1_prototype
 			};
 			scrollContent.Children.Add(textCredits);
 		}
-	}
+    }
 }
