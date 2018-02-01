@@ -264,7 +264,7 @@ namespace fyp1_prototype
 			{
 				Lives = lives,
 				PlayerGame = playerGame,
-				DateTime = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS"),
+				DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:MM:SS"),
 				Time = time,
 				Score = score,
 				ItemGame = itemGame
@@ -277,7 +277,7 @@ namespace fyp1_prototype
 			DatabaseContext dc = new DatabaseContext();
 			var game = dc.Game.FirstOrDefault(g => g.PlayerGame == playerGame);
 			game.Lives = lives;
-			game.DateTime = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS");
+			game.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:MM:SS");
 			game.Time = time;
 			game.Score = score;
 			game.ItemGame = itemGame;
