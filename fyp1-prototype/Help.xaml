@@ -16,7 +16,8 @@
 				</Grid>
 				
 				<k:KinectScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Top" Height="750" Width="1100" Margin="50,150,50,50">
-					<StackPanel Orientation="Vertical" Name="scrollContent"></StackPanel>
+					<StackPanel Orientation="Vertical" Name="scrollContent" Margin="5 0 0 0">
+					</StackPanel>
 				</k:KinectScrollViewer>
 			</Grid>
 		</k:KinectRegion>

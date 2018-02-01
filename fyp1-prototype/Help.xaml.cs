@@ -34,11 +34,25 @@ namespace fyp1_prototype
 
 			var textHeader = new Label
 			{
-				Content = "This is a freakin guide\nThis is a line space\nThis is the complete guide!!!",
+				Content = "Help",
 				FontWeight = FontWeights.Bold,
-				FontSize = 26
+				FontSize = 68
 			};
 			scrollContent.Children.Add(textHeader);
+
+			var textContent = new Label
+			{
+				Content = "This section will give you a guide to this game.\nTo play this game, you need to have Kinect for Windows.\nFind an area where the Kinect sensor can detect you well and clear.\n",
+				FontSize = 22
+			};
+			scrollContent.Children.Add(textContent);
+
+			var textCredits = new Label
+			{
+				Content = "Credits:\nfreepik",
+				FontSize = 22
+			};
+			scrollContent.Children.Add(textCredits);
 		}
 	}
 }

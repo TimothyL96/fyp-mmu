@@ -6,8 +6,12 @@
 		xmlns:k="http://schemas.microsoft.com/kinect/2013"
         xmlns:local="clr-namespace:fyp1_prototype"
         mc:Ignorable="d"
-        Title="Kinect For Educational Game" MinHeight="620" MinWidth="740" Height="900" Width="1200" WindowState="Maximized" Icon="Resources/handCursor.png" Closing="Window_Closing">
+        Title="Kinect For Educational Game" MinHeight="620" MinWidth="740" Height="820" Width="1200" WindowState="Normal" Icon="Resources/handCursor.png" Closing="Window_Closing">
 	<Grid>
+		<Grid.Background>
+			<ImageBrush ImageSource="Resources/front background.png"/>
+		</Grid.Background>
+		
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectSensorChooserUI Name="kinectSensorDisplay" HorizontalAlignment="Center" VerticalAlignment="Top"></k:KinectSensorChooserUI>
 		<k:KinectUserViewer Name="kinectUserViewer" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" k:KinectRegion.KinectRegion="{Binding ElementName=kinectKinectRegion}"></k:KinectUserViewer>
@@ -59,6 +63,10 @@
 					<Button Content="High Scores"	x:Name="btn_highScores"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="09" Click="highscore"		Height="80"/>
 					<Button Content="Help"			x:Name="btn_help"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="11" Click="help"			Height="80"/>
 					<Button Content="Exit"			x:Name="btn_exit"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="09" Grid.Row="13" Click="close"			Height="80"/>
+
+					<Image Source="Resources/nuclear.png"	Margin="-100 0 0 0"	Grid.Column="1" Grid.Row="13"/>
+					<Image Source="Resources/waste.png"		Margin="100 0 0 0"	Grid.Column="1" Grid.Row="13"/>
+					<Image Source="Resources/nuclear.png"	Margin="-160 0 0 0"	Grid.Column="3" Grid.Row="13"/>
 				</Grid>
 			</Grid>
 		</k:KinectRegion>
