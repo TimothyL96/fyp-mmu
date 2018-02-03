@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using Microsoft.Kinect;
@@ -114,8 +113,6 @@ namespace fyp1_prototype
 			KinectRegion.SetIsPressTarget(btn_highScores, true);
 			KinectRegion.SetIsPressTarget(btn_help, true);
 			KinectRegion.SetIsPressTarget(btn_exit, true);
-
-			new PlayersRepository();
 		}
 	
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
@@ -311,10 +308,16 @@ namespace fyp1_prototype
 				if (e.HandPointer.GetIsOver(btn_login))
 				{
 					VisualStateManager.GoToState(btn_login, "MouseOver", true);
+
+					Login login = new Login(kinectSensorChooser);
+					login.ShowDialog();
 				}
 				else if (e.HandPointer.GetIsOver(btn_register))
 				{
 					VisualStateManager.GoToState(btn_register, "MouseOver", true);
+
+					Register register = new Register(kinectSensorChooser);
+					register.ShowDialog();
 				}
 				else if (e.HandPointer.GetIsOver(btn_singlePlayer))
 				{
@@ -405,13 +408,13 @@ namespace fyp1_prototype
 
         private void login(object sender, RoutedEventArgs e)
         {
-            Login login = new Login();
+            Login login = new Login(kinectSensorChooser);
             login.ShowDialog();
         }
 
 		private void register(object sender, RoutedEventArgs e)
 		{
-			Register register = new Register();
+			Register register = new Register(kinectSensorChooser);
 			register.ShowDialog();
 		}
 	}

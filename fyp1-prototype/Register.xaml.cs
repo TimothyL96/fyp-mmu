@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Security.Cryptography;
+using Microsoft.Kinect.Toolkit.Controls;
+using Microsoft.Kinect.Toolkit;
 
 namespace fyp1_prototype
 {
@@ -20,11 +22,126 @@ namespace fyp1_prototype
     /// </summary>
     public partial class Register : Window
     {
-        public Register()
+		private HandPointer capturedHandPointer;
+		private KinectSensorChooser kinectSensorChooser;
+
+		public Register(KinectSensorChooser kinectSensorChooser)
         {
             InitializeComponent();
 
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+			this.kinectSensorChooser = kinectSensorChooser;
+
+			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
+			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
+
+			//	Setup Kinect region press target and event handlers
+			KinectRegion.SetIsPressTarget(btnCancelRegister, true);
+			KinectRegion.SetIsPressTarget(btnRegister, true);
+
+			//	btnCancelRegister
+			KinectRegion.AddHandPointerEnterHandler(btnCancelRegister, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerLeaveHandler(btnCancelRegister, HandPointerLeaveEvent);
+
+			KinectRegion.AddHandPointerPressHandler(btnCancelRegister, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(btnCancelRegister, HandPointerPressReleaseEvent);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(btnCancelRegister, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(btnCancelRegister, HandPointerLostCaptureEvent);
+
+			//	btnRegister
+			KinectRegion.AddHandPointerEnterHandler(btnRegister, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerLeaveHandler(btnRegister, HandPointerLeaveEvent);
+
+			KinectRegion.AddHandPointerPressHandler(btnRegister, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(btnRegister, HandPointerPressReleaseEvent);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(btnRegister, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(btnRegister, HandPointerLostCaptureEvent);
+		}
+
+		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
+		{
+			if (e.HandPointer.GetIsOver(btnCancelRegister) && e.HandPointer.IsPrimaryHandOfUser)
+				VisualStateManager.GoToState(btnCancelRegister, "MouseOver", true);
+			else if (e.HandPointer.GetIsOver(btnRegister) && e.HandPointer.IsPrimaryHandOfUser)
+				VisualStateManager.GoToState(btnRegister, "MouseOver", true);
+
+			e.Handled = true;
+		}
+
+		private void HandPointerLeaveEvent(object sender, HandPointerEventArgs e)
+		{
+			if (!e.HandPointer.GetIsOver(btnCancelRegister) && e.HandPointer.IsPrimaryHandOfUser)
+				VisualStateManager.GoToState(btnCancelRegister, "Normal", true);
+			if (!e.HandPointer.GetIsOver(btnRegister) && e.HandPointer.IsPrimaryHandOfUser)
+				VisualStateManager.GoToState(btnRegister, "Normal", true);
+
+			if (capturedHandPointer == e.HandPointer)
+			{
+				capturedHandPointer = null;
+				e.Handled = true;
+			}
+		}
+
+		private void HandPointerPressEvent(object sender, HandPointerEventArgs e)
+		{
+			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				if (e.HandPointer.GetIsOver(btnCancelRegister))
+				{
+					e.HandPointer.Capture(btnCancelRegister);
+					capturedHandPointer = e.HandPointer;
+					e.Handled = true;
+				}
+				else if (e.HandPointer.GetIsOver(btnRegister))
+				{
+					e.HandPointer.Capture(btnRegister);
+					capturedHandPointer = e.HandPointer;
+					e.Handled = true;
+				}
+			}
+		}
+
+		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
+		{
+			if (capturedHandPointer == e.HandPointer)
+			{
+				if (e.HandPointer.GetIsOver(btnCancelRegister))
+				{
+					Close();
+					VisualStateManager.GoToState(btnCancelRegister, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(btnRegister))
+				{
+					VisualStateManager.GoToState(btnRegister, "MouseOver", true);
+				}
+				else
+				{
+					VisualStateManager.GoToState(btnCancelRegister, "Normal", true);
+				}
+				e.HandPointer.Capture(null);
+				e.Handled = true;
+			}
+		}
+
+		private void HandPointerCaptureEvent(object sender, HandPointerEventArgs e)
+		{
+			if (capturedHandPointer == null)
+			{
+				capturedHandPointer = e.HandPointer;
+				e.Handled = true;
+			}
+		}
+
+		private void HandPointerLostCaptureEvent(object sender, HandPointerEventArgs e)
+		{
+			if (capturedHandPointer == e.HandPointer)
+			{
+				capturedHandPointer = null;
+				e.Handled = true;
+			}
 		}
 
 		//	Temporary click functions
@@ -35,8 +152,28 @@ namespace fyp1_prototype
 
 		private void register(object sender, RoutedEventArgs e)
 		{
+			//	Check if username length is less than 3 or empty
+			if (textBoxUsername.Text.Length < 3)
+			{
+				//	Show message dialog to enter longer username
+				MessageBox.Show("Username must be at least 3 characters long!");
+				return;
+			}
+			//	Check if password length is less than 3
+			else if (passwordBox.Password.Length < 3)
+			{
+				//	Show message dialog to enter longer password
+				MessageBox.Show("Password must be at least 3 characters long!");
+
+				//	Return to stop executing
+				return;
+			}
+
+			//	If the fields are correct, then check the data
+			//	Check if password match
 			if (passwordBox.Password == passwordBox1.Password)
 			{
+				//	Create the player repository object
 				PlayersRepository pro = new PlayersRepository();
 
 				//	Check if username exist

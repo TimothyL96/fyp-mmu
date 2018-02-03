@@ -22,10 +22,12 @@ namespace fyp1_prototype
 
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            back.FontSize = 24;
+			this.kinectSensorChooser = kinectSensorChooser;
 
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
+
+			back.FontSize = 24;
 
 			var textHeader = new Label
 			{
@@ -56,6 +58,7 @@ namespace fyp1_prototype
 				scrollContent.Children.Add(textBody);
 			}
 
+			//	Setup Kinect region press target and event handlers
 			KinectRegion.SetIsPressTarget(back, true);
 
 			KinectRegion.AddHandPointerEnterHandler(back, HandPointerEnterEvent);
@@ -107,8 +110,7 @@ namespace fyp1_prototype
 			{
 				if (e.HandPointer.GetIsOver(back))
 				{
-
-					this.Close();
+					Close();
 					VisualStateManager.GoToState(back, "MouseOver", true);
 				}
 				else
@@ -141,9 +143,9 @@ namespace fyp1_prototype
 		//	Disable maximizing window
 		private void Window_StateChanged(object sender, EventArgs e)
 		{
-			if (this.WindowState == WindowState.Maximized)
+			if (WindowState == WindowState.Maximized)
 			{
-				this.WindowState = WindowState.Normal;
+				WindowState = WindowState.Normal;
 			}
 		}
     }
