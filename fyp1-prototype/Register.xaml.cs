@@ -24,6 +24,8 @@ namespace fyp1_prototype
     {
 		private HandPointer capturedHandPointer;
 		private KinectSensorChooser kinectSensorChooser;
+		private const int hoverSizeChange = 50;
+		private char keyPressed;
 
 		public Register(KinectSensorChooser kinectSensorChooser)
         {
@@ -64,9 +66,28 @@ namespace fyp1_prototype
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
 		{
 			if (e.HandPointer.GetIsOver(btnCancelRegister) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(btnCancelRegister, "MouseOver", true);
+			}				
 			else if (e.HandPointer.GetIsOver(btnRegister) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(btnRegister, "MouseOver", true);
+			}
+			else if (e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				VisualStateManager.GoToState((Button)sender, "MouseOver", true);
+
+				Button button = (Button)sender;
+				button.RenderTransformOrigin = new Point(0.5, 0.5);
+				ScaleTransform scaleTransform = new ScaleTransform
+				{
+					ScaleX = 1.8,
+					ScaleY = 1.8
+				};
+				TransformGroup transformGroup = new TransformGroup();
+				transformGroup.Children.Add(scaleTransform);
+				button.RenderTransform = transformGroup;
+			}
 
 			e.Handled = true;
 		}
@@ -74,9 +95,28 @@ namespace fyp1_prototype
 		private void HandPointerLeaveEvent(object sender, HandPointerEventArgs e)
 		{
 			if (!e.HandPointer.GetIsOver(btnCancelRegister) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(btnCancelRegister, "Normal", true);
+			}
 			if (!e.HandPointer.GetIsOver(btnRegister) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(btnRegister, "Normal", true);
+			}
+			if (!e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				VisualStateManager.GoToState((Button)sender, "Normal", true);
+
+				Button button = (Button)sender;
+				button.RenderTransformOrigin = new Point(0.5, 0.5);
+				ScaleTransform scaleTransform = new ScaleTransform
+				{
+					ScaleX = 1,
+					ScaleY = 1
+				};
+				TransformGroup transformGroup = new TransformGroup();
+				transformGroup.Children.Add(scaleTransform);
+				button.RenderTransform = transformGroup;
+			}
 
 			if (capturedHandPointer == e.HandPointer)
 			{
@@ -298,6 +338,160 @@ namespace fyp1_prototype
 			{
 				//	Feedback to user that the passwords do not match
 				customMessageBox.ShowText("Password do not match! Try again");
+			}
+		}
+
+		private void AMouseEnter(object sender, MouseEventArgs e)
+		{
+			Button button = (Button)sender;
+			button.RenderTransformOrigin = new Point(0.5, .5);
+			ScaleTransform scaleTransform = new ScaleTransform
+			{
+				ScaleX = 1.8,
+				ScaleY = 1.8
+			};
+			TransformGroup transformGroup = new TransformGroup();
+			transformGroup.Children.Add(scaleTransform);
+			button.RenderTransform = transformGroup;
+		}
+
+		private void AMouseLeave(object sender, MouseEventArgs e)
+		{
+			Button button = (Button)sender;
+			button.RenderTransformOrigin = new Point(0.5, .5);
+			ScaleTransform scaleTransform = new ScaleTransform
+			{
+				ScaleX = 1,
+				ScaleY = 1
+			};
+			TransformGroup transformGroup = new TransformGroup();
+			transformGroup.Children.Add(scaleTransform);
+			button.RenderTransform = transformGroup;
+		}
+
+		private void keyClick(object sender, RoutedEventArgs e)
+		{
+			Button button = (Button)sender;
+			if (button.Equals(btnA))
+			{
+				keyPressed = 'a';
+			}
+			else if (button.Equals(btnB))
+			{
+				keyPressed = 'b';
+			}
+			else if (button.Equals(btnC))
+			{
+				keyPressed = 'c';
+			}
+			else if (button.Equals(btnD))
+			{
+				keyPressed = 'd';
+			}
+			else if (button.Equals(btnE))
+			{
+				keyPressed = 'e';
+			}
+			else if (button.Equals(btnF))
+			{
+				keyPressed = 'f';
+			}
+			else if (button.Equals(btnG))
+			{
+				keyPressed = 'g';
+			}
+			else if (button.Equals(btnH))
+			{
+				keyPressed = 'h';
+			}
+			else if (button.Equals(btnI))
+			{
+				keyPressed = 'i';
+			}
+			else if (button.Equals(btnJ))
+			{
+				keyPressed = 'j';
+			}
+			else if (button.Equals(btnK))
+			{
+				keyPressed = 'k';
+			}
+			else if (button.Equals(btnL))
+			{
+				keyPressed = 'l';
+			}
+			else if (button.Equals(btnM))
+			{
+				keyPressed = 'm';
+			}
+			else if (button.Equals(btnN))
+			{
+				keyPressed = 'n';
+			}
+			else if (button.Equals(btnO))
+			{
+				keyPressed = 'o';
+			}
+			else if (button.Equals(btnP))
+			{
+				keyPressed = 'p';
+			}
+			else if (button.Equals(btnQ))
+			{
+				keyPressed = 'q';
+			}
+			else if (button.Equals(btnR))
+			{
+				keyPressed = 'r';
+			}
+			else if (button.Equals(btnS))
+			{
+				keyPressed = 's';
+			}
+			else if (button.Equals(btnT))
+			{
+				keyPressed = 't';
+			}
+			else if (button.Equals(btnU))
+			{
+				keyPressed = 'u';
+			}
+			else if (button.Equals(btnV))
+			{
+				keyPressed = 'v';
+			}
+			else if (button.Equals(btnW))
+			{
+				keyPressed = 'w';
+			}
+			else if (button.Equals(btnX))
+			{
+				keyPressed = 'x';
+			}
+			else if (button.Equals(btnY))
+			{
+				keyPressed = 'y';
+			}
+			else if (button.Equals(btnZ))
+			{
+				keyPressed = 'z';
+			}
+
+			if (textBoxUsername.IsFocused)
+			{
+				int usernameCaretIndex = textBoxUsername.CaretIndex;
+				textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
+				textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+			}
+			else if (passwordBox.IsFocused)
+			{
+				//	Due to security reason, caret index of passwordbox is not retrievable
+				//	Use TextCompositionManager to input at current caret
+				TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+			}
+			else if (passwordBox1.IsFocused)
+			{
+				TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox1, keyPressed.ToString()));
 			}
 		}
 	}

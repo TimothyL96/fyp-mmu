@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:fyp1_prototype"
         mc:Ignorable="d"
         Title="Login" Height="700" Width="800" Icon="Resources/hand.png" WindowState="Normal" WindowStyle="None" ResizeMode="NoResize">
-    <Grid>
+	<Grid>
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
@@ -22,6 +22,34 @@
 
 				<Button Content="Back" Margin="220 110 0 0" Name="btnCancelLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
 				<Button Content="Login" Margin="420 110 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="login" IsDefault="True"/>
+
+				<Button Content="Q" Margin="060,250,0,0" x:Name="btnQ" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="W" Margin="150,250,0,0" x:Name="btnW" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="E" Margin="240,250,0,0" x:Name="btnE" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="R" Margin="330,250,0,0" x:Name="btnR" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="T" Margin="420,250,0,0" x:Name="btnT" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="Y" Margin="510,250,0,0" x:Name="btnY" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="U" Margin="600,250,0,0" x:Name="btnU" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="I" Margin="690,250,0,0" x:Name="btnI" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="O" Margin="100,350,0,0" x:Name="btnO" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="P" Margin="190,350,0,0" x:Name="btnP" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="A" Margin="280,350,0,0" x:Name="btnA" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+
+				<Button Content="S" Margin="370,350,0,0" x:Name="btnS" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="D" Margin="460,350,0,0" x:Name="btnD" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="F" Margin="550,350,0,0" x:Name="btnF" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="G" Margin="640,350,0,0" x:Name="btnG" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="H" Margin="150,455,0,0" x:Name="btnH" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="J" Margin="240,455,0,0" x:Name="btnJ" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="K" Margin="330,455,0,0" x:Name="btnK" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="L" Margin="420,455,0,0" x:Name="btnL" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="Z" Margin="510,455,0,0" x:Name="btnZ" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="X" Margin="600,455,0,0" x:Name="btnX" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="C" Margin="190,560,0,0" x:Name="btnC" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="V" Margin="280,560,0,0" x:Name="btnV" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="B" Margin="370,560,0,0" x:Name="btnB" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="N" Margin="460,560,0,0" x:Name="btnN" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="M" Margin="550,560,0,0" x:Name="btnM" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
 			</Grid>
 		</k:KinectRegion>
 	</Grid>
