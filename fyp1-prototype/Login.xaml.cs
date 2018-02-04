@@ -152,11 +152,14 @@ namespace fyp1_prototype
 
 		private void login(object sender, RoutedEventArgs e)
 		{
+			//	Setup custom message box
+			CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+
 			//	Check if username entered is at least 3 characters long
 			if (textBoxUsername.Text.Length < 3)
 			{
 				//	Show error message dialog
-				MessageBox.Show("Username is at least 3 characters long!");
+				customMessageBox.ShowText("Username is at least 3 characters long!");
 
 				//	Return to stop executing the remaining codes
 				return;
@@ -165,7 +168,7 @@ namespace fyp1_prototype
 			else if (passwordBox.Password.Length < 3)
 			{
 				//	Show error message dialog
-				MessageBox.Show("Password is at least 3 characters long!");
+				customMessageBox.ShowText("Password is at least 3 characters long!");
 
 				//	Return to stop executing the remaining codes
 				return;
@@ -195,7 +198,7 @@ namespace fyp1_prototype
 				if (result.ToString().Contains(player[0].Password))
 				{
 					//	Show dialog that the login is successful
-					MessageBox.Show("Log in succeeded");
+					customMessageBox.ShowText("Log in succeeded");
 
 					//	Close after succesfully logged in
 					Close();
@@ -203,7 +206,7 @@ namespace fyp1_prototype
 				else
 				{
 					//	Show dialog that the login is not successful
-					MessageBox.Show("Password is incorrect!");
+					customMessageBox.ShowText("Password is incorrect!");
 
 					//	Clear the incorrect password
 					passwordBox.Password = "";
@@ -212,7 +215,7 @@ namespace fyp1_prototype
 			else
 			{
 				//	Show dialog that the login is not successful
-				MessageBox.Show("Player doesn't exist!");
+				customMessageBox.ShowText("Player doesn't exist!");
 			}
 		}
 	}

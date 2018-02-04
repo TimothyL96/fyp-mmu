@@ -6,28 +6,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:fyp1_prototype"
         mc:Ignorable="d"
-        Title="Register" Height="300" Width="400" Icon="Resources/hand.png" WindowState="Normal" WindowStyle="None" ResizeMode="NoResize">
+        Title="Register" Height="700" Width="800" Icon="Resources/hand.png" WindowState="Normal" WindowStyle="None" ResizeMode="NoResize">
 	<Grid>
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
-				<TextBlock Height="20" HorizontalAlignment="Left" Margin="30,0,0,0" x:Name ="errormessage" VerticalAlignment="Top" Width="247"  OpacityMask="Crimson" Foreground="#FFE5572C" />
+				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,20,0,0" Name="textBlockUsername" Text="Username:" FontSize="20" VerticalAlignment="Top" Width="110" />
 
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="30,20,0,0" Name="textBlockUsername" Text="Username:" FontSize="20" VerticalAlignment="Top" Width="110" />
+				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,60,0,0" Name="textBlockPassword" Text="Password:" FontSize="20" VerticalAlignment="Top" Width="110"  />
 
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="30,60,0,0" Name="textBlockPassword" Text="Password:" FontSize="20" VerticalAlignment="Top" Width="110"  />
-
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="30,100,0,0" Name="textBlockPassword1" Text="Repeat Pass:" FontSize="20" VerticalAlignment="Top" Width="110"  />
+				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,100,0,0" Name="textBlockPassword1" Text="Repeat Password:" FontSize="20" VerticalAlignment="Top" Width="160"  />
 
 
-				<TextBox Height="26" HorizontalAlignment="Left" Margin="143,20,0,0" Name="textBoxUsername" VerticalAlignment="Top" Width="222" />
+				<TextBox Height="26" HorizontalAlignment="Left" Margin="380,20,0,0" Name="textBoxUsername" VerticalAlignment="Top" Width="222" />
 
-				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="143,60,0,0" Name="passwordBox" VerticalAlignment="Top" Width="222" />
+				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="380,60,0,0" Name="passwordBox" VerticalAlignment="Top" Width="222" />
 
-				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="143,100,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="222" />
+				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="380,100,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="222" />
 
-				<Button Content="Back" Margin="40 140 0 0" Name="btnCancelRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40" Click="goback"/>
-				<Button Content="Register" Margin="223 140 0 0" Name="btnRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="40" Click="register" IsDefault="True"/>
+				<Button Content="Back" Margin="220 150 0 0" Name="btnCancelRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
+				<Button Content="Register" Margin="420 150 0 0" Name="btnRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="register" IsDefault="True"/>
 			</Grid>
 		</k:KinectRegion>
 	</Grid>

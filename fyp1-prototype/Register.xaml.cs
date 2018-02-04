@@ -152,18 +152,21 @@ namespace fyp1_prototype
 
 		private void register(object sender, RoutedEventArgs e)
 		{
+			//	Setup custom Message box
+			CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+
 			//	Check if username length is less than 3 or empty
 			if (textBoxUsername.Text.Length < 3)
 			{
 				//	Show message dialog to enter longer username
-				MessageBox.Show("Username must be at least 3 characters long!");
+				customMessageBox.ShowText("Username must be at least 3 characters long!");
 				return;
 			}
 			//	Check if password length is less than 3
 			else if (passwordBox.Password.Length < 3)
 			{
 				//	Show message dialog to enter longer password
-				MessageBox.Show("Password must be at least 3 characters long!");
+				customMessageBox.ShowText("Password must be at least 3 characters long!");
 
 				//	Return to stop executing
 				return;
@@ -206,7 +209,7 @@ namespace fyp1_prototype
 					pro.AddPlayer(textBoxUsername.Text, result.ToString());
 
 					//	Popup successful registration dialog
-					MessageBox.Show("Registration succeeded!");
+					customMessageBox.ShowText("Registration succeeded!");
 
 					//	Close after successful registration
 					Close();
@@ -214,13 +217,13 @@ namespace fyp1_prototype
 				else
 				{
 					//	Feedback to user that the entered username is not available
-					MessageBox.Show("Username already taken! Try another");
+					customMessageBox.ShowText("Username already taken! Try another");
 				}
 			}
 			else
 			{
 				//	Feedback to user that the passwords do not match
-				MessageBox.Show("Password do not match! Try again");
+				customMessageBox.ShowText("Password do not match! Try again");
 			}
 		}
 	}
