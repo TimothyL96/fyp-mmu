@@ -115,6 +115,80 @@ namespace fyp1_prototype
 				}
 				else if (e.HandPointer.GetIsOver(btnRegister))
 				{
+					//	Setup custom Message box
+					CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+
+					//	Check if username length is less than 3 or empty
+					if (textBoxUsername.Text.Length < 3)
+					{
+						//	Show message dialog to enter longer username
+						customMessageBox.ShowText("Username must be at least 3 characters long!");
+						return;
+					}
+					//	Check if password length is less than 3
+					else if (passwordBox.Password.Length < 3)
+					{
+						//	Show message dialog to enter longer password
+						customMessageBox.ShowText("Password must be at least 3 characters long!");
+
+						//	Return to stop executing
+						return;
+					}
+
+					//	If the fields are correct, then check the data
+					//	Check if password match
+					if (passwordBox.Password == passwordBox1.Password)
+					{
+						//	Create the player repository object
+						PlayersRepository pro = new PlayersRepository();
+
+						//	Check if username exist
+						List<String> allUsername = pro.GetAllPlayersUsername();
+						bool usernameDuplicate = false;
+
+						foreach (var username in allUsername)
+						{
+							if (username == textBoxUsername.Text)
+							{
+								usernameDuplicate = true;
+								break;
+							}
+						}
+
+						if (usernameDuplicate == false)
+						{
+							//	Hash the password
+							SHA256 sha256 = SHA256.Create();
+							byte[] bytes = Encoding.UTF8.GetBytes(passwordBox.Password);
+							byte[] hash = sha256.ComputeHash(bytes);
+
+							StringBuilder result = new StringBuilder();
+							for (int i = 0; i < hash.Length; i++)
+							{
+								result.Append(hash[i].ToString("X2"));
+							}
+
+							//	Register player into database
+							pro.AddPlayer(textBoxUsername.Text, result.ToString());
+
+							//	Popup successful registration dialog
+							customMessageBox.ShowText("Registration succeeded!");
+
+							//	Close after successful registration
+							Close();
+						}
+						else
+						{
+							//	Feedback to user that the entered username is not available
+							customMessageBox.ShowText("Username already taken! Try another");
+						}
+					}
+					else
+					{
+						//	Feedback to user that the passwords do not match
+						customMessageBox.ShowText("Password do not match! Try again");
+					}
+
 					VisualStateManager.GoToState(btnRegister, "MouseOver", true);
 				}
 				else
