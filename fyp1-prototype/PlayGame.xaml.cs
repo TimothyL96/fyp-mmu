@@ -38,8 +38,10 @@ namespace fyp1_prototype
 		private DispatcherTimer timerPushImage = new DispatcherTimer();
 
 		private Skeleton[] allSkeletons = new Skeleton[6];
-		private static int screenWidth = 2040;// (int)SystemParameters.PrimaryScreenWidth;
-		private static int screenHeight = 1040;// (int)SystemParameters.PrimaryScreenHeight;
+		private static int screenWidth;// (int)SystemParameters.PrimaryScreenWidth;
+		private static int screenHeight;// (int)SystemParameters.PrimaryScreenHeight;
+		private int screenFactorX;
+		private int screenFactorY;
 
 		private InteractionStream _interactionStream;
 		private Skeleton[] _skeletons; //the skeletons 
@@ -53,7 +55,7 @@ namespace fyp1_prototype
 		private double handCursoronTopDistant;
 		private const int itemWidth = 30;
 		private const int itemHeight = 30;
-		private const int itemChildrenStart = 6;
+		private const int itemChildrenStart = 8;
 
 		private int currentLives = 3;
 		private int currentScore = 0;
@@ -67,8 +69,9 @@ namespace fyp1_prototype
 		//	Constructor
 		public DragDropImages()
 		{
-			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			InitializeComponent();
+
+			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
@@ -108,9 +111,9 @@ namespace fyp1_prototype
 				{
 					e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
 					e.NewSensor.DepthStream.Range = DepthRange.Near;
-					e.NewSensor.SkeletonStream.Enable();
 					e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
 					e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+					e.NewSensor.SkeletonStream.Enable();
 				}
 				catch (InvalidOperationException)
 				{
@@ -122,8 +125,24 @@ namespace fyp1_prototype
 			if (!error)
 			{
 				sensor = e.NewSensor;
-				InitializeSkeleton();
+
+				if (kinectSensorChooser.Status == ChooserStatus.SensorStarted)
+					InitializeSkeleton();
 			}
+		}
+		
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			//	Fix the orange bin to the middle of blue bin and brown bin
+			var brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
+			var blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
+			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
+
+			screenWidth = (int)SystemParameters.PrimaryScreenWidth;
+			screenHeight = (int)SystemParameters.PrimaryScreenHeight;
+
+			screenFactorX = screenWidth / 640;
+			screenFactorY = screenHeight / 480;
 		}
 
 		public interface IInteractionClient
@@ -158,8 +177,11 @@ namespace fyp1_prototype
 			if (DesignerProperties.GetIsInDesignMode(this))
 				return;
 
+			//sensor = KinectSensor.KinectSensors.FirstOrDefault();
 			if (sensor == null)
 			{
+				CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+				customMessageBox.ShowText("No Kinect sensor detected!");
 				Close();
 				return;
 			}
@@ -172,14 +194,15 @@ namespace fyp1_prototype
 			   
 			sensor.DepthFrameReady += SensorOnDepthFrameReady;
 			sensor.SkeletonFrameReady += SensorOnSkeletonFrameReady;
+			sensor.AllFramesReady += SensorAllFramesReady;
 			
 			if (!sensor.IsRunning)
 				sensor.Start();
 
 			//	Start creating images
 			timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
-			timerCreateImage.Interval = TimeSpan.FromMilliseconds(1000);
-			timerCreateImage.Start();
+			timerCreateImage.Interval = TimeSpan.FromMilliseconds(2000);
+			//timerCreateImage.Start();
 			// new DroppingObjectManager().Start();
 		}
 
@@ -222,7 +245,7 @@ namespace fyp1_prototype
 				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
 
 				//	Define speed / difficulty
-				if (canvas.Children.Count == 8)
+				if (canvas.Children.Count == 9)
 					verticalLength = 5;
 
 				//	If the image touched edge of window then stop it
@@ -290,11 +313,11 @@ namespace fyp1_prototype
 						dump.AppendLine("    RawX: " + hand.RawX.ToString("N3"));
 						dump.AppendLine("    RawY: " + hand.RawY.ToString("N3"));
 						dump.AppendLine("    RawZ: " + hand.RawZ.ToString("N3"));
-
+						
 						if (lastHandEvent == InteractionHandEventType.Grip)
 						{
 							//	If hand gripped, show gripped cursor and move the item with the cursor
-							handCursor.Source = new BitmapImage(new Uri("Resources/pointer.png", UriKind.Relative));
+							handCursor.Source = new BitmapImage(new Uri("Resources/pointerWhite.png", UriKind.Relative));
 
 							//	Find the item number of which the hand cursor is on
 							if (handCursorOn == -1)
@@ -322,7 +345,7 @@ namespace fyp1_prototype
 						else if (lastHandEvent == InteractionHandEventType.GripRelease)
 						{
 							//	If hand grip released, show normal cursor
-							handCursor.Source = new BitmapImage(new Uri("Resources/hand.png", UriKind.Relative));
+							handCursor.Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative));
 							handCursorOn = -1;
 						}
 						else if (hand.IsPressed)
@@ -462,7 +485,7 @@ namespace fyp1_prototype
 				return bitmapimage;
 			}
 		}
-
+		
 		private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 			Skeleton first = GetFirstSkeleton(e);
@@ -518,9 +541,10 @@ namespace fyp1_prototype
 
 		}
 
+		//	Scale the X and Y to the screen size
 		private float ScaleVector(int length, float position)
 		{
-			float value = (((((float)length) / 1f) / 2f) * position) + (length / 2);
+			float value = (((((float)length) / 1f) / 2f) * position * 5) + (length / 2);
 			if (value > length)
 			{
 				return (float)length;
@@ -565,14 +589,14 @@ namespace fyp1_prototype
 
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
-			//Canvas.SetLeft(element, point.X * 1.5 - element.Width / 2);
-			//Canvas.SetTop(element, point.Y * 1.125 - element.Height / 2);
+			Canvas.SetLeft(element, point.X - element.Width / 2);
+			Canvas.SetTop(element, point.Y - element.Height / 2);
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
 		{
-			//if (sensor != null)
-				//sensor.Stop();
+			if (sensor != null)
+				sensor.Stop();
 			kinectSensorChooser.Stop();
 		}
 

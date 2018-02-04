@@ -323,6 +323,7 @@ namespace fyp1_prototype
 				{
 					VisualStateManager.GoToState(btn_singlePlayer, "MouseOver", true);
 
+					kinectSensorChooser.Stop();
 					DragDropImages dragDropImages = new DragDropImages
 					{
 						Owner = Application.Current.MainWindow
@@ -393,6 +394,7 @@ namespace fyp1_prototype
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
+			kinectSensorChooser.Stop();
 			DragDropImages dragDropImages = new DragDropImages
 			{
 				Owner = Application.Current.MainWindow

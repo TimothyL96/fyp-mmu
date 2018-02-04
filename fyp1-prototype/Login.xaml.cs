@@ -69,6 +69,9 @@ namespace fyp1_prototype
 			KinectRegion.SetIsPressTarget(btnY, true);
 			KinectRegion.SetIsPressTarget(btnZ, true);
 
+			KinectRegion.SetIsPressTarget(textBoxUsername, true);
+			KinectRegion.SetIsPressTarget(passwordBox, true);
+
 			//	btnCancelLogin
 			KinectRegion.AddHandPointerEnterHandler(btnCancelLogin, HandPointerEnterEvent);
 			KinectRegion.AddHandPointerLeaveHandler(btnCancelLogin, HandPointerLeaveEvent);
@@ -88,6 +91,26 @@ namespace fyp1_prototype
 
 			KinectRegion.AddHandPointerGotCaptureHandler(btnLogin, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(btnLogin, HandPointerLostCaptureEvent);
+
+			//	textBoxUsername
+			KinectRegion.AddHandPointerEnterHandler(textBoxUsername, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerLeaveHandler(textBoxUsername, HandPointerLeaveEvent);
+
+			KinectRegion.AddHandPointerPressHandler(textBoxUsername, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(textBoxUsername, HandPointerPressReleaseEvent);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(textBoxUsername, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(textBoxUsername, HandPointerLostCaptureEvent);
+
+			//	passwordBox
+			KinectRegion.AddHandPointerEnterHandler(passwordBox, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerLeaveHandler(passwordBox, HandPointerLeaveEvent);
+
+			KinectRegion.AddHandPointerPressHandler(passwordBox, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(passwordBox, HandPointerPressReleaseEvent);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(passwordBox, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(passwordBox, HandPointerLostCaptureEvent);
 
 			//	Keyboard: Register event handlers
 			//	1 - AddHandPointerEnterHandler
@@ -269,6 +292,14 @@ namespace fyp1_prototype
 			{
 				VisualStateManager.GoToState(btnLogin, "MouseOver", true);
 			}
+			else if (e.HandPointer.GetIsOver(textBoxUsername) && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				VisualStateManager.GoToState(textBoxUsername, "MouseOver", true);
+			}
+			else if (e.HandPointer.GetIsOver(passwordBox) && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				VisualStateManager.GoToState(passwordBox, "MouseOver", true);
+			}
 			else if (e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
 			{
 				VisualStateManager.GoToState((Button)sender, "MouseOver", true);
@@ -297,6 +328,14 @@ namespace fyp1_prototype
 			if (!e.HandPointer.GetIsOver(btnLogin) && e.HandPointer.IsPrimaryHandOfUser)
 			{
 				VisualStateManager.GoToState(btnLogin, "Normal", true);
+			}
+			if (!e.HandPointer.GetIsOver(textBoxUsername) && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				VisualStateManager.GoToState(textBoxUsername, "Normal", true);
+			}
+			if (!e.HandPointer.GetIsOver(passwordBox) && e.HandPointer.IsPrimaryHandOfUser)
+			{
+				VisualStateManager.GoToState(passwordBox, "Normal", true);
 			}
 			if (!e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
 			{
@@ -334,6 +373,24 @@ namespace fyp1_prototype
 				else if (e.HandPointer.GetIsOver(btnLogin))
 				{
 					e.HandPointer.Capture(btnLogin);
+					capturedHandPointer = e.HandPointer;
+					e.Handled = true;
+				}
+				else if (e.HandPointer.GetIsOver(textBoxUsername))
+				{
+					e.HandPointer.Capture(textBoxUsername);
+					capturedHandPointer = e.HandPointer;
+					e.Handled = true;
+				}
+				else if (e.HandPointer.GetIsOver(passwordBox))
+				{
+					e.HandPointer.Capture(passwordBox);
+					capturedHandPointer = e.HandPointer;
+					e.Handled = true;
+				}
+				else if (e.HandPointer.GetIsOver((Button)sender))
+				{
+					e.HandPointer.Capture((Button)sender);
 					capturedHandPointer = e.HandPointer;
 					e.Handled = true;
 				}
@@ -419,9 +476,140 @@ namespace fyp1_prototype
 
 					VisualStateManager.GoToState(btnLogin, "MouseOver", true);
 				}
+				else if (e.HandPointer.GetIsOver(textBoxUsername))
+				{
+					textBoxUsername.Focus();
+					VisualStateManager.GoToState(textBoxUsername, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(passwordBox))
+				{
+					passwordBox.Focus();
+					VisualStateManager.GoToState(passwordBox, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver((Button)sender))
+				{
+					Button button = (Button)sender;
+					if (button.Equals(btnA))
+					{
+						keyPressed = 'a';
+					}
+					else if (button.Equals(btnB))
+					{
+						keyPressed = 'b';
+					}
+					else if (button.Equals(btnC))
+					{
+						keyPressed = 'c';
+					}
+					else if (button.Equals(btnD))
+					{
+						keyPressed = 'd';
+					}
+					else if (button.Equals(btnE))
+					{
+						keyPressed = 'e';
+					}
+					else if (button.Equals(btnF))
+					{
+						keyPressed = 'f';
+					}
+					else if (button.Equals(btnG))
+					{
+						keyPressed = 'g';
+					}
+					else if (button.Equals(btnH))
+					{
+						keyPressed = 'h';
+					}
+					else if (button.Equals(btnI))
+					{
+						keyPressed = 'i';
+					}
+					else if (button.Equals(btnJ))
+					{
+						keyPressed = 'j';
+					}
+					else if (button.Equals(btnK))
+					{
+						keyPressed = 'k';
+					}
+					else if (button.Equals(btnL))
+					{
+						keyPressed = 'l';
+					}
+					else if (button.Equals(btnM))
+					{
+						keyPressed = 'm';
+					}
+					else if (button.Equals(btnN))
+					{
+						keyPressed = 'n';
+					}
+					else if (button.Equals(btnO))
+					{
+						keyPressed = 'o';
+					}
+					else if (button.Equals(btnP))
+					{
+						keyPressed = 'p';
+					}
+					else if (button.Equals(btnQ))
+					{
+						keyPressed = 'q';
+					}
+					else if (button.Equals(btnR))
+					{
+						keyPressed = 'r';
+					}
+					else if (button.Equals(btnS))
+					{
+						keyPressed = 's';
+					}
+					else if (button.Equals(btnT))
+					{
+						keyPressed = 't';
+					}
+					else if (button.Equals(btnU))
+					{
+						keyPressed = 'u';
+					}
+					else if (button.Equals(btnV))
+					{
+						keyPressed = 'v';
+					}
+					else if (button.Equals(btnW))
+					{
+						keyPressed = 'w';
+					}
+					else if (button.Equals(btnX))
+					{
+						keyPressed = 'x';
+					}
+					else if (button.Equals(btnY))
+					{
+						keyPressed = 'y';
+					}
+					else if (button.Equals(btnZ))
+					{
+						keyPressed = 'z';
+					}
+
+					if (textBoxUsername.IsFocused)
+					{
+						int usernameCaretIndex = textBoxUsername.CaretIndex;
+						textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
+						textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+					}
+					else if (passwordBox.IsFocused)
+					{
+						//	Due to security reason, caret index of passwordbox is not retrievable
+						//	Use TextCompositionManager to input at current caret
+						TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+					}
+				}
 				else
 				{
-					VisualStateManager.GoToState(btnCancelLogin, "Normal", true);
+					VisualStateManager.GoToState((Button)sender, "Normal", true);
 				}
 				e.HandPointer.Capture(null);
 				e.Handled = true;
