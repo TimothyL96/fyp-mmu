@@ -52,7 +52,7 @@ namespace fyp1_prototype
 
 		private int handCursorOn = -1;
 		private double handCursorOnLeftDistant;
-		private double handCursoronTopDistant;
+		private double handCursorOnTopDistant;
 		private const int itemWidth = 30;
 		private const int itemHeight = 30;
 		private const int itemChildrenStart = 8;
@@ -202,7 +202,7 @@ namespace fyp1_prototype
 			//	Start creating images
 			timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
 			timerCreateImage.Interval = TimeSpan.FromMilliseconds(2000);
-			//timerCreateImage.Start();
+			timerCreateImage.Start();
 			// new DroppingObjectManager().Start();
 		}
 
@@ -324,12 +324,13 @@ namespace fyp1_prototype
 							{
 								for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 								{
-									var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-									if (Canvas.GetLeft(handCursor) >= p.X && Canvas.GetLeft(handCursor) >= p.X + itemWidth && Canvas.GetTop(handCursor) >= p.Y && Canvas.GetTop(handCursor) >= itemHeight)
+									var childrenPoint = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
+									var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+									if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X + itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
 									{
 										handCursorOn = i;
-										handCursorOnLeftDistant = p.X - Canvas.GetLeft(canvas.Children[i]);
-										handCursoronTopDistant = p.Y - Canvas.GetTop(canvas.Children[i]);
+										handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
+										handCursorOnTopDistant = handCursorPoint.Y - childrenPoint.Y;
 										break;
 									}
 								}
@@ -338,8 +339,9 @@ namespace fyp1_prototype
 							//	Move the item with the hand cursor
 							if (handCursorOn != -1)
 							{
-								Canvas.SetLeft(canvas.Children[handCursorOn], Canvas.GetLeft(handCursor) + handCursorOnLeftDistant);
-								Canvas.SetTop(canvas.Children[handCursorOn], Canvas.GetTop(handCursor) + handCursoronTopDistant);
+								var p = handCursor.TranslatePoint(new Point(0, 0), canvas);
+								Canvas.SetLeft(canvas.Children[handCursorOn], p.X + handCursorOnLeftDistant);
+								Canvas.SetTop(canvas.Children[handCursorOn], p.Y + handCursorOnTopDistant);
 							}
 						}
 						else if (lastHandEvent == InteractionHandEventType.GripRelease)
@@ -544,6 +546,7 @@ namespace fyp1_prototype
 		//	Scale the X and Y to the screen size
 		private float ScaleVector(int length, float position)
 		{
+			return position * screenFactorX;
 			float value = (((((float)length) / 1f) / 2f) * position * 5) + (length / 2);
 			if (value > length)
 			{
@@ -589,8 +592,8 @@ namespace fyp1_prototype
 
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
-			Canvas.SetLeft(element, point.X - element.Width / 2);
-			Canvas.SetTop(element, point.Y - element.Height / 2);
+			Canvas.SetLeft(element, point.X - element.Width / 2.5);
+			Canvas.SetTop(element, point.Y - element.Height / 2.5);
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
