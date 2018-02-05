@@ -95,6 +95,13 @@ namespace fyp1_prototype
 			UpdateScoreLives();
 
 			DataContext = this;
+
+			//	Set up the font size and weight of score and lives
+			score.FontSize = 22;
+			lives.FontSize = 22;
+
+			score.FontWeight = FontWeights.Bold;
+			lives.FontWeight = FontWeights.Bold;
 		}
 
 		private void UpdateScoreLives()
@@ -241,7 +248,7 @@ namespace fyp1_prototype
 				{
 					Width = imageWidth,
 					Height = imageHeight,
-					Source = BitmapToImageSource(Properties.Resources.pepsi330ml)
+					//Source = BitmapToImageSource(Properties.Resources.pepsi330ml)
 				};
 
 				canvas.Children.Add(image);
