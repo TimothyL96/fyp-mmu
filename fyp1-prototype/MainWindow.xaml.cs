@@ -14,6 +14,7 @@ namespace fyp1_prototype
 	{
 		private KinectSensorChooser kinectSensorChooser;
 		private HandPointer capturedHandPointer;
+		private int playerGame = 1;
 
 		public MainWindow()
 		{
@@ -337,6 +338,8 @@ namespace fyp1_prototype
 				else if (e.HandPointer.GetIsOver(btn_loadGame))
 				{
 					VisualStateManager.GoToState(btn_loadGame, "MouseOver", true);
+
+
 				}
 				else if (e.HandPointer.GetIsOver(btn_highScores))
 				{
@@ -418,6 +421,21 @@ namespace fyp1_prototype
 		{
 			Register register = new Register(kinectSensorChooser);
 			register.ShowDialog();
+		}
+
+		private void loadGame(object sender, RoutedEventArgs e)
+		{
+			GameRepository gameRepository = new GameRepository();
+			if (gameRepository.GetGame(playerGame).Count == 0)
+			{
+				//	No game saved, display the dialog
+				LoadGame load = new LoadGame(kinectSensorChooser);
+				load.ShowDialog();
+			}
+			else
+			{
+				//	Load the game
+			}
 		}
 	}
 }
