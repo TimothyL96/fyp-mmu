@@ -25,7 +25,7 @@ namespace fyp1_prototype
 		KinectSensor sensor;
 		KinectSensorChooser kinectSensorChooser;
 
-		private int horizontalLength = 50;	//	X axis image drop starting point
+		private int horizontalLength = 50;  //	X axis image drop starting point
 		private int verticalLength = 10;
 
 		private int horizontalMaxLength = 750;
@@ -57,14 +57,27 @@ namespace fyp1_prototype
 		private const int itemHeight = 30;
 		private const int itemChildrenStart = 8;
 
-		private int currentLives = 3;
-		private int currentScore = 0;
+		private int currentScore;
+		private int currentLives;
+		public string CurrentScoreText
+		{
+			get { return (string)GetValue(CurrentScoreTextProperty); }
+			set { SetValue(CurrentScoreTextProperty, value); }
+		}
+		public string CurrentLivesText
+		{
+			get { return (string)GetValue(CurrentLivesTextProperty); }
+			set { SetValue(CurrentLivesTextProperty, value); }
+		}
+
 		Stopwatch watch = Stopwatch.StartNew();
 		private string currentTime;
 		private int playerID = 1;
 		private int itemGame = 1;
 
-		DroppingObjectManager _dom = new DroppingObjectManager();
+		//	Dpendency Property:
+		public static readonly DependencyProperty CurrentScoreTextProperty = DependencyProperty.Register("CurrentScoreText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Score: 0"));
+		public static readonly DependencyProperty CurrentLivesTextProperty = DependencyProperty.Register("CurrentLivesText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Lives: 0"));
 
 		//	Constructor
 		public DragDropImages()
@@ -77,13 +90,26 @@ namespace fyp1_prototype
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 			kinectSensorChooser.Start();
 
-			//	Bind score to currentScore
-			var scoreBinding = new Binding("") { Source = "Score: " + currentScore };
-			score.SetBinding(TextBlock.TextProperty, scoreBinding);
+			currentScore = 0;
+			currentLives = 3;
+			UpdateScoreLives();
 
-			//	Bind lives to currentLives
-			var livesBinding = new Binding("") { Source = "Lives: " + currentLives };
-			lives.SetBinding(TextBlock.TextProperty, livesBinding);
+			DataContext = this;
+		}
+
+		private void UpdateScoreLives()
+		{
+			CurrentScoreText = "Score: " + currentScore;
+			CurrentLivesText = "Lives: " + currentLives;
+		}
+
+		public void GetLoadGameData(int lives, string time, int score, int itemGame)
+		{
+			currentLives = lives;
+			currentTime = time;
+			currentScore = score;
+			this.itemGame = itemGame;
+			UpdateScoreLives();
 		}
 
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
@@ -364,16 +390,18 @@ namespace fyp1_prototype
 								{
 									//	Save Game
 									watch.Stop();
-									currentTime = watch.ToString();
 									GameRepository gro = new GameRepository();
 									if (gro.GetGame(playerID).Count == 0)
 									{
+										currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
 										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
 									}
 									else
 									{
+										currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
 										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
 									}
+									watch.Reset();
 									Close();
 								}
 							}
@@ -610,16 +638,18 @@ namespace fyp1_prototype
 		{
 			//	Save Game
 			watch.Stop();
-			currentTime = watch.ElapsedMilliseconds.ToString();
 			GameRepository gro = new GameRepository();
 			if (gro.GetGame(playerID).Count == 0)
 			{
+				currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
 				gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
 			}
 			else
 			{
+				currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
 				gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
 			}
+			watch.Reset();
 			Close();
 		}
 	}

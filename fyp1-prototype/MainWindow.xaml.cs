@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Data;
 using Microsoft.Kinect;
@@ -27,7 +28,7 @@ namespace fyp1_prototype
 			kinectSensorDisplay.KinectSensorChooser = kinectSensorChooser;
 
 			kinectSensorChooser.Start();
-
+			
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
 
@@ -325,10 +326,14 @@ namespace fyp1_prototype
 					VisualStateManager.GoToState(btn_singlePlayer, "MouseOver", true);
 
 					kinectSensorChooser.Stop();
-					DragDropImages dragDropImages = new DragDropImages
+					DragDropImages dragDropImages = new DragDropImages();
+
+					GameRepository gameRepository = new GameRepository();
+					if (gameRepository.GetGame(playerGame).Count > 0)
 					{
-						Owner = Application.Current.MainWindow
-					};
+						gameRepository.DeleteGame(playerGame);
+					}
+
 					dragDropImages.Show();
 				}
 				else if (e.HandPointer.GetIsOver(btn_multiPlayer))
@@ -398,10 +403,14 @@ namespace fyp1_prototype
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
 			kinectSensorChooser.Stop();
-			DragDropImages dragDropImages = new DragDropImages
+			DragDropImages dragDropImages = new DragDropImages();
+
+			GameRepository gameRepository = new GameRepository();
+			if (gameRepository.GetGame(playerGame).Count > 0)
 			{
-				Owner = Application.Current.MainWindow
-			};
+				gameRepository.DeleteGame(playerGame);
+			}
+
 			dragDropImages.Show();
 		}
 
@@ -426,15 +435,20 @@ namespace fyp1_prototype
 		private void loadGame(object sender, RoutedEventArgs e)
 		{
 			GameRepository gameRepository = new GameRepository();
-			if (gameRepository.GetGame(playerGame).Count == 0)
+			List<GameRepository.GameDto> getGame = gameRepository.GetGame(playerGame);
+			if (getGame.Count == 0)
 			{
 				//	No game saved, display the dialog
-				LoadGame load = new LoadGame(kinectSensorChooser);
-				load.ShowDialog();
+				CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+				customMessageBox.ShowText("You have no saved game!");
 			}
 			else
 			{
 				//	Load the game
+				kinectSensorChooser.Stop();
+				DragDropImages dragDropImages = new DragDropImages();
+				dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
+				dragDropImages.Show();
 			}
 		}
 	}

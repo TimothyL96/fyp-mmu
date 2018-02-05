@@ -294,13 +294,21 @@ namespace fyp1_prototype
 				{
 					Id = game.Id,
 					Lives = game.Lives,
-					PlayerGame = game.Lives,
+					PlayerGame = game.PlayerGame,
 					DateTime = game.DateTime,
 					Time = game.Time,
 					Score = game.Score,
 					ItemGame = game.ItemGame
 				})
 				.ToList();
+		}
+
+		public void DeleteGame(int playerGame)
+		{
+			DatabaseContext dc = new DatabaseContext();
+			Game gameToRemove = dc.Game.Where(p => p.PlayerGame == playerGame).FirstOrDefault();
+			dc.Game.Remove(gameToRemove);
+			dc.SaveChanges();
 		}
 	}
 

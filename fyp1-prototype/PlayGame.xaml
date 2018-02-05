@@ -12,8 +12,8 @@
 		<Grid>
 			<Canvas Name="canvas">
 				<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0" Click="back_Click">Back</Button>
-				<TextBlock Canvas.Left="350" Canvas.Top="30" Name="score">Score:</TextBlock>
-				<TextBlock Canvas.Right="100" Canvas.Top="30" Name="lives">Lives:</TextBlock>
+				<TextBlock Canvas.Left="350" Canvas.Top="30" Name="score" Text="{Binding CurrentScoreText}"/>
+				<TextBlock Canvas.Right="100" Canvas.Top="30" Name="lives" Text="{Binding CurrentLivesText}"/>
 				<Image Canvas.Left="500" Canvas.Bottom="500" Name="handCursor"	Stretch="Fill" Height="90"	Width="80"	Source="Resources/handWhite.png"	Panel.ZIndex="5"/>
 				<Image Canvas.Left="180" Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
 				<Image Canvas.Left="720" Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill" Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
