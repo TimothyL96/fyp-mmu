@@ -61,8 +61,8 @@ namespace fyp1_prototype
 		private int currentScore = 0;
 		Stopwatch watch = Stopwatch.StartNew();
 		private string currentTime;
-		private int playerID;
-		private int itemGame;
+		private int playerID = 1;
+		private int itemGame = 1;
 
 		DroppingObjectManager _dom = new DroppingObjectManager();
 
@@ -353,11 +353,14 @@ namespace fyp1_prototype
 						else if (hand.IsPressed)
 						{
 							//	If hand pressed the back, go back
+							var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+							var backPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+
 							//	Left and Right check:
-							if (back.Width + Canvas.GetLeft(back) >= Canvas.GetLeft(handCursor) && Canvas.GetLeft(handCursor) >= Canvas.GetLeft(back))
+							if (back.Width + backPoint.X >= handCursorPoint.X && handCursorPoint.X >= backPoint.X)
 							{
 								//	Top and Bottom check:
-								if (back.Height + Canvas.GetTop(back) >= Canvas.GetTop(handCursor) && Canvas.GetTop(handCursor) >= Canvas.GetTop(back))
+								if (back.Height + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y >= backPoint.Y)
 								{
 									//	Save Game
 									watch.Stop();
@@ -546,7 +549,6 @@ namespace fyp1_prototype
 		//	Scale the X and Y to the screen size
 		private float ScaleVector(int length, float position)
 		{
-			return position * screenFactorX;
 			float value = (((((float)length) / 1f) / 2f) * position * 5) + (length / 2);
 			if (value > length)
 			{
@@ -606,6 +608,18 @@ namespace fyp1_prototype
 		//	Temporary click function
 		private void back_Click(object sender, RoutedEventArgs e)
 		{
+			//	Save Game
+			watch.Stop();
+			currentTime = watch.ElapsedMilliseconds.ToString();
+			GameRepository gro = new GameRepository();
+			if (gro.GetGame(playerID).Count == 0)
+			{
+				gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
+			}
+			else
+			{
+				gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
+			}
 			Close();
 		}
 	}
