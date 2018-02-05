@@ -193,10 +193,10 @@
     <None Include="Resources\Image1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\orange\water-bottle.png" />
+    <Resource Include="Resources\orange\water-bottle.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\blue\blank-paper.png" />
+    <Resource Include="Resources\blue\blank-paper.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\test.png" />
@@ -238,7 +238,7 @@
     <Resource Include="Resources\blue\newspaper.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\blue\book.jpg" />
+    <Resource Include="Resources\blue\book.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\brown\glass-jar.png" />

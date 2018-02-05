@@ -26,16 +26,13 @@ namespace fyp1_prototype
 		KinectSensorChooser kinectSensorChooser;
 
 		private int horizontalLength = 50;  //	X axis image drop starting point
-		private int verticalLength = 10;
+		private int verticalLength = 5;
 
-		private int horizontalMaxLength = 750;
-		private int verticalMaxLength = 1750;
+		private int horizontalMaxLength;
+		private int verticalMaxLength;
 
 		private int imageWidth = 200;
 		private int imageHeight = 200;
-
-		private DispatcherTimer timerCreateImage = new DispatcherTimer();
-		private DispatcherTimer timerPushImage = new DispatcherTimer();
 
 		private Skeleton[] allSkeletons = new Skeleton[6];
 		private static int screenWidth;// (int)SystemParameters.PrimaryScreenWidth;
@@ -53,8 +50,8 @@ namespace fyp1_prototype
 		private int handCursorOn = -1;
 		private double handCursorOnLeftDistant;
 		private double handCursorOnTopDistant;
-		private const int itemWidth = 30;
-		private const int itemHeight = 30;
+		private int itemWidth = 30;
+		private int itemHeight = 30;
 		private const int itemChildrenStart = 8;
 
 		private int currentScore;
@@ -75,6 +72,18 @@ namespace fyp1_prototype
 		private int playerID = 1;
 		private int itemGame = 1;
 
+		//	Total item counts in database
+		private int totalItemCount = 0;
+
+		//	Flag if after 3 seconds will run the game
+		private int countdownFlag = 3;
+
+		//	DipatchTimer
+		DispatcherTimer timerCountdown = new DispatcherTimer();
+
+		//	ItemsRepository
+		ItemsRepository itemsRepository = new ItemsRepository();
+
 		//	Dpendency Property:
 		public static readonly DependencyProperty CurrentScoreTextProperty = DependencyProperty.Register("CurrentScoreText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Score: 0"));
 		public static readonly DependencyProperty CurrentLivesTextProperty = DependencyProperty.Register("CurrentLivesText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Lives: 0"));
@@ -88,7 +97,6 @@ namespace fyp1_prototype
 
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
-			kinectSensorChooser.Start();
 
 			currentScore = 0;
 			currentLives = 3;
@@ -97,11 +105,20 @@ namespace fyp1_prototype
 			DataContext = this;
 
 			//	Set up the font size and weight of score and lives
+			//	Fontsize
 			score.FontSize = 22;
 			lives.FontSize = 22;
 
+			//	Fontweight
 			score.FontWeight = FontWeights.Bold;
 			lives.FontWeight = FontWeights.Bold;
+
+			//	Adjust the item width
+			itemWidth = imageWidth;
+			itemHeight = imageHeight;
+
+			//	Get total item counts
+			totalItemCount = itemsRepository.GetCount();
 		}
 
 		private void UpdateScoreLives()
@@ -166,16 +183,36 @@ namespace fyp1_prototype
 		
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			kinectSensorChooser.Start();
+
 			//	Fix the orange bin to the middle of blue bin and brown bin
 			var brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
 			var blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
 			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
 
-			screenWidth = (int)SystemParameters.PrimaryScreenWidth;
-			screenHeight = (int)SystemParameters.PrimaryScreenHeight;
+			screenWidth = (int)SystemParameters.FullPrimaryScreenWidth;
+			screenHeight = (int)SystemParameters.FullPrimaryScreenHeight;
 
 			screenFactorX = screenWidth / 640;
 			screenFactorY = screenHeight / 480;
+
+			//	Setup countdown text position
+			Canvas.SetLeft(countdown, ((screenWidth / 2) - (countdown.ActualWidth / 2)));
+			Canvas.SetTop(countdown, ((screenHeight / 2) - (countdown.ActualHeight / 2)));
+
+			//	Set vertical and horizontal max length
+			verticalMaxLength = screenWidth - itemWidth;
+			horizontalMaxLength = screenHeight - itemHeight - (int)blueBin.ActualHeight;
+
+			//	test
+			//	Delay one second
+			System.Threading.Thread.Sleep(1000);
+
+			//	Start counting down
+			timerCountdown.Tick += new EventHandler(Tick_Countdown);
+			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
+			countdown.Visibility = Visibility.Visible;
+			timerCountdown.Start();
 		}
 
 		public interface IInteractionClient
@@ -232,25 +269,56 @@ namespace fyp1_prototype
 			if (!sensor.IsRunning)
 				sensor.Start();
 
-			//	Start creating images
-			timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
-			timerCreateImage.Interval = TimeSpan.FromMilliseconds(2000);
-			timerCreateImage.Start();
-			// new DroppingObjectManager().Start();
+			//	Delay one second
+			System.Threading.Thread.Sleep(1000);
+
+			//	Start counting down
+			timerCountdown.Tick += new EventHandler(Tick_Countdown);
+			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
+			countdown.Visibility = Visibility.Visible;
+			timerCountdown.Start();
+		}
+		
+		private void Tick_Countdown(object source, EventArgs e)
+		{
+			countdownFlag--;
+			countdown.Text = countdownFlag.ToString();
+
+			if (countdownFlag == 0)
+			{
+				//	Start counting down
+				DispatcherTimer timerCreateImage = new DispatcherTimer();
+				timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
+				timerCreateImage.Interval = TimeSpan.FromMilliseconds(1500);
+				timerCreateImage.Start();
+				timerCountdown.Stop();
+				countdown.Visibility = Visibility.Hidden;
+			}
 		}
 
 		private void Tick_CreateImage(object source, EventArgs e)
 		{
+			//	Create new image
 			Image image;
+
+			//	Generate random number for the random recycleable item from the database
+			Random random = new Random();
+			itemGame = random.Next(1, 10);
+
+			//	Get the specific item
+			ItemsRepository.ItemsDto itemsDto = itemsRepository.GetItem(itemGame)[0];
+
+			//test
+			back.Content = itemsDto.Item_Image_Link;
+
 			Application.Current.Dispatcher.Invoke(delegate
 			{
 				image = new Image
 				{
 					Width = imageWidth,
 					Height = imageHeight,
-					Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative))
-					//Source = BitmapToImageSource(Properties.Resources.pepsi330ml)
-					//new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative))
+					Source = new BitmapImage(new Uri(itemsDto.Item_Image_Link, UriKind.Relative)),
+					Tag = itemsDto.Item_Type,
 				};
 
 				canvas.Children.Add(image);
@@ -259,12 +327,13 @@ namespace fyp1_prototype
 
 				horizontalLength += 150;
 
-				if (horizontalLength > verticalMaxLength) //1540 > width size is 200
-					horizontalLength = 50;	//Reset to the most left of screen
+				if (horizontalLength >= verticalMaxLength)
+					horizontalLength = 50;  //Reset to the most left of screen
 
 				//	Start pushing images down
+				DispatcherTimer timerPushImage = new DispatcherTimer();
 				timerPushImage.Tick += new EventHandler(Tick_PushImage);
-				timerPushImage.Interval = TimeSpan.FromMilliseconds(50);
+				timerPushImage.Interval = TimeSpan.FromMilliseconds(100);
 				timerPushImage.Start();
 			});
 		}
@@ -276,12 +345,13 @@ namespace fyp1_prototype
 				if (i == handCursorOn)
 					continue;
 
-				var p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
+				var itemObject = canvas.Children[i];
+				var p = itemObject.TranslatePoint(new Point(0, 0), canvas);
+				//Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
+				Canvas.SetTop(itemObject, p.Y);
 
 				//	Define speed / difficulty
-				if (canvas.Children.Count == 9)
-					verticalLength = 5;
+				verticalLength = 6;
 
 				//	If the image touched edge of window then stop it
 				if (Canvas.GetTop(canvas.Children[i]) > horizontalMaxLength) //840 > height size is 200
@@ -300,129 +370,101 @@ namespace fyp1_prototype
      
 				iaf.CopyInteractionDataTo(_userInfos);
 			}
-     
-			StringBuilder dump = new StringBuilder();
-     
-			var hasUser = false;
+    
 			foreach (var userInfo in _userInfos)
 			{
 				var userID = userInfo.SkeletonTrackingId;
 				if (userID == 0)
 					continue;
      
-				hasUser = true;
-				dump.AppendLine("User ID = " + userID);
-				dump.AppendLine("  Hands: ");
 				var hands = userInfo.HandPointers;
-				if (hands.Count == 0)
-					dump.AppendLine("    No hands");
-				else
+				foreach (var hand in hands)
 				{
-					foreach (var hand in hands)
+					var lastHandEvents = hand.HandType == InteractionHandType.Left
+												? _lastLeftHandEvents
+												: _lastRightHandEvents;
+					if (lastHandEvents == _lastLeftHandEvents)
+						continue;
+
+					if (hand.HandEventType != InteractionHandEventType.None)
+						lastHandEvents[userID] = hand.HandEventType;
+     
+					var lastHandEvent = lastHandEvents.ContainsKey(userID)
+											? lastHandEvents[userID]
+											: InteractionHandEventType.None;
+					//	TODO:
+					//	Lives & Score
+					//	Scale to screensize
+					//	Randomized the item drops
+
+					if (lastHandEvent == InteractionHandEventType.Grip)
 					{
-						var lastHandEvents = hand.HandType == InteractionHandType.Left
-													? _lastLeftHandEvents
-													: _lastRightHandEvents;
-						if (lastHandEvents == _lastLeftHandEvents)
-							continue;
+						//	If hand gripped, show gripped cursor and move the item with the cursor
+						handCursor.Source = new BitmapImage(new Uri("Resources/pointerWhite.png", UriKind.Relative));
 
-						if (hand.HandEventType != InteractionHandEventType.None)
-							lastHandEvents[userID] = hand.HandEventType;
-     
-						var lastHandEvent = lastHandEvents.ContainsKey(userID)
-												? lastHandEvents[userID]
-												: InteractionHandEventType.None;
-     
-						dump.AppendLine();
-						dump.AppendLine("    HandType: " + hand.HandType);
-						dump.AppendLine("    HandEventType: " + hand.HandEventType);
-						dump.AppendLine("    LastHandEventType: " + lastHandEvent);
-						dump.AppendLine("    IsActive: " + hand.IsActive);
-						dump.AppendLine("    IsPrimaryForUser: " + hand.IsPrimaryForUser);
-						dump.AppendLine("    IsInteractive: " + hand.IsInteractive);
-						dump.AppendLine("    PressExtent: " + hand.PressExtent.ToString("N3"));
-						dump.AppendLine("    IsPressed: " + hand.IsPressed);
-						dump.AppendLine("    IsTracked: " + hand.IsTracked);
-						dump.AppendLine("    X: " + hand.X.ToString("N3"));
-						dump.AppendLine("    Y: " + hand.Y.ToString("N3"));
-						dump.AppendLine("    RawX: " + hand.RawX.ToString("N3"));
-						dump.AppendLine("    RawY: " + hand.RawY.ToString("N3"));
-						dump.AppendLine("    RawZ: " + hand.RawZ.ToString("N3"));
-						
-						if (lastHandEvent == InteractionHandEventType.Grip)
+						//	Find the item number of which the hand cursor is on
+						if (handCursorOn == -1)
 						{
-							//	If hand gripped, show gripped cursor and move the item with the cursor
-							handCursor.Source = new BitmapImage(new Uri("Resources/pointerWhite.png", UriKind.Relative));
-
-							//	Find the item number of which the hand cursor is on
-							if (handCursorOn == -1)
+							for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 							{
-								for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
+								var childrenPoint = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
+								var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+								if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X + itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
 								{
-									var childrenPoint = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-									var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
-									if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X + itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
-									{
-										handCursorOn = i;
-										handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
-										handCursorOnTopDistant = handCursorPoint.Y - childrenPoint.Y;
-										break;
-									}
+									handCursorOn = i;
+									handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
+									handCursorOnTopDistant = handCursorPoint.Y - childrenPoint.Y;
+									break;
 								}
 							}
-
-							//	Move the item with the hand cursor
-							if (handCursorOn != -1)
-							{
-								var p = handCursor.TranslatePoint(new Point(0, 0), canvas);
-								Canvas.SetLeft(canvas.Children[handCursorOn], p.X + handCursorOnLeftDistant);
-								Canvas.SetTop(canvas.Children[handCursorOn], p.Y + handCursorOnTopDistant);
-							}
 						}
-						else if (lastHandEvent == InteractionHandEventType.GripRelease)
-						{
-							//	If hand grip released, show normal cursor
-							handCursor.Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative));
-							handCursorOn = -1;
-						}
-						else if (hand.IsPressed)
-						{
-							//	If hand pressed the back, go back
-							var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
-							var backPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
 
-							//	Left and Right check:
-							if (back.Width + backPoint.X >= handCursorPoint.X && handCursorPoint.X >= backPoint.X)
+						//	Move the item with the hand cursor
+						if (handCursorOn != -1)
+						{
+							var p = handCursor.TranslatePoint(new Point(0, 0), canvas);
+							Canvas.SetLeft(canvas.Children[handCursorOn], p.X + handCursorOnLeftDistant);
+							Canvas.SetTop(canvas.Children[handCursorOn], p.Y + handCursorOnTopDistant);
+						}
+					}
+					else if (lastHandEvent == InteractionHandEventType.GripRelease)
+					{
+						//	If hand grip released, show normal cursor
+						handCursor.Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative));
+						handCursorOn = -1;
+					}
+					else if (hand.IsPressed)
+					{
+						//	If hand pressed the back, go back
+						var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+						var backPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+
+						//	Left and Right check:
+						if (back.Width + backPoint.X >= handCursorPoint.X && handCursorPoint.X >= backPoint.X)
+						{
+							//	Top and Bottom check:
+							if (back.Height + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y >= backPoint.Y)
 							{
-								//	Top and Bottom check:
-								if (back.Height + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y >= backPoint.Y)
+								//	Save Game
+								watch.Stop();
+								GameRepository gro = new GameRepository();
+								if (gro.GetGame(playerID).Count == 0)
 								{
-									//	Save Game
-									watch.Stop();
-									GameRepository gro = new GameRepository();
-									if (gro.GetGame(playerID).Count == 0)
-									{
-										currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
-										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
-									}
-									else
-									{
-										currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
-										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
-									}
-									watch.Reset();
-									Close();
+									currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+									gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
 								}
+								else
+								{
+									currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
+									gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
+								}
+								watch.Reset();
+								Close();
 							}
 						}
 					}
 				}
-     
-				tb.Text = dump.ToString();
 			}
-     
-			if (!hasUser)
-				tb.Text = "No user detected.";
 		}
 
 		private void SensorOnSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs skeletonFrameReadyEventArgs)

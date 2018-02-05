@@ -18,9 +18,8 @@
 				<Image Canvas.Left="180" Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
 				<Image Canvas.Left="720" Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill" Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
 				<Image Canvas.Right="180" Canvas.Bottom="0"	Name="brownBin"		Stretch="Fill" Height="160" Width="140" Source="Resources/brownbin.png"		Panel.ZIndex="3"/>
-				<Viewbox>
-					<TextBlock Name="tb" Text="Initializing..."/>
-				</Viewbox>
+
+				<TextBlock Name="countdown" Text="3" FontSize="396" FontWeight="Bold" Width="auto" Height="auto" Visibility="Hidden"/>
 			</Canvas>
 		</Grid>
 	</Grid>
