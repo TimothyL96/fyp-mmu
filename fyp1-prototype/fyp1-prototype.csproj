@@ -193,10 +193,10 @@
     <None Include="Resources\Image1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\water-bottle.png" />
+    <None Include="Resources\orange\water-bottle.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\blank-paper.png" />
+    <None Include="Resources\blue\blank-paper.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\test.png" />
@@ -207,7 +207,7 @@
     <Resource Include="Resources\orangebin.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\pepsi.png" />
+    <Resource Include="Resources\orange\pepsi.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\handCursor.png" />
@@ -232,10 +232,16 @@
     <Resource Include="Resources\pointerWhite.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\beer-glass.png" />
-    <Resource Include="Resources\cardboard.png" />
-    <Resource Include="Resources\milk-carton.png" />
-    <Resource Include="Resources\newspaper.png" />
+    <Resource Include="Resources\brown\beer-glass.png" />
+    <Resource Include="Resources\blue\cardboard.png" />
+    <Resource Include="Resources\orange\milk-carton.png" />
+    <Resource Include="Resources\blue\newspaper.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\blue\book.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\brown\glass-jar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

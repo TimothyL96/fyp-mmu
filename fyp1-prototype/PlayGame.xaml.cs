@@ -248,7 +248,9 @@ namespace fyp1_prototype
 				{
 					Width = imageWidth,
 					Height = imageHeight,
+					Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative))
 					//Source = BitmapToImageSource(Properties.Resources.pepsi330ml)
+					//new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative))
 				};
 
 				canvas.Children.Add(image);
