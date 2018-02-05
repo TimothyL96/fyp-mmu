@@ -234,7 +234,7 @@
   <ItemGroup>
     <Resource Include="Resources\brown\beer-glass.png" />
     <Resource Include="Resources\blue\cardboard.png" />
-    <Resource Include="Resources\orange\milk-carton.png" />
+    <Resource Include="Resources\blue\milk-carton.png" />
     <Resource Include="Resources\blue\newspaper.png" />
   </ItemGroup>
   <ItemGroup>

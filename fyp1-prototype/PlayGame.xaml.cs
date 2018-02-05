@@ -25,8 +25,10 @@ namespace fyp1_prototype
 		KinectSensor sensor;
 		KinectSensorChooser kinectSensorChooser;
 
-		private int horizontalLength = 50;  //	X axis image drop starting point
-		private int verticalLength = 5;
+		private const int horizontalLengthStart = 150;
+		private int horizontalLength = 150;  //	X axis image drop starting point
+		private int horizontalLengthChange = 150;
+		private int verticalLength = 10;
 
 		private int horizontalMaxLength;
 		private int verticalMaxLength;
@@ -80,6 +82,8 @@ namespace fyp1_prototype
 
 		//	DipatchTimer
 		DispatcherTimer timerCountdown = new DispatcherTimer();
+		DispatcherTimer timerCreateImage = new DispatcherTimer();
+		DispatcherTimer timerPushImage = new DispatcherTimer();
 
 		//	ItemsRepository
 		ItemsRepository itemsRepository = new ItemsRepository();
@@ -201,8 +205,8 @@ namespace fyp1_prototype
 			Canvas.SetTop(countdown, ((screenHeight / 2) - (countdown.ActualHeight / 2)));
 
 			//	Set vertical and horizontal max length
-			verticalMaxLength = screenWidth - itemWidth;
-			horizontalMaxLength = screenHeight - itemHeight - (int)blueBin.ActualHeight;
+			verticalMaxLength = screenHeight - itemHeight;
+			horizontalMaxLength = screenWidth - itemWidth;
 
 			//	test
 			//	Delay one second
@@ -287,12 +291,16 @@ namespace fyp1_prototype
 			if (countdownFlag == 0)
 			{
 				//	Start counting down
-				DispatcherTimer timerCreateImage = new DispatcherTimer();
 				timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
 				timerCreateImage.Interval = TimeSpan.FromMilliseconds(1500);
 				timerCreateImage.Start();
 				timerCountdown.Stop();
 				countdown.Visibility = Visibility.Hidden;
+
+				//	Start pushing images down
+				timerPushImage.Tick += new EventHandler(Tick_PushImage);
+				timerPushImage.Interval = TimeSpan.FromMilliseconds(50);
+				timerPushImage.Start();
 			}
 		}
 
@@ -308,9 +316,6 @@ namespace fyp1_prototype
 			//	Get the specific item
 			ItemsRepository.ItemsDto itemsDto = itemsRepository.GetItem(itemGame)[0];
 
-			//test
-			back.Content = itemsDto.Item_Image_Link;
-
 			Application.Current.Dispatcher.Invoke(delegate
 			{
 				image = new Image
@@ -323,18 +328,13 @@ namespace fyp1_prototype
 
 				canvas.Children.Add(image);
 				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], horizontalLength);
-				var p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
+				Point p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
 
-				horizontalLength += 150;
+				//	Randomize
+				horizontalLength += horizontalLengthChange;
 
-				if (horizontalLength >= verticalMaxLength)
-					horizontalLength = 50;  //Reset to the most left of screen
-
-				//	Start pushing images down
-				DispatcherTimer timerPushImage = new DispatcherTimer();
-				timerPushImage.Tick += new EventHandler(Tick_PushImage);
-				timerPushImage.Interval = TimeSpan.FromMilliseconds(100);
-				timerPushImage.Start();
+				if (horizontalLength >= horizontalMaxLength)
+					horizontalLength = horizontalLengthStart;  //Reset to the most left of screen
 			});
 		}
 
@@ -344,17 +344,16 @@ namespace fyp1_prototype
 			{
 				if (i == handCursorOn)
 					continue;
-
-				var itemObject = canvas.Children[i];
-				var p = itemObject.TranslatePoint(new Point(0, 0), canvas);
-				//Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
-				Canvas.SetTop(itemObject, p.Y);
+				
+				Point p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
+				Canvas.SetTop(canvas.Children[i], p.Y);
+				//todo
 
 				//	Define speed / difficulty
-				verticalLength = 6;
+				//verticalLength = 150;
 
 				//	If the image touched edge of window then stop it
-				if (Canvas.GetTop(canvas.Children[i]) > horizontalMaxLength) //840 > height size is 200
+				if (Canvas.GetTop(canvas.Children[i]) > verticalMaxLength)
 				{
 					canvas.Children.Remove(canvas.Children[i]);
 				}
@@ -396,6 +395,7 @@ namespace fyp1_prototype
 					//	Lives & Score
 					//	Scale to screensize
 					//	Randomized the item drops
+					//	items drop horizontal & vertical
 
 					if (lastHandEvent == InteractionHandEventType.Grip)
 					{
@@ -679,8 +679,12 @@ namespace fyp1_prototype
 
 		private void Window_Closing(object sender, EventArgs e)
 		{
+			timerCreateImage.Stop();
+			timerPushImage.Stop();
+
 			if (sensor != null)
 				sensor.Stop();
+
 			kinectSensorChooser.Stop();
 		}
 
