@@ -246,7 +246,9 @@ namespace fyp1_prototype
 	{
 		public GameRepository()
 		{
-
+			DatabaseContext dc = new DatabaseContext();
+			dc.Database.ExecuteSqlCommand("ALTER TABLE game AUTO_INCREMENT = 1;");
+			dc.SaveChanges();
 		}
 
 		public class GameDto

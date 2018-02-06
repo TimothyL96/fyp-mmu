@@ -273,7 +273,7 @@ namespace fyp1_prototype
 		{
 			CurrentScoreText = "Score: " + currentScore;
 
-			//	Update lives tqext according to game mode
+			//	Update lives text according to game mode
 			if (gameMode == 0)
 			{
 				CurrentLivesText = "Lives: " + currentLives;
@@ -282,9 +282,6 @@ namespace fyp1_prototype
 			{
 				CurrentLivesText = "Lives: -";
 			}
-
-			//	Get elapsed time from Stopwatch and convert to seconds
-			currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
 
 			//	Update time text according to game mode
 			if (gameMode == 0)
@@ -435,6 +432,12 @@ namespace fyp1_prototype
 
 		private void Tick_PushImage(object source, EventArgs e)
 		{
+			//	Get the playing time
+			currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+
+			//	Update the score
+			UpdateScoreLivesTime();
+
 			for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 			{
 				if (i == handCursorOn)
@@ -442,7 +445,6 @@ namespace fyp1_prototype
 				
 				Point p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
-				//todo
 
 				//	Define speed / difficulty
 				verticalLength = 10;
@@ -473,6 +475,7 @@ namespace fyp1_prototype
 					continue;
      
 				var hands = userInfo.HandPointers;
+
 				foreach (var hand in hands)
 				{
 					var lastHandEvents = hand.HandType == InteractionHandType.Left
@@ -491,7 +494,14 @@ namespace fyp1_prototype
 					//	Lives & Score
 					//	Scale to screensize
 					//	Randomized the item drops
-					//	items drop horizontal & vertical
+					//	items drop vertical speed
+					//	Bind time, score and live
+
+					//	Get the playing time
+					currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+
+					//	Update the score
+					UpdateScoreLivesTime();
 
 					if (lastHandEvent == InteractionHandEventType.Grip)
 					{
@@ -715,7 +725,8 @@ namespace fyp1_prototype
 
 				Skeleton first = (from s in allSkeletons
 								  where s.TrackingState == SkeletonTrackingState.Tracked
-								  select s).FirstOrDefault();
+								  select s).ElementAt(0);
+				//.FirstOrDefault();
 
 				return first;
 			}
@@ -738,7 +749,6 @@ namespace fyp1_prototype
 
 			Canvas.SetLeft(element, scaledJoint.Position.X);
 			Canvas.SetTop(element, scaledJoint.Position.Y);
-
 		}
 
 		//	Scale the X and Y to the screen size
@@ -822,8 +832,7 @@ namespace fyp1_prototype
 					currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
 					gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 				}
-				watch.Reset();
-				
+				watch.Reset();	
 			}
 			
 			//	Close the game window
