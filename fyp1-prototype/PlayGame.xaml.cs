@@ -84,6 +84,9 @@ namespace fyp1_prototype
 		//	Timer to record the time
 		Stopwatch watch = Stopwatch.StartNew();
 
+		//	Previously elapsed time in saved game
+		private long previousTime = 0;
+
 		//	String to display current score, lives and time on the screen
 		public string CurrentScoreText
 		{
@@ -185,6 +188,7 @@ namespace fyp1_prototype
 			watch.Reset();
 		}
 	
+		//	When window is loaded
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			//	Start the Kinect sensor
@@ -223,6 +227,7 @@ namespace fyp1_prototype
 			timerCountdown.Start();
 		}
 
+		//	When Kinect is started or stopped
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
 		{
 			bool error = false;
@@ -283,6 +288,16 @@ namespace fyp1_prototype
 				CurrentLivesText = "Lives: -";
 			}
 
+			//	Get the playing time
+			if (watch.IsRunning)
+			{
+				currentTime = previousTime + watch.ElapsedMilliseconds / 1000;
+			}
+			else
+			{
+				currentTime = previousTime;
+			}
+
 			//	Update time text according to game mode
 			if (gameMode == 0)
 			{
@@ -290,7 +305,7 @@ namespace fyp1_prototype
 			}
 			else if (gameMode == 1)
 			{
-				CurrentTimeText = "Time: " + Convert.ToString((60 - Convert.ToInt64(currentTime)));
+				CurrentTimeText = "Time: " + Convert.ToString((60 - Convert.ToInt32(currentTime)));
 			}
 		}
 
@@ -298,7 +313,7 @@ namespace fyp1_prototype
 		public void GetLoadGameData(int lives, int time, int score, int itemGame)
 		{
 			currentLives = lives;
-			currentTime = time;
+			previousTime = time;
 			currentScore = score;
 			this.itemGame = itemGame;
 			
@@ -334,7 +349,7 @@ namespace fyp1_prototype
 				return result;
 			}
 		}
-
+		
 		private void InitializeSkeleton()
 		{
 			if (DesignerProperties.GetIsInDesignMode(this))
@@ -431,17 +446,8 @@ namespace fyp1_prototype
 		}
 
 		private void Tick_PushImage(object source, EventArgs e)
-		{
-			//	Get the playing time
-			if (gameMode == 0)
-			{
-				currentTime = watch.ElapsedMilliseconds / 1000;
-			}
-			else if (gameMode == 1)
-			{
-
-			}
-
+		{			
+			//	testtt
 			//	Update the score
 			UpdateScoreLivesTime();
 
@@ -503,9 +509,6 @@ namespace fyp1_prototype
 					//	Randomized the item drops
 					//	items drop vertical speed
 					//	Bind time, score and live
-
-					//	Get the playing time
-					currentTime = watch.ElapsedMilliseconds / 1000;
 
 					//	Update the score
 					UpdateScoreLivesTime();
@@ -829,14 +832,13 @@ namespace fyp1_prototype
 			{
 				watch.Stop();
 				GameRepository gro = new GameRepository();
+				currentTime = previousTime + watch.ElapsedMilliseconds / 1000;
 				if (gro.GetGame(playerID).Count == 0)
 				{
-					currentTime = watch.ElapsedMilliseconds / 1000;
 					gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 				}
 				else
 				{
-					currentTime = Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000;
 					gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 				}
 				watch.Reset();	
