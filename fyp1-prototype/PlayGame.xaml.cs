@@ -120,6 +120,8 @@ namespace fyp1_prototype
 		DispatcherTimer timerCountdown = new DispatcherTimer();
 		DispatcherTimer timerCreateImage = new DispatcherTimer();
 		DispatcherTimer timerPushImage = new DispatcherTimer();
+		DispatcherTimer timerGameEnd = new DispatcherTimer();
+		DispatcherTimer timerGameBack = new DispatcherTimer();
 
 		//	ItemsRepository
 		ItemsRepository itemsRepository = new ItemsRepository();
@@ -520,14 +522,75 @@ namespace fyp1_prototype
 					}
 					else if (gameMode == 0)
 					{
-						//	When the item never touches the bin but on the floor
+						//	When the item never touches the bin but on the floor, easier to lose if uncommented
 						//currentLives--;
 					}
 
 					//	Update the score
 					UpdateScoreLivesTime();
 				}
+
+				//	testtt
+				//	Check if game ends
+				if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60))
+				{
+					//	Game ends
+
+					//	Stop the timers
+					timerCreateImage.Stop();
+					timerPushImage.Stop();
+					watch.Stop();
+
+					//	Display text
+					countdown.Visibility = Visibility.Visible;
+					countdown.Text = "END";
+
+					//	Delay three second and display score
+					timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
+					timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
+					timerGameEnd.Start();
+				}
 			}
+		}
+
+		//	Display final score after game end
+		private void Tick_GameEnd(object source, EventArgs e)
+		{
+			//	Stop the one time timer
+			timerGameEnd.Stop();
+
+			//	Update the score
+			ScoreRepository scoreRepository = new ScoreRepository();
+			scoreRepository.AddScore(currentScore, playerID);
+
+			//	Delete previous saved game
+			GameRepository gameRepository = new GameRepository();
+			if (gameRepository.GetGame(playerID).Count > 0)
+			{
+				gameRepository.DeleteGame(playerID);
+			}
+
+			//	Display the score
+			countdown.Text = "FINAL SCORE:\n" + currentScore;
+			countdown.FontSize = 256;
+			countdown.Width = screenWidth;
+			Canvas.SetLeft(countdown, 0);
+			Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
+
+			//	Auto back after 5 seconds
+			timerGameBack.Tick += new EventHandler(Tick_GameBack);
+			timerGameBack.Interval = TimeSpan.FromMilliseconds(5000);
+			timerGameBack.Start();
+		}
+
+		//	Close the game 5 seconds after game end
+		private void Tick_GameBack(object source, EventArgs e)
+		{
+			//	Stop the one time timer
+			timerGameBack.Stop();
+
+			//	Close the window
+			Close();
 		}
 
 		private void InteractionStreamOnInteractionFrameReady(object sender, InteractionFrameReadyEventArgs args)
@@ -566,9 +629,34 @@ namespace fyp1_prototype
 					//	Scale to screensize
 					//	Randomized the item drops
 					//	items drop vertical speed
+					//	add more items
+					//	high score different game modes
+					//	high score ordering
 
 					//	Update the time
 					UpdateScoreLivesTime();
+
+					//	Check if game ends
+					if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60))
+					{
+						//	Game ends
+
+						//	Stop the timers
+						timerCreateImage.Stop();
+						timerPushImage.Stop();
+						watch.Stop();
+
+						//	Display text
+						countdown.Visibility = Visibility.Visible;
+						countdown.Text = "END";
+						Canvas.SetTop(countdown, (screenHeight / 2) - (countdown.ActualHeight / 2));
+						Canvas.SetLeft(countdown, (screenWidth / 2) - (countdown.ActualWidth / 2));
+
+						//	Delay three second
+						timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
+						timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
+						timerGameEnd.Start();
+					}
 
 					if (lastHandEvent == InteractionHandEventType.Grip)
 					{

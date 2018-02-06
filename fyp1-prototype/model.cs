@@ -347,6 +347,9 @@ namespace fyp1_prototype
 				PlayerScore = playerID
 			});
 			dc.SaveChanges();
+
+			//	Update best score at player table
+			UpdatePersonalBest();
 		}
 
 		public List<ScoreDto> GetAllScore()
@@ -361,6 +364,11 @@ namespace fyp1_prototype
 					PlayerScore = score.PlayerScore
 				})
 				.ToList();
+		}
+
+		public void UpdatePersonalBest()
+		{
+
 		}
 	}
 
