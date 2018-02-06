@@ -155,6 +155,9 @@ namespace fyp1_prototype
 			//	Set the game mode
 			this.gameMode = gameMode;
 
+			//	Reset the stopwatch
+			watch.Reset();
+			
 			//	Default value for the score, lives and time
 			currentScore = 0;
 			currentLives = 3;
@@ -183,9 +186,6 @@ namespace fyp1_prototype
 
 			//	Get total item counts
 			totalItemCount = itemsRepository.GetCount();
-
-			//	Reset the stopwatch
-			watch.Reset();
 		}
 	
 		//	When window is loaded
@@ -213,7 +213,7 @@ namespace fyp1_prototype
 
 			//	Set vertical and horizontal max length
 			//	Vertical max length is screen height minus recycle bin height minus 25% of a item height
-			verticalMaxLength = screenHeight - (int)blueBin.ActualHeight - (int)(itemHeight * 0.25);
+			verticalMaxLength = screenHeight - (int)blueBin.ActualHeight - (int)(itemHeight * 0.75);
 			horizontalMaxLength = screenWidth - itemWidth;
 
 			//	test - start the game
@@ -446,27 +446,69 @@ namespace fyp1_prototype
 		}
 
 		private void Tick_PushImage(object source, EventArgs e)
-		{			
-			//	testtt
+		{
+			//	test
 			//	Update the score
 			UpdateScoreLivesTime();
 
+			//	For every item
 			for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 			{
+				//	Skip if this item is being gripped
 				if (i == handCursorOn)
 					continue;
-				
-				Point p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
+
+				//	Save the item object for easier accessing
+				Image itemObject = (Image)canvas.Children[i];
+
+				//	Get the points
+				Point itemPoint = itemObject.TranslatePoint(new Point(0, 0), canvas);
+				Point blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
+				Point orangeBinPoint = orangeBin.TranslatePoint(new Point(0, 0), canvas);
+				Point brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
+
+				//	Push the image down
+				Canvas.SetTop(itemObject, itemPoint.Y + verticalLength);
 
 				//	Define speed / difficulty
 				verticalLength = 10;
 
-				//	If the image touched any recycle bin then stop it
-				if (Canvas.GetTop(canvas.Children[i]) >= verticalMaxLength)
-				{
+				//	Update the item point
+				itemPoint = itemObject.TranslatePoint(new Point(0, 0), canvas);
 
-					canvas.Children.Remove(canvas.Children[i]);
+				//	If the image passed the max vertical length then stop it
+				if (itemPoint.Y >= verticalMaxLength)
+				{
+					canvas.Children.Remove(itemObject);
+
+					//	Check if item touches any bins
+					if (itemPoint.X + itemHeight * 0.75 >= blueBinPoint.Y || itemPoint.X + itemHeight * 0.25 <= blueBinPoint.Y + blueBin.ActualWidth)
+					{
+						//	Blue bin. Tag = 0
+						if ((int)itemObject.Tag == 0)
+						{
+							currentScore++;
+						}
+					}
+					else if (itemPoint.X + itemHeight * 0.75 >= orangeBinPoint.Y || itemPoint.X + itemHeight * 0.25 <= orangeBinPoint.Y + orangeBin.ActualWidth)
+					{
+						//	Orange bin. Tag = 1
+						if ((int)itemObject.Tag == 1)
+						{
+							currentScore++;
+						}
+					}
+					else if (itemPoint.X + itemHeight * 0.75 >= brownBinPoint.Y || itemPoint.X + itemHeight * 0.25 <= brownBinPoint.Y + brownBin.ActualWidth)
+					{
+						//	Brown bin. Tag = 2
+						if ((int)itemObject.Tag == 2)
+						{
+							currentScore++;
+						}
+					}
+
+					//	Update the score
+					UpdateScoreLivesTime();
 				}
 			}
 		}
@@ -508,9 +550,8 @@ namespace fyp1_prototype
 					//	Scale to screensize
 					//	Randomized the item drops
 					//	items drop vertical speed
-					//	Bind time, score and live
 
-					//	Update the score
+					//	Update the time
 					UpdateScoreLivesTime();
 
 					if (lastHandEvent == InteractionHandEventType.Grip)
