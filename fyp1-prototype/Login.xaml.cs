@@ -30,14 +30,18 @@ namespace fyp1_prototype
 		public Login(KinectSensorChooser kinectSensorChooser)
         {
             InitializeComponent();
-			
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+			//	Set window to center of screen
+			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+			//	Set kinect sensor chooser
 			this.kinectSensorChooser = kinectSensorChooser;
 
+			//	Binding Kinect sensor to Kinect Region
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
 
+			#region KinectRegion
 			//	Setup Kinect region press target and event handlers
 			KinectRegion.SetIsPressTarget(btnCancelLogin, true);
 			KinectRegion.SetIsPressTarget(btnLogin, true);
@@ -280,6 +284,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerLostCaptureHandler(btnX, HandPointerLostCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(btnY, HandPointerLostCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(btnZ, HandPointerLostCaptureEvent);
+			#endregion
 		}
 
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
@@ -397,6 +402,7 @@ namespace fyp1_prototype
 			}
 		}
 
+		//	Execute press functions
 		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
 		{
 			if (capturedHandPointer == e.HandPointer)
@@ -609,7 +615,35 @@ namespace fyp1_prototype
 				}
 				else
 				{
-					VisualStateManager.GoToState((Button)sender, "Normal", true);
+					VisualStateManager.GoToState(btnCancelLogin, "Normal", true);
+					VisualStateManager.GoToState(btnLogin, "Normal", true);
+					VisualStateManager.GoToState(textBoxUsername, "Normal", true);
+					VisualStateManager.GoToState(passwordBox, "Normal", true);
+					VisualStateManager.GoToState(btnA, "Normal", true);
+					VisualStateManager.GoToState(btnB, "Normal", true);
+					VisualStateManager.GoToState(btnC, "Normal", true);
+					VisualStateManager.GoToState(btnD, "Normal", true);
+					VisualStateManager.GoToState(btnE, "Normal", true);
+					VisualStateManager.GoToState(btnF, "Normal", true);
+					VisualStateManager.GoToState(btnH, "Normal", true);
+					VisualStateManager.GoToState(btnI, "Normal", true);
+					VisualStateManager.GoToState(btnJ, "Normal", true);
+					VisualStateManager.GoToState(btnK, "Normal", true);
+					VisualStateManager.GoToState(btnL, "Normal", true);
+					VisualStateManager.GoToState(btnM, "Normal", true);
+					VisualStateManager.GoToState(btnN, "Normal", true);
+					VisualStateManager.GoToState(btnO, "Normal", true);
+					VisualStateManager.GoToState(btnP, "Normal", true);
+					VisualStateManager.GoToState(btnQ, "Normal", true);
+					VisualStateManager.GoToState(btnR, "Normal", true);
+					VisualStateManager.GoToState(btnS, "Normal", true);
+					VisualStateManager.GoToState(btnT, "Normal", true);
+					VisualStateManager.GoToState(btnU, "Normal", true);
+					VisualStateManager.GoToState(btnV, "Normal", true);
+					VisualStateManager.GoToState(btnW, "Normal", true);
+					VisualStateManager.GoToState(btnX, "Normal", true);
+					VisualStateManager.GoToState(btnY, "Normal", true);
+					VisualStateManager.GoToState(btnZ, "Normal", true);
 				}
 				e.HandPointer.Capture(null);
 				e.Handled = true;

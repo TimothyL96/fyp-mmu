@@ -66,7 +66,9 @@ namespace fyp1_prototype
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
 		{
 			if (e.HandPointer.GetIsOver(back) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(back, "MouseOver", true);
+			}
 
 			e.Handled = true;
 		}
@@ -74,7 +76,9 @@ namespace fyp1_prototype
 		private void HandPointerLeaveEvent(object sender, HandPointerEventArgs e)
 		{
 			if (!e.HandPointer.GetIsOver(back) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(back, "Normal", true);
+			}
 
 			if (capturedHandPointer == e.HandPointer)
 			{
@@ -96,14 +100,15 @@ namespace fyp1_prototype
 			}
 		}
 
+		//	Execute press functions
 		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
 		{
 			if (capturedHandPointer == e.HandPointer)
 			{
 				if (e.HandPointer.GetIsOver(back))
 				{
-
 					Close();
+
 					VisualStateManager.GoToState(back, "MouseOver", true);
 				}
 				else

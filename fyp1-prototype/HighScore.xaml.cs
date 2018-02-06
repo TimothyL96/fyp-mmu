@@ -58,6 +58,7 @@ namespace fyp1_prototype
 				scrollContent.Children.Add(textBody);
 			}
 
+			#region KinectRegion
 			//	Setup Kinect region press target and event handlers
 			KinectRegion.SetIsPressTarget(back, true);
 
@@ -69,12 +70,15 @@ namespace fyp1_prototype
 
 			KinectRegion.AddHandPointerGotCaptureHandler(back, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(back, HandPointerLostCaptureEvent);
+			#endregion
 		}
 
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
 		{
 			if (e.HandPointer.GetIsOver(back) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(back, "MouseOver", true);
+			}
 
 			e.Handled = true;
 		}
@@ -82,7 +86,9 @@ namespace fyp1_prototype
 		private void HandPointerLeaveEvent(object sender, HandPointerEventArgs e)
 		{
 			if (!e.HandPointer.GetIsOver(back) && e.HandPointer.IsPrimaryHandOfUser)
+			{
 				VisualStateManager.GoToState(back, "Normal", true);
+			}
 
 			if (capturedHandPointer == e.HandPointer)
 			{
@@ -104,6 +110,7 @@ namespace fyp1_prototype
 			}
 		}
 
+		//	Execute press functions
 		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
 		{
 			if (capturedHandPointer == e.HandPointer)
@@ -111,6 +118,7 @@ namespace fyp1_prototype
 				if (e.HandPointer.GetIsOver(back))
 				{
 					Close();
+
 					VisualStateManager.GoToState(back, "MouseOver", true);
 				}
 				else

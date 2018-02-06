@@ -42,9 +42,6 @@ namespace fyp1_prototype
 		[Column("playerGame")]
 		public int PlayerGame{ get; set; }
 
-		[Column("datetime")]
-		public string DateTime { get; set; }
-
 		[Column("time")]
 		public string Time { get; set; }
 
@@ -53,6 +50,12 @@ namespace fyp1_prototype
 
 		[Column("itemGame")]
 		public int ItemGame { get; set; }
+
+		[Column("gameMode")]
+		public int GameMode { get; set; }
+
+		[Column("datetime")]
+		public string DateTime { get; set; }
 	}
 
 	//	Score class
@@ -251,36 +254,39 @@ namespace fyp1_prototype
 			public int Id { get; set; }
 			public int Lives { get; set; }
 			public int PlayerGame { get; set; }
-			public string DateTime { get; set; }
 			public string Time { get; set; }
 			public int Score { get; set; }
 			public int ItemGame { get; set; }
+			public int GameMode { get; set; }
+			public string DateTime { get; set; }
 		}
 
-		public void AddGame(int lives, int playerGame, string time, int score, int itemGame)
+		public void AddGame(int lives, int playerGame, string time, int score, int itemGame, int gameMode)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			dc.Game.Add(new Game()
 			{
 				Lives = lives,
 				PlayerGame = playerGame,
-				DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
 				Time = time,
 				Score = score,
-				ItemGame = itemGame
+				ItemGame = itemGame,
+				GameMode = gameMode,
+				DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
 			});
 			dc.SaveChanges();
 		}
 
-		public void ModifyGame(int lives, int playerGame, string time, int score, int itemGame)
+		public void ModifyGame(int lives, int playerGame, string time, int score, int itemGame, int gameMode)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			var game = dc.Game.FirstOrDefault(g => g.PlayerGame == playerGame);
 			game.Lives = lives;
-			game.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			game.Time = time;
 			game.Score = score;
 			game.ItemGame = itemGame;
+			game.GameMode = gameMode;
+			game.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			dc.SaveChanges();
 		}
 
@@ -295,10 +301,11 @@ namespace fyp1_prototype
 					Id = game.Id,
 					Lives = game.Lives,
 					PlayerGame = game.PlayerGame,
-					DateTime = game.DateTime,
 					Time = game.Time,
 					Score = game.Score,
-					ItemGame = game.ItemGame
+					ItemGame = game.ItemGame,
+					GameMode = game.GameMode,
+					DateTime = game.DateTime
 				})
 				.ToList();
 		}

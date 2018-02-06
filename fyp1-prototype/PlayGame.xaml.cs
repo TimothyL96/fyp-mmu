@@ -22,42 +22,69 @@ namespace fyp1_prototype
 	/// </summary>
 	public partial class DragDropImages : Window
 	{
+		#region Class members
+		//	Sensor storage
 		KinectSensor sensor;
 		KinectSensorChooser kinectSensorChooser;
 
+		//	Set items spawning and speed
 		private const int horizontalLengthStart = 150;
 		private int horizontalLength = 150;  //	X axis image drop starting point
 		private int horizontalLengthChange = 150;
 		private int verticalLength = 10;
 
+		//	Items max spawing and pushing area
 		private int horizontalMaxLength;
 		private int verticalMaxLength;
 
+		//	Default item width and height
 		private int imageWidth = 200;
 		private int imageHeight = 200;
 
+		private int itemWidth = 30;
+		private int itemHeight = 30;
+
+		//	ALl skeleton and Interaction Streams storage
 		private Skeleton[] allSkeletons = new Skeleton[6];
-		private static int screenWidth;// (int)SystemParameters.PrimaryScreenWidth;
-		private static int screenHeight;// (int)SystemParameters.PrimaryScreenHeight;
+		private InteractionStream _interactionStream;
+
+		//	The skeletons
+		private Skeleton[] _skeletons;
+
+		//	The information about the interactive users
+		private UserInfo[] _userInfos;
+
+		//	Full primary screen width and height
+		private static int screenWidth;
+		private static int screenHeight;
+
+		//	Screen factor of horizontal and vertical by dividing screenWidth and screenHeight by Kinect's 640x480 for scaling
 		private int screenFactorX;
 		private int screenFactorY;
 
-		private InteractionStream _interactionStream;
-		private Skeleton[] _skeletons; //the skeletons 
-		private UserInfo[] _userInfos; //the information about the interactive users
-
+		//	Dictionary for left and right hand
 		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
 		private Dictionary<int, InteractionHandEventType> _lastRightHandEvents = new Dictionary<int, InteractionHandEventType>();
 
+		//	Indicate on which item the hand cursor is on by index of canvas.children
 		private int handCursorOn = -1;
+
+		//	When the hand cursor is gripping the item, record the left and right distance to move the item in the right ratio from the point of grip
 		private double handCursorOnLeftDistant;
 		private double handCursorOnTopDistant;
-		private int itemWidth = 30;
-		private int itemHeight = 30;
+
+		//	This indicates the start index of canvas that is an item
 		private const int itemChildrenStart = 8;
 
+		//	Record the current score, lives
 		private int currentScore;
 		private int currentLives;
+
+		//	Timer and currentTime to record the time
+		Stopwatch watch = Stopwatch.StartNew();
+		private string currentTime;
+
+		//	String to display current score, lives and time on the screen
 		public string CurrentScoreText
 		{
 			get { return (string)GetValue(CurrentScoreTextProperty); }
@@ -68,16 +95,22 @@ namespace fyp1_prototype
 			get { return (string)GetValue(CurrentLivesTextProperty); }
 			set { SetValue(CurrentLivesTextProperty, value); }
 		}
+		public string CurrentTimeText
+		{
+			get { return (string)GetValue(CurrentTimeTextProperty); }
+			set { SetValue(CurrentTimeTextProperty, value); }
+		}
 
-		Stopwatch watch = Stopwatch.StartNew();
-		private string currentTime;
-		private int playerID = 1;
+		//	Get the logged in player ID
+		public int playerID;
+
+		//	Current Item index from the item table
 		private int itemGame = 1;
 
 		//	Total item counts in database
 		private int totalItemCount = 0;
 
-		//	Flag if after 3 seconds will run the game
+		//	Flag for counting down. After 3 seconds will run the game
 		private int countdownFlag = 3;
 
 		//	DipatchTimer
@@ -88,34 +121,52 @@ namespace fyp1_prototype
 		//	ItemsRepository
 		ItemsRepository itemsRepository = new ItemsRepository();
 
+		/// <summary>
+		/// Game mode
+		///	0 - Timeless Classic
+		///	1 - Time Attack
+		/// </summary>
+		public int gameMode;
+
 		//	Dpendency Property:
 		public static readonly DependencyProperty CurrentScoreTextProperty = DependencyProperty.Register("CurrentScoreText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Score: 0"));
 		public static readonly DependencyProperty CurrentLivesTextProperty = DependencyProperty.Register("CurrentLivesText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Lives: 0"));
+		public static readonly DependencyProperty CurrentTimeTextProperty = DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
+		#endregion
 
 		//	Constructor
-		public DragDropImages()
+		public DragDropImages(int playerID, int gameMode)
 		{
 			InitializeComponent();
 
+			//	Set screen to the center
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+			//	Kinect changed event listener
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 
+			//	Default value for the score, lives and time
 			currentScore = 0;
 			currentLives = 3;
-			UpdateScoreLives();
+			currentTime = "0";
 
+			//	Update the score, lives and time on screen
+			UpdateScoreLivesTime();
+
+			//	Data binding
 			DataContext = this;
 
 			//	Set up the font size and weight of score and lives
 			//	Fontsize
 			score.FontSize = 22;
 			lives.FontSize = 22;
+			time.FontSize = 22;
 
 			//	Fontweight
 			score.FontWeight = FontWeights.Bold;
 			lives.FontWeight = FontWeights.Bold;
+			time.FontWeight = FontWeights.Bold;
 
 			//	Adjust the item width
 			itemWidth = imageWidth;
@@ -123,21 +174,52 @@ namespace fyp1_prototype
 
 			//	Get total item counts
 			totalItemCount = itemsRepository.GetCount();
-		}
 
-		private void UpdateScoreLives()
-		{
-			CurrentScoreText = "Score: " + currentScore;
-			CurrentLivesText = "Lives: " + currentLives;
-		}
+			//	Set the player ID
+			this.playerID = playerID;
 
-		public void GetLoadGameData(int lives, string time, int score, int itemGame)
+			//	Set the game mode
+			this.gameMode = gameMode;
+
+			//	Reset the stopwatch
+			watch.Reset();
+		}
+	
+		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			currentLives = lives;
-			currentTime = time;
-			currentScore = score;
-			this.itemGame = itemGame;
-			UpdateScoreLives();
+			//	Start the Kinect sensor
+			kinectSensorChooser.Start();
+
+			//	Fix the orange bin to the middle of blue bin and brown bin by dividing the distance betweenthe blue bin and brown bin
+			var brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
+			var blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
+			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
+
+			//	Set the screenWidth and screenHeight to the width and height of the full primary screen
+			screenWidth = (int)SystemParameters.FullPrimaryScreenWidth;
+			screenHeight = (int)SystemParameters.FullPrimaryScreenHeight;
+
+			//	Calculate the screen factor
+			screenFactorX = screenWidth / 640;
+			screenFactorY = screenHeight / 480;
+
+			//	Setup countdown text position
+			Canvas.SetLeft(countdown, ((screenWidth / 2) - (countdown.ActualWidth / 2)));
+			Canvas.SetTop(countdown, ((screenHeight / 2) - (countdown.ActualHeight / 2)));
+
+			//	Set vertical and horizontal max length
+			verticalMaxLength = screenHeight - itemHeight;
+			horizontalMaxLength = screenWidth - itemWidth;
+
+			//	test - start the game
+			//	Delay one second
+			System.Threading.Thread.Sleep(1000);
+
+			//	Start counting down
+			timerCountdown.Tick += new EventHandler(Tick_Countdown);
+			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
+			countdown.Visibility = Visibility.Visible;
+			timerCountdown.Start();
 		}
 
 		private void KinectSensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
@@ -184,41 +266,49 @@ namespace fyp1_prototype
 					InitializeSkeleton();
 			}
 		}
-		
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+
+		//	Update score, lives and time on the screen
+		private void UpdateScoreLivesTime()
 		{
-			kinectSensorChooser.Start();
+			CurrentScoreText = "Score: " + currentScore;
 
-			//	Fix the orange bin to the middle of blue bin and brown bin
-			var brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
-			var blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
-			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
+			//	Update lives text according to game mode
+			if (gameMode == 0)
+			{
+				CurrentLivesText = "Lives: " + currentLives;
+			}
+			else if (gameMode == 1)
+			{
+				CurrentLivesText = "Lives: -";
+			}
 
-			screenWidth = (int)SystemParameters.FullPrimaryScreenWidth;
-			screenHeight = (int)SystemParameters.FullPrimaryScreenHeight;
+			//	Get elapsed time from Stopwatch and convert to seconds
+			currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
 
-			screenFactorX = screenWidth / 640;
-			screenFactorY = screenHeight / 480;
-
-			//	Setup countdown text position
-			Canvas.SetLeft(countdown, ((screenWidth / 2) - (countdown.ActualWidth / 2)));
-			Canvas.SetTop(countdown, ((screenHeight / 2) - (countdown.ActualHeight / 2)));
-
-			//	Set vertical and horizontal max length
-			verticalMaxLength = screenHeight - itemHeight;
-			horizontalMaxLength = screenWidth - itemWidth;
-
-			//	test
-			//	Delay one second
-			System.Threading.Thread.Sleep(1000);
-
-			//	Start counting down
-			timerCountdown.Tick += new EventHandler(Tick_Countdown);
-			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
-			countdown.Visibility = Visibility.Visible;
-			timerCountdown.Start();
+			//	Update time text according to game mode
+			if (gameMode == 0)
+			{
+				CurrentTimeText = "Time: " + currentTime;
+			}
+			else if (gameMode == 1)
+			{
+				CurrentTimeText = "Time: " + Convert.ToString((60 - Convert.ToInt64(currentTime)));
+			}
 		}
 
+		//	Set up data for loading game
+		public void GetLoadGameData(int lives, string time, int score, int itemGame)
+		{
+			currentLives = lives;
+			currentTime = time;
+			currentScore = score;
+			this.itemGame = itemGame;
+			
+			//	Update the screen's score, livse and time
+			UpdateScoreLivesTime();
+		}
+
+		//	IInteractionClient for DummyInteractionClient
 		public interface IInteractionClient
 		{
 			InteractionInfo GetInteractionInfoAtLocation(
@@ -228,7 +318,8 @@ namespace fyp1_prototype
 				double y
 				);
 		}
-
+		
+		//	Dummy Interaction Client with Interaction Info
 		public class DummyInteractionClient : Microsoft.Kinect.Toolkit.Interaction.IInteractionClient
 		{
 			public InteractionInfo GetInteractionInfoAtLocation(int skeletonTrackingId, InteractionHandType handType, double x, double y)
@@ -290,6 +381,9 @@ namespace fyp1_prototype
 
 			if (countdownFlag == 0)
 			{
+				//	Start the timer
+				watch.Start();
+
 				//	Start counting down
 				timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
 				timerCreateImage.Interval = TimeSpan.FromMilliseconds(1500);
@@ -346,11 +440,11 @@ namespace fyp1_prototype
 					continue;
 				
 				Point p = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
-				Canvas.SetTop(canvas.Children[i], p.Y);
+				Canvas.SetTop(canvas.Children[i], p.Y + verticalLength);
 				//todo
 
 				//	Define speed / difficulty
-				//verticalLength = 150;
+				verticalLength = 10;
 
 				//	If the image touched edge of window then stop it
 				if (Canvas.GetTop(canvas.Children[i]) > verticalMaxLength)
@@ -446,19 +540,35 @@ namespace fyp1_prototype
 							if (back.Height + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y >= backPoint.Y)
 							{
 								//	Save Game
+
+								//	Stop the timer
 								watch.Stop();
+
+								//	Create new GameRepository object
 								GameRepository gro = new GameRepository();
+
+								//	If the player ID exists in the database (Playing loaded game), update the row to the current game, else insert a new row
 								if (gro.GetGame(playerID).Count == 0)
 								{
+									//	Get the playing time
 									currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+
+									//	Add a new game to the database
 									gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
 								}
 								else
 								{
+									//	Add the playing time to the previous playing time
 									currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
+
+									//	Modify the game in the database
 									gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
 								}
+
+								//	Reset the timer
 								watch.Reset();
+
+								//	Close the game screen
 								Close();
 							}
 						}
