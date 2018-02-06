@@ -126,7 +126,7 @@ namespace fyp1_prototype
 
 		/// <summary>
 		/// Game mode
-		///	0 - Timeless Classic
+		///	0 - Survival
 		///	1 - Time Attack
 		/// </summary>
 		public int gameMode;

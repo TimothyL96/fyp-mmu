@@ -42,18 +42,18 @@ namespace fyp1_prototype
 
 			#region KinectRegion
 			//	Setup Kinect region press target and event handlers
-			KinectRegion.SetIsPressTarget(btnTimelessClassic, true);
+			KinectRegion.SetIsPressTarget(btnSurvival, true);
 			KinectRegion.SetIsPressTarget(btnTimeAttack, true);
 
-			//	btnTimelessClassic
-			KinectRegion.AddHandPointerEnterHandler(btnTimelessClassic, HandPointerEnterEvent);
-			KinectRegion.AddHandPointerLeaveHandler(btnTimelessClassic, HandPointerLeaveEvent);
+			//	btnSurvival
+			KinectRegion.AddHandPointerEnterHandler(btnSurvival, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerLeaveHandler(btnSurvival, HandPointerLeaveEvent);
 
-			KinectRegion.AddHandPointerPressHandler(btnTimelessClassic, HandPointerPressEvent);
-			KinectRegion.AddHandPointerPressReleaseHandler(btnTimelessClassic, HandPointerPressReleaseEvent);
+			KinectRegion.AddHandPointerPressHandler(btnSurvival, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(btnSurvival, HandPointerPressReleaseEvent);
 
-			KinectRegion.AddHandPointerGotCaptureHandler(btnTimelessClassic, HandPointerCaptureEvent);
-			KinectRegion.AddHandPointerLostCaptureHandler(btnTimelessClassic, HandPointerLostCaptureEvent);
+			KinectRegion.AddHandPointerGotCaptureHandler(btnSurvival, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(btnSurvival, HandPointerLostCaptureEvent);
 
 			//	btnTimeAttack
 			KinectRegion.AddHandPointerEnterHandler(btnTimeAttack, HandPointerEnterEvent);
@@ -69,9 +69,9 @@ namespace fyp1_prototype
 
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
 		{
-			if (e.HandPointer.GetIsOver(btnTimelessClassic) && e.HandPointer.IsPrimaryHandOfUser)
+			if (e.HandPointer.GetIsOver(btnSurvival) && e.HandPointer.IsPrimaryHandOfUser)
 			{
-				VisualStateManager.GoToState(btnTimelessClassic, "MouseOver", true);
+				VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
 			}
 			else if (e.HandPointer.GetIsOver(btnTimeAttack) && e.HandPointer.IsPrimaryHandOfUser)
 			{
@@ -83,9 +83,9 @@ namespace fyp1_prototype
 
 		private void HandPointerLeaveEvent(object sender, HandPointerEventArgs e)
 		{
-			if (!e.HandPointer.GetIsOver(btnTimelessClassic) && e.HandPointer.IsPrimaryHandOfUser)
+			if (!e.HandPointer.GetIsOver(btnSurvival) && e.HandPointer.IsPrimaryHandOfUser)
 			{
-				VisualStateManager.GoToState(btnTimelessClassic, "Normal", true);
+				VisualStateManager.GoToState(btnSurvival, "Normal", true);
 			}
 			if (!e.HandPointer.GetIsOver(btnTimeAttack) && e.HandPointer.IsPrimaryHandOfUser)
 			{
@@ -103,9 +103,9 @@ namespace fyp1_prototype
 		{
 			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser && e.HandPointer.IsPrimaryHandOfUser)
 			{
-				if (e.HandPointer.GetIsOver(btnTimelessClassic))
+				if (e.HandPointer.GetIsOver(btnSurvival))
 				{
-					e.HandPointer.Capture(btnTimelessClassic);
+					e.HandPointer.Capture(btnSurvival);
 					capturedHandPointer = e.HandPointer;
 					e.Handled = true;
 				}
@@ -126,12 +126,12 @@ namespace fyp1_prototype
 				kinectSensorChooser.Stop();
 				DragDropImages dragDropImages = null;
 
-				if (e.HandPointer.GetIsOver(btnTimelessClassic))
+				if (e.HandPointer.GetIsOver(btnSurvival))
 				{
 					//	Timeless Classic
 					dragDropImages  = new DragDropImages(playerID, 0);
 
-					VisualStateManager.GoToState(btnTimelessClassic, "MouseOver", true);
+					VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
 				}
 				else if (e.HandPointer.GetIsOver(btnTimeAttack))
 				{
@@ -142,7 +142,7 @@ namespace fyp1_prototype
 				}
 				else
 				{
-					VisualStateManager.GoToState(btnTimelessClassic, "Normal", true);
+					VisualStateManager.GoToState(btnSurvival, "Normal", true);
 					VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
 				}
 
@@ -174,16 +174,6 @@ namespace fyp1_prototype
 			}
 		}
 
-		private void timelessClassic(object sender, RoutedEventArgs e)
-		{
-			//	Timeless Classic
-			kinectSensorChooser.Stop();
-			DragDropImages dragDropImages = new DragDropImages(playerID, 0);
-			dragDropImages.Show();
-
-			Close();
-		}
-
 		private void timeAttack(object sender, RoutedEventArgs e)
 		{
 			//	Time Attack
@@ -201,6 +191,16 @@ namespace fyp1_prototype
 			{
 				WindowState = WindowState.Maximized;
 			}
+		}
+
+		private void survival(object sender, RoutedEventArgs e)
+		{
+			//	Survival
+			kinectSensorChooser.Stop();
+			DragDropImages dragDropImages = new DragDropImages(playerID, 0);
+			dragDropImages.Show();
+
+			Close();
 		}
 	}
 }
