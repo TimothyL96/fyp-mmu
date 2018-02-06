@@ -125,14 +125,17 @@ namespace fyp1_prototype
 			{
 				kinectSensorChooser.Stop();
 				DragDropImages dragDropImages = null;
+
 				if (e.HandPointer.GetIsOver(btnTimelessClassic))
 				{
+					//	Timeless Classic
 					dragDropImages  = new DragDropImages(playerID, 0);
 
 					VisualStateManager.GoToState(btnTimelessClassic, "MouseOver", true);
 				}
 				else if (e.HandPointer.GetIsOver(btnTimeAttack))
 				{
+					//	Time Attack
 					dragDropImages = new DragDropImages(playerID, 1);
 
 					VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
@@ -142,7 +145,9 @@ namespace fyp1_prototype
 					VisualStateManager.GoToState(btnTimelessClassic, "Normal", true);
 					VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
 				}
-				dragDropImages.Show();
+
+				if (dragDropImages != null)
+					dragDropImages.Show();
 
 				e.HandPointer.Capture(null);
 				e.Handled = true;
@@ -165,6 +170,20 @@ namespace fyp1_prototype
 				capturedHandPointer = null;
 				e.Handled = true;
 			}
+		}
+
+		private void timelessClassic(object sender, RoutedEventArgs e)
+		{
+			//	Timeless Classic
+			kinectSensorChooser.Stop();
+			DragDropImages dragDropImages = new DragDropImages(playerID, 0);
+		}
+
+		private void timeAttack(object sender, RoutedEventArgs e)
+		{
+			//	Time Attack
+			kinectSensorChooser.Stop();
+			DragDropImages dragDropImages = new DragDropImages(playerID, 1);
 		}
 	}
 }

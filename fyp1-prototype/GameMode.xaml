@@ -11,8 +11,8 @@
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
-				<Button Name="btnTimelessClassic" Content="Timeless Classic" Width="160" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-220 200 0 0" Click="back"/>
-				<Button Name="btnTimeAttack" Content="Time Attack" Width="160" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="220 200 0 0" Click="playGame"/>
+				<Button Name="btnTimelessClassic" Content="Timeless Classic" Width="260" Height="180" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-300 0 0 0" Click="timelessClassic"/>
+				<Button Name="btnTimeAttack" Content="Time Attack" Width="260" Height="180" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300 0 0 0" Click="timeAttack"/>
 			</Grid>
 		</k:KinectRegion>
 	</Grid>

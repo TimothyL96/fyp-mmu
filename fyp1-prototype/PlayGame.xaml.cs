@@ -272,7 +272,7 @@ namespace fyp1_prototype
 		{
 			CurrentScoreText = "Score: " + currentScore;
 
-			//	Update lives text according to game mode
+			//	Update lives tqext according to game mode
 			if (gameMode == 0)
 			{
 				CurrentLivesText = "Lives: " + currentLives;
@@ -554,7 +554,7 @@ namespace fyp1_prototype
 									currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
 
 									//	Add a new game to the database
-									gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
+									gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 								}
 								else
 								{
@@ -562,7 +562,7 @@ namespace fyp1_prototype
 									currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
 
 									//	Modify the game in the database
-									gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
+									gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 								}
 
 								//	Reset the timer
@@ -807,12 +807,12 @@ namespace fyp1_prototype
 			if (gro.GetGame(playerID).Count == 0)
 			{
 				currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
-				gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame);
+				gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 			}
 			else
 			{
 				currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
-				gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame);
+				gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 			}
 			watch.Reset();
 			Close();
