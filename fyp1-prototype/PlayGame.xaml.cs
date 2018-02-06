@@ -76,13 +76,13 @@ namespace fyp1_prototype
 		//	This indicates the start index of canvas that is an item
 		private const int itemChildrenStart = 8;
 
-		//	Record the current score, lives
+		//	Record the current score, lives and time
 		private int currentScore;
 		private int currentLives;
+		private long currentTime;
 
-		//	Timer and currentTime to record the time
+		//	Timer to record the time
 		Stopwatch watch = Stopwatch.StartNew();
-		private string currentTime;
 
 		//	String to display current score, lives and time on the screen
 		public string CurrentScoreText
@@ -146,10 +146,16 @@ namespace fyp1_prototype
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 
+			//	Set the player ID
+			this.playerID = playerID;
+
+			//	Set the game mode
+			this.gameMode = gameMode;
+
 			//	Default value for the score, lives and time
 			currentScore = 0;
 			currentLives = 3;
-			currentTime = "0";
+			currentTime = 0;
 
 			//	Update the score, lives and time on screen
 			UpdateScoreLivesTime();
@@ -174,12 +180,6 @@ namespace fyp1_prototype
 
 			//	Get total item counts
 			totalItemCount = itemsRepository.GetCount();
-
-			//	Set the player ID
-			this.playerID = playerID;
-
-			//	Set the game mode
-			this.gameMode = gameMode;
 
 			//	Reset the stopwatch
 			watch.Reset();
@@ -295,7 +295,7 @@ namespace fyp1_prototype
 		}
 
 		//	Set up data for loading game
-		public void GetLoadGameData(int lives, string time, int score, int itemGame)
+		public void GetLoadGameData(int lives, int time, int score, int itemGame)
 		{
 			currentLives = lives;
 			currentTime = time;
@@ -433,7 +433,14 @@ namespace fyp1_prototype
 		private void Tick_PushImage(object source, EventArgs e)
 		{
 			//	Get the playing time
-			currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+			if (gameMode == 0)
+			{
+				currentTime = watch.ElapsedMilliseconds / 1000;
+			}
+			else if (gameMode == 1)
+			{
+
+			}
 
 			//	Update the score
 			UpdateScoreLivesTime();
@@ -498,7 +505,7 @@ namespace fyp1_prototype
 					//	Bind time, score and live
 
 					//	Get the playing time
-					currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+					currentTime = watch.ElapsedMilliseconds / 1000;
 
 					//	Update the score
 					UpdateScoreLivesTime();
@@ -567,7 +574,7 @@ namespace fyp1_prototype
 									if (gro.GetGame(playerID).Count == 0)
 									{
 										//	Get the playing time
-										currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+										currentTime = watch.ElapsedMilliseconds / 1000;
 
 										//	Add a new game to the database
 										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
@@ -575,7 +582,7 @@ namespace fyp1_prototype
 									else
 									{
 										//	Add the playing time to the previous playing time
-										currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
+										currentTime = Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000;
 
 										//	Modify the game in the database
 										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
@@ -824,12 +831,12 @@ namespace fyp1_prototype
 				GameRepository gro = new GameRepository();
 				if (gro.GetGame(playerID).Count == 0)
 				{
-					currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+					currentTime = watch.ElapsedMilliseconds / 1000;
 					gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 				}
 				else
 				{
-					currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
+					currentTime = Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000;
 					gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 				}
 				watch.Reset();	

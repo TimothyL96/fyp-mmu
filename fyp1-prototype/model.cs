@@ -43,7 +43,7 @@ namespace fyp1_prototype
 		public int PlayerGame{ get; set; }
 
 		[Column("time")]
-		public string Time { get; set; }
+		public int Time { get; set; }
 
 		[Column("score")]
 		public int Score { get; set; }
@@ -256,21 +256,21 @@ namespace fyp1_prototype
 			public int Id { get; set; }
 			public int Lives { get; set; }
 			public int PlayerGame { get; set; }
-			public string Time { get; set; }
+			public int Time { get; set; }
 			public int Score { get; set; }
 			public int ItemGame { get; set; }
 			public int GameMode { get; set; }
 			public string DateTime { get; set; }
 		}
 
-		public void AddGame(int lives, int playerGame, string time, int score, int itemGame, int gameMode)
+		public void AddGame(int lives, int playerGame, long time, int score, int itemGame, int gameMode)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			dc.Game.Add(new Game()
 			{
 				Lives = lives,
 				PlayerGame = playerGame,
-				Time = time,
+				Time = (int)time,
 				Score = score,
 				ItemGame = itemGame,
 				GameMode = gameMode,
@@ -279,12 +279,12 @@ namespace fyp1_prototype
 			dc.SaveChanges();
 		}
 
-		public void ModifyGame(int lives, int playerGame, string time, int score, int itemGame, int gameMode)
+		public void ModifyGame(int lives, int playerGame, long time, int score, int itemGame, int gameMode)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			var game = dc.Game.FirstOrDefault(g => g.PlayerGame == playerGame);
 			game.Lives = lives;
-			game.Time = time;
+			game.Time = (int)time;
 			game.Score = score;
 			game.ItemGame = itemGame;
 			game.GameMode = gameMode;
