@@ -572,21 +572,18 @@ namespace fyp1_prototype
 
 									//	Create new GameRepository object
 									GameRepository gro = new GameRepository();
+									//	Get the playing time
+
+									currentTime = previousTime + watch.ElapsedMilliseconds / 1000;
 
 									//	If the player ID exists in the database (Playing loaded game), update the row to the current game, else insert a new row
 									if (gro.GetGame(playerID).Count == 0)
 									{
-										//	Get the playing time
-										currentTime = watch.ElapsedMilliseconds / 1000;
-
 										//	Add a new game to the database
 										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 									}
 									else
 									{
-										//	Add the playing time to the previous playing time
-										currentTime = Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000;
-
 										//	Modify the game in the database
 										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 									}
