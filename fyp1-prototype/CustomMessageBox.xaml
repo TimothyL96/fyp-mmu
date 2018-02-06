@@ -11,7 +11,7 @@
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
-				<TextBlock Name="textBlock" Text="" FontSize="16" TextAlignment="Center" Width="400" Height="150" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				<TextBlock Name="textBlock" Text="" FontSize="20" TextAlignment="Center" Width="400" Height="150" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 				<Button Name="btnOK" Width="225" Height="90" VerticalAlignment="Bottom" Margin="0 0 0 20" Content="OK" Click="back"/>
 			</Grid>
 		</k:KinectRegion>

@@ -208,7 +208,8 @@ namespace fyp1_prototype
 			Canvas.SetTop(countdown, ((screenHeight / 2) - (countdown.ActualHeight / 2)));
 
 			//	Set vertical and horizontal max length
-			verticalMaxLength = screenHeight - itemHeight;
+			//	Vertical max length is screen height minus recycle bin height minus 25% of a item height
+			verticalMaxLength = screenHeight - (int)blueBin.ActualHeight - (int)(itemHeight * 0.25);
 			horizontalMaxLength = screenWidth - itemWidth;
 
 			//	test - start the game
@@ -446,9 +447,10 @@ namespace fyp1_prototype
 				//	Define speed / difficulty
 				verticalLength = 10;
 
-				//	If the image touched edge of window then stop it
-				if (Canvas.GetTop(canvas.Children[i]) > verticalMaxLength)
+				//	If the image touched any recycle bin then stop it
+				if (Canvas.GetTop(canvas.Children[i]) >= verticalMaxLength)
 				{
+
 					canvas.Children.Remove(canvas.Children[i]);
 				}
 			}
@@ -529,7 +531,9 @@ namespace fyp1_prototype
 					}
 					else if (hand.IsPressed)
 					{
-						//	If hand pressed the back, go back
+						//	If hand pressed the back, go back:
+						
+						//	Get points of hand cursor and back button
 						var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
 						var backPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
 
@@ -539,36 +543,38 @@ namespace fyp1_prototype
 							//	Top and Bottom check:
 							if (back.Height + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y >= backPoint.Y)
 							{
-								//	Save Game
-
-								//	Stop the timer
-								watch.Stop();
-
-								//	Create new GameRepository object
-								GameRepository gro = new GameRepository();
-
-								//	If the player ID exists in the database (Playing loaded game), update the row to the current game, else insert a new row
-								if (gro.GetGame(playerID).Count == 0)
+								//	If 'watch' timer is running, then save the game first
+								//	If not, just close the window
+								if (watch.IsRunning)
 								{
-									//	Get the playing time
-									currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+									//	Stop the timer
+									watch.Stop();
 
-									//	Add a new game to the database
-									gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
+									//	Create new GameRepository object
+									GameRepository gro = new GameRepository();
+
+									//	If the player ID exists in the database (Playing loaded game), update the row to the current game, else insert a new row
+									if (gro.GetGame(playerID).Count == 0)
+									{
+										//	Get the playing time
+										currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+
+										//	Add a new game to the database
+										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
+									}
+									else
+									{
+										//	Add the playing time to the previous playing time
+										currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
+
+										//	Modify the game in the database
+										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
+									}
+
+									//	Reset the timer
+									watch.Reset();
 								}
-								else
-								{
-									//	Add the playing time to the previous playing time
-									currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
-
-									//	Modify the game in the database
-									gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
-								}
-
-								//	Reset the timer
-								watch.Reset();
-
-								//	Close the game screen
+								//	Close the game window
 								Close();
 							}
 						}
@@ -802,19 +808,25 @@ namespace fyp1_prototype
 		private void back_Click(object sender, RoutedEventArgs e)
 		{
 			//	Save Game
-			watch.Stop();
-			GameRepository gro = new GameRepository();
-			if (gro.GetGame(playerID).Count == 0)
+			if (watch.IsRunning)
 			{
-				currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
-				gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
+				watch.Stop();
+				GameRepository gro = new GameRepository();
+				if (gro.GetGame(playerID).Count == 0)
+				{
+					currentTime = Convert.ToString(watch.ElapsedMilliseconds / 1000);
+					gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
+				}
+				else
+				{
+					currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
+					gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
+				}
+				watch.Reset();
+				
 			}
-			else
-			{
-				currentTime = Convert.ToString(Convert.ToInt64(currentTime) + watch.ElapsedMilliseconds / 1000);
-				gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
-			}
-			watch.Reset();
+			
+			//	Close the game window
 			Close();
 		}
 	}
