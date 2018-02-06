@@ -185,5 +185,14 @@ namespace fyp1_prototype
 			kinectSensorChooser.Stop();
 			DragDropImages dragDropImages = new DragDropImages(playerID, 1);
 		}
+
+		//	Disable maximizing window
+		private void Window_StateChanged(object sender, EventArgs e)
+		{
+			if (WindowState == WindowState.Normal)
+			{
+				WindowState = WindowState.Maximized;
+			}
+		}
 	}
 }

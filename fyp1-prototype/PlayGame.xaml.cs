@@ -657,9 +657,9 @@ namespace fyp1_prototype
 		//	Disable maximizing window
 		private void Window_StateChanged(object sender, EventArgs e)
 		{
-			if (this.WindowState == WindowState.Normal)
+			if (WindowState == WindowState.Normal)
 			{
-				this.WindowState = WindowState.Maximized;
+				WindowState = WindowState.Maximized;
 			}
 		}
 
