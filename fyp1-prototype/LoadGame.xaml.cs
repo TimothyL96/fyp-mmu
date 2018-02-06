@@ -23,6 +23,7 @@ namespace fyp1_prototype
 	{
 		private HandPointer capturedHandPointer;
 		private KinectSensorChooser kinectSensorChooser;
+		public int playerGame { get; set; }
 
 		public LoadGame(KinectSensorChooser kinectSensorChooser)
 		{
@@ -37,7 +38,9 @@ namespace fyp1_prototype
 
 			//	Setup Kinect region press target and event handlers
 			KinectRegion.SetIsPressTarget(buttonLoad, true);
+			KinectRegion.SetIsPressTarget(buttonBack, true);
 
+			//	Button load
 			KinectRegion.AddHandPointerEnterHandler(buttonLoad, HandPointerEnterEvent);
 			KinectRegion.AddHandPointerLeaveHandler(buttonLoad, HandPointerLeaveEvent);
 
@@ -46,12 +49,24 @@ namespace fyp1_prototype
 
 			KinectRegion.AddHandPointerGotCaptureHandler(buttonLoad, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(buttonLoad, HandPointerLostCaptureEvent);
+
+			//	Button back
+			KinectRegion.AddHandPointerEnterHandler(buttonBack, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerLeaveHandler(buttonBack, HandPointerLeaveEvent);
+
+			KinectRegion.AddHandPointerPressHandler(buttonBack, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(buttonBack, HandPointerPressReleaseEvent);
+
+			KinectRegion.AddHandPointerGotCaptureHandler(buttonBack, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(buttonBack, HandPointerLostCaptureEvent);
 		}
 
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
 		{
 			if (e.HandPointer.GetIsOver(buttonLoad) && e.HandPointer.IsPrimaryHandOfUser)
 				VisualStateManager.GoToState(buttonLoad, "MouseOver", true);
+			else if (e.HandPointer.GetIsOver(buttonBack) && e.HandPointer.IsPrimaryHandOfUser)
+				VisualStateManager.GoToState(buttonBack, "MouseOver", true);
 
 			e.Handled = true;
 		}
@@ -60,6 +75,8 @@ namespace fyp1_prototype
 		{
 			if (!e.HandPointer.GetIsOver(buttonLoad) && e.HandPointer.IsPrimaryHandOfUser)
 				VisualStateManager.GoToState(buttonLoad, "Normal", true);
+			if (!e.HandPointer.GetIsOver(buttonBack) && e.HandPointer.IsPrimaryHandOfUser)
+				VisualStateManager.GoToState(buttonBack, "Normal", true);
 
 			if (capturedHandPointer == e.HandPointer)
 			{
@@ -78,21 +95,38 @@ namespace fyp1_prototype
 					capturedHandPointer = e.HandPointer;
 					e.Handled = true;
 				}
+				else if (e.HandPointer.GetIsOver(buttonBack))
+				{
+					e.HandPointer.Capture(buttonBack);
+					capturedHandPointer = e.HandPointer;
+					e.Handled = true;
+				}
 			}
 		}
 
+		//	Execute button functions
 		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
 		{
 			if (capturedHandPointer == e.HandPointer)
 			{
 				if (e.HandPointer.GetIsOver(buttonLoad))
 				{
-					Close();
+					//	Load a new game
+					kinectSensorChooser.Stop();
+					DragDropImages dragDropImages = new DragDropImages();
+					dragDropImages.Show();
+
 					VisualStateManager.GoToState(buttonLoad, "MouseOver", true);
+				}
+				else if (e.HandPointer.GetIsOver(buttonBack))
+				{
+					Close();
+					VisualStateManager.GoToState(buttonBack, "MouseOver", true);
 				}
 				else
 				{
 					VisualStateManager.GoToState(buttonLoad, "Normal", true);
+					VisualStateManager.GoToState(buttonBack, "MouseOver", true);
 				}
 				e.HandPointer.Capture(null);
 				e.Handled = true;
@@ -130,6 +164,16 @@ namespace fyp1_prototype
 		private void back(object sender, RoutedEventArgs e)
 		{
 			Close();
+		}
+		
+		private	void playGame(object sender, RoutedEventArgs e)
+		{
+			GameRepository gameRepository = new GameRepository();
+			gameRepository.DeleteGame(playerGame);
+
+			kinectSensorChooser.Stop();
+			DragDropImages dragDropImages = new DragDropImages();
+			dragDropImages.Show();
 		}
 	}
 }

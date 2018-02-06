@@ -402,16 +402,13 @@ namespace fyp1_prototype
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
-			kinectSensorChooser.Stop();
-			DragDropImages dragDropImages = new DragDropImages();
-
 			GameRepository gameRepository = new GameRepository();
 			if (gameRepository.GetGame(playerGame).Count > 0)
 			{
-				gameRepository.DeleteGame(playerGame);
+				LoadGame loadGame = new LoadGame(kinectSensorChooser);
+				loadGame.playerGame = playerGame;
+				loadGame.ShowDialog();
 			}
-
-			dragDropImages.Show();
 		}
 
 		private void help(object sender, RoutedEventArgs e)
