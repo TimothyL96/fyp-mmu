@@ -151,6 +151,8 @@ namespace fyp1_prototype
 
 				e.HandPointer.Capture(null);
 				e.Handled = true;
+
+				Close();
 			}
 		}
 
@@ -177,6 +179,9 @@ namespace fyp1_prototype
 			//	Timeless Classic
 			kinectSensorChooser.Stop();
 			DragDropImages dragDropImages = new DragDropImages(playerID, 0);
+			dragDropImages.Show();
+
+			Close();
 		}
 
 		private void timeAttack(object sender, RoutedEventArgs e)
@@ -184,6 +189,9 @@ namespace fyp1_prototype
 			//	Time Attack
 			kinectSensorChooser.Stop();
 			DragDropImages dragDropImages = new DragDropImages(playerID, 1);
+			dragDropImages.Show();
+
+			Close();
 		}
 
 		//	Disable maximizing window
