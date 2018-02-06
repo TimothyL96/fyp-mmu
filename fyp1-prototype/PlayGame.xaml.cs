@@ -74,7 +74,7 @@ namespace fyp1_prototype
 		private double handCursorOnTopDistant;
 
 		//	This indicates the start index of canvas that is an item
-		private const int itemChildrenStart = 8;
+		private const int itemChildrenStart = 9;
 
 		//	Record the current score, lives and time
 		private int currentScore;
@@ -482,29 +482,46 @@ namespace fyp1_prototype
 					canvas.Children.Remove(itemObject);
 
 					//	Check if item touches any bins
-					if (itemPoint.X + itemHeight * 0.75 >= blueBinPoint.Y || itemPoint.X + itemHeight * 0.25 <= blueBinPoint.Y + blueBin.ActualWidth)
+					if (itemPoint.X + itemWidth * 0.75 >= blueBinPoint.X && itemPoint.X + itemWidth * 0.25 <= blueBinPoint.X + blueBin.ActualWidth)
 					{
 						//	Blue bin. Tag = 0
 						if ((int)itemObject.Tag == 0)
 						{
 							currentScore++;
 						}
+						else if (gameMode == 0)
+						{
+							currentLives--;
+						}
 					}
-					else if (itemPoint.X + itemHeight * 0.75 >= orangeBinPoint.Y || itemPoint.X + itemHeight * 0.25 <= orangeBinPoint.Y + orangeBin.ActualWidth)
+					else if (itemPoint.X + itemWidth * 0.75 >= orangeBinPoint.X && itemPoint.X + itemWidth * 0.25 <= orangeBinPoint.X + orangeBin.ActualWidth)
 					{
 						//	Orange bin. Tag = 1
 						if ((int)itemObject.Tag == 1)
 						{
 							currentScore++;
 						}
+						else if (gameMode == 0)
+						{
+							currentLives--;
+						}
 					}
-					else if (itemPoint.X + itemHeight * 0.75 >= brownBinPoint.Y || itemPoint.X + itemHeight * 0.25 <= brownBinPoint.Y + brownBin.ActualWidth)
+					else if (itemPoint.X + itemWidth * 0.75 >= brownBinPoint.X && itemPoint.X + itemWidth * 0.25 <= brownBinPoint.X + brownBin.ActualWidth)
 					{
 						//	Brown bin. Tag = 2
 						if ((int)itemObject.Tag == 2)
 						{
 							currentScore++;
 						}
+						else if (gameMode == 0)
+						{
+							currentLives--;
+						}
+					}
+					else if (gameMode == 0)
+					{
+						//	When the item never touches the bin but on the floor
+						//currentLives--;
 					}
 
 					//	Update the score
@@ -546,7 +563,6 @@ namespace fyp1_prototype
 											? lastHandEvents[userID]
 											: InteractionHandEventType.None;
 					//	TODO:
-					//	Lives & Score
 					//	Scale to screensize
 					//	Randomized the item drops
 					//	items drop vertical speed
@@ -679,43 +695,6 @@ namespace fyp1_prototype
 					// into a bad state.  Ignore the frame in that case.
 				}
 			}
-		}
-
-		public class DroppingObjectManager
-		{
-			DateTime _lastCreation;
-
-			public void Start()
-			{
-				Task.Run(() =>
-				{
-					while (true)
-					{
-						Tick();
-						Task.Delay(10);
-					}
-				});
-			}
-
-			public void Tick()
-			{
-				DateTime now = DateTime.Now;
-				if (now - _lastCreation > TimeSpan.FromSeconds(1))
-				{
-					Create();
-					Console.WriteLine(now);
-					_lastCreation = now;
-				}
-			}
-
-			public void Create()
-			{
-			}
-		}
-
-		public class DroppingObject : Image
-		{
-
 		}
 
 		//	Disable maximizing window
