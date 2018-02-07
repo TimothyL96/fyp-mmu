@@ -154,7 +154,7 @@ namespace fyp1_prototype
 					Date = player.Date,
 					Password = player.Password
 				})
-				.OrderBy(pl => pl.Score) //	Ordering not working
+				.OrderBy(pl => pl.Score)
 				.ToList();
 		}
 

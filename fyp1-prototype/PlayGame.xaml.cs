@@ -134,9 +134,12 @@ namespace fyp1_prototype
 		public int gameMode;
 
 		//	Dpendency Property:
-		public static readonly DependencyProperty CurrentScoreTextProperty = DependencyProperty.Register("CurrentScoreText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Score: 0"));
-		public static readonly DependencyProperty CurrentLivesTextProperty = DependencyProperty.Register("CurrentLivesText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Lives: 0"));
-		public static readonly DependencyProperty CurrentTimeTextProperty = DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
+		public static readonly DependencyProperty CurrentScoreTextProperty =
+			DependencyProperty.Register("CurrentScoreText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Score: 0"));
+		public static readonly DependencyProperty CurrentLivesTextProperty =
+			DependencyProperty.Register("CurrentLivesText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Lives: 0"));
+		public static readonly DependencyProperty CurrentTimeTextProperty =
+			DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
 		#endregion
 
 		//	Constructor
@@ -669,7 +672,8 @@ namespace fyp1_prototype
 							{
 								var childrenPoint = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 								var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
-								if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X + itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
+								if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X + 
+									itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
 								{
 									handCursorOn = i;
 									handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
