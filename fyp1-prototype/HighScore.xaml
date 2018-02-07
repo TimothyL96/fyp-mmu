@@ -25,7 +25,7 @@
 				</materialDesign:Card>-->
 				
 				<Grid>
-					<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" Margin="25,25,0,0">Back</Button>
+					<Button Name="back" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Height="100" FontSize="24" Margin="25,25,0,0">Back</Button>
 				</Grid>
 				<k:KinectScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Top" Height="750" Width="1100" Margin="50,150,50,50">
 					<StackPanel Orientation="Vertical" Name="scrollContent"></StackPanel>					

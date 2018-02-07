@@ -24,8 +24,9 @@ namespace fyp1_prototype
 		private HandPointer capturedHandPointer;
 		KinectSensorChooser kinectSensorChooser;
 		private int playerID;
+		private int windowType;
 
-		public GameMode(KinectSensorChooser kinectSensorChooser, int playerID)
+		public GameMode(KinectSensorChooser kinectSensorChooser, int playerID, int window = -1)
 		{
 			InitializeComponent();
 
@@ -35,6 +36,9 @@ namespace fyp1_prototype
 			//	Set the class members
 			this.playerID = playerID;
 			this.kinectSensorChooser = kinectSensorChooser;
+
+			// window -1 for game, 0 for high score
+			windowType = window;
 
 			// Bind Kinect Sensor to Kinect Region
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
@@ -123,31 +127,60 @@ namespace fyp1_prototype
 		{
 			if (capturedHandPointer == e.HandPointer)
 			{
-				kinectSensorChooser.Stop();
-				DragDropImages dragDropImages = null;
-
-				if (e.HandPointer.GetIsOver(btnSurvival))
+				if (windowType == -1)
 				{
-					//	Timeless Classic
-					dragDropImages  = new DragDropImages(playerID, 0);
+					//	Show game play window
+					kinectSensorChooser.Stop();
+					DragDropImages dragDropImages = null;
 
-					VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
-				}
-				else if (e.HandPointer.GetIsOver(btnTimeAttack))
-				{
-					//	Time Attack
-					dragDropImages = new DragDropImages(playerID, 1);
+					if (e.HandPointer.GetIsOver(btnSurvival))
+					{
+						//	Survival
+						dragDropImages = new DragDropImages(playerID, 0);
 
-					VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+						VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
+					}
+					else if (e.HandPointer.GetIsOver(btnTimeAttack))
+					{
+						//	Time Attack
+						dragDropImages = new DragDropImages(playerID, 1);
+
+						VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+					}
+					else
+					{
+						VisualStateManager.GoToState(btnSurvival, "Normal", true);
+						VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
+					}
+
+					if (dragDropImages != null)
+						dragDropImages.Show();
 				}
 				else
 				{
-					VisualStateManager.GoToState(btnSurvival, "Normal", true);
-					VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
-				}
+					//	Show high score
+					if (e.HandPointer.GetIsOver(btnSurvival))
+					{
+						//	Survival
+						HighScore highScore = new HighScore(kinectSensorChooser, 0);
+						highScore.Show();
 
-				if (dragDropImages != null)
-					dragDropImages.Show();
+						VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
+					}
+					else if (e.HandPointer.GetIsOver(btnTimeAttack))
+					{
+						//	Time Attack
+						HighScore highScore = new HighScore(kinectSensorChooser, 1);
+						highScore.Show();
+
+						VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+					}
+					else
+					{
+						VisualStateManager.GoToState(btnSurvival, "Normal", true);
+						VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
+					}
+				}
 
 				e.HandPointer.Capture(null);
 				e.Handled = true;
@@ -174,16 +207,6 @@ namespace fyp1_prototype
 			}
 		}
 
-		private void timeAttack(object sender, RoutedEventArgs e)
-		{
-			//	Time Attack
-			kinectSensorChooser.Stop();
-			DragDropImages dragDropImages = new DragDropImages(playerID, 1);
-			dragDropImages.Show();
-
-			Close();
-		}
-
 		//	Disable maximizing window
 		private void Window_StateChanged(object sender, EventArgs e)
 		{
@@ -195,12 +218,40 @@ namespace fyp1_prototype
 
 		private void survival(object sender, RoutedEventArgs e)
 		{
-			//	Survival
-			kinectSensorChooser.Stop();
-			DragDropImages dragDropImages = new DragDropImages(playerID, 0);
-			dragDropImages.Show();
+			if (windowType == -1)
+			{
+				//	Survival
+				kinectSensorChooser.Stop();
+				DragDropImages dragDropImages = new DragDropImages(playerID, 0);
+				dragDropImages.Show();
 
-			Close();
+				Close();
+			}
+			else
+			{
+				//	Survival
+				HighScore highScore = new HighScore(kinectSensorChooser, 0);
+				highScore.Show();
+			}
+		}
+
+		private void timeAttack(object sender, RoutedEventArgs e)
+		{
+			if (windowType == -1)
+			{
+				//	Time Attack
+				kinectSensorChooser.Stop();
+				DragDropImages dragDropImages = new DragDropImages(playerID, 1);
+				dragDropImages.Show();
+
+				Close();
+			}
+			else
+			{
+				//	Time attack
+				HighScore highScore = new HighScore(kinectSensorChooser, 1);
+				highScore.Show();
+			}
 		}
 	}
 }

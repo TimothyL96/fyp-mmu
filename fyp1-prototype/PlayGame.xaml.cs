@@ -561,7 +561,7 @@ namespace fyp1_prototype
 
 			//	Update the score
 			ScoreRepository scoreRepository = new ScoreRepository();
-			scoreRepository.AddScore(currentScore, playerID);
+			scoreRepository.AddScore(currentScore, playerID, gameMode);
 
 			//	Delete previous saved game
 			GameRepository gameRepository = new GameRepository();
@@ -630,7 +630,6 @@ namespace fyp1_prototype
 					//	Randomized the item drops
 					//	items drop vertical speed
 					//	add more items
-					//	high score different game modes
 					//	high score ordering
 
 					//	Update the time

@@ -15,20 +15,34 @@ namespace fyp1_prototype
 	{
 		private HandPointer capturedHandPointer;
 		private KinectSensorChooser kinectSensorChooser;
+		private int gameMode;
 
-		public HighScore(KinectSensorChooser kinectSensorChooser)
+		public HighScore(KinectSensorChooser kinectSensorChooser, int gameMode)
 		{
 			InitializeComponent();
 
+			//	Set screen to center
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+			//	Set values
 			this.kinectSensorChooser = kinectSensorChooser;
+			this.gameMode = gameMode;
 
+			//	Data binding
 			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
 			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
 
-			back.FontSize = 24;
+			//	Set title
+			if (gameMode == 0)
+			{
+				Title = "Survival Mode Highscore";
+			}
+			else if (gameMode == 1)
+			{
+				Title = "Time Attack Mode Highscore";
+			}
 
+			//	Set highscore text
 			var textHeader = new Label
 			{
 				Content = "Name\t\t\t\t\t\t\t\t\t" + "Score",
@@ -40,7 +54,7 @@ namespace fyp1_prototype
 			ScoreRepository sro = new ScoreRepository();
 			PlayersRepository pro = new PlayersRepository();
 
-			var highscore = sro.GetAllScore();
+			var highscore = sro.GetAllScore(gameMode);
 			for (int i = highscore.Count - 1; i >= 0; i--)
 			{
 				List<PlayersRepository.PlayerDto> user = pro.GetPlayerWithId(highscore[i].PlayerScore);

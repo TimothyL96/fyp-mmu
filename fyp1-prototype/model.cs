@@ -73,6 +73,9 @@ namespace fyp1_prototype
 
 		[Column("playerScore")]
 		public int PlayerScore { get; set; }
+
+		[Column("gameMode")]
+		public int GameMode { get; set; }
 	}
 
 	//	Item class
@@ -326,7 +329,9 @@ namespace fyp1_prototype
 	{
 		public ScoreRepository()
 		{
-
+			DatabaseContext dc = new DatabaseContext();
+			dc.Database.ExecuteSqlCommand("ALTER TABLE score AUTO_INCREMENT = 1;");
+			dc.SaveChanges();
 		}
 
 		public class ScoreDto
@@ -334,17 +339,19 @@ namespace fyp1_prototype
 			public int Id { get; set; }
 			public int Value { get; set; }
 			public string DateTime { get; set; }
-			public int PlayerScore { get; set; }	//	Player ID foreign key
+			public int PlayerScore { get; set; }    //	Player ID foreign key
+			public int GameMode { get; set; }
 		}
 
-		public void AddScore(int score, int playerID)
+		public void AddScore(int score, int playerID, int gameMode)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			dc.Score.Add(new Score()
 			{
 				Value = score,
 				DateTime = DateTime.Now.ToString(),
-				PlayerScore = playerID
+				PlayerScore = playerID,
+				GameMode = gameMode
 			});
 			dc.SaveChanges();
 
@@ -352,16 +359,18 @@ namespace fyp1_prototype
 			UpdatePersonalBest();
 		}
 
-		public List<ScoreDto> GetAllScore()
+		public List<ScoreDto> GetAllScore(int gameMode)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc
 				.Score
+				.Where(score => score.GameMode == gameMode)
 				.Select(score => new ScoreDto()
 				{
 					Value = score.Value,
 					DateTime = score.DateTime,
-					PlayerScore = score.PlayerScore
+					PlayerScore = score.PlayerScore,
+					GameMode = score.GameMode
 				})
 				.ToList();
 		}

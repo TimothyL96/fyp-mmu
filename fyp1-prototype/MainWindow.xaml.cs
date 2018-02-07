@@ -368,8 +368,8 @@ namespace fyp1_prototype
 				{
 					VisualStateManager.GoToState(btn_highScores, "MouseOver", true);
 
-					HighScore highScore = new HighScore(kinectSensorChooser);
-					highScore.Show();
+					GameMode gameMode = new GameMode(kinectSensorChooser, playerID, 0);
+					gameMode.Show();
 				}
 				else if (e.HandPointer.GetIsOver(btn_help))
 				{
@@ -414,8 +414,8 @@ namespace fyp1_prototype
 
 		private void highscore(object sender, RoutedEventArgs e)
 		{
-			HighScore highScore = new HighScore(kinectSensorChooser);
-			highScore.Show();
+			GameMode gameMode = new GameMode(kinectSensorChooser, playerID, 0);
+			gameMode.Show();
 		}
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
