@@ -349,7 +349,7 @@ namespace fyp1_prototype
 			dc.Score.Add(new Score()
 			{
 				Value = score,
-				DateTime = DateTime.Now.ToString(),
+				DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
 				PlayerScore = playerID,
 				GameMode = gameMode
 			});

@@ -232,6 +232,8 @@ namespace fyp1_prototype
 				//	Survival
 				HighScore highScore = new HighScore(kinectSensorChooser, 0);
 				highScore.Show();
+
+				Close();
 			}
 		}
 
@@ -251,6 +253,8 @@ namespace fyp1_prototype
 				//	Time attack
 				HighScore highScore = new HighScore(kinectSensorChooser, 1);
 				highScore.Show();
+
+				Close();
 			}
 		}
 	}

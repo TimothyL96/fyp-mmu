@@ -572,7 +572,7 @@ namespace fyp1_prototype
 
 			//	Display the score
 			countdown.Text = "FINAL SCORE:\n" + currentScore;
-			countdown.FontSize = 256;
+			countdown.FontSize = 200;
 			countdown.Width = screenWidth;
 			Canvas.SetLeft(countdown, 0);
 			Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
