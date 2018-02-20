@@ -660,7 +660,7 @@ namespace fyp1_prototype
 					//	add more items
 					//	high score ordering
 					//	fix kinect start and start app ordering
-
+					
 					//	Update the time
 					UpdateScoreLivesTime();
 
@@ -676,8 +676,8 @@ namespace fyp1_prototype
 							{
 								var childrenPoint = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 								var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
-								if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X +
-									itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
+								if (handCursorPoint.X > childrenPoint.X && handCursorPoint.X < childrenPoint.X +
+									itemWidth && handCursorPoint.Y > childrenPoint.Y && handCursorPoint.Y < childrenPoint.Y + itemHeight)
 								{
 									handCursorOn = i;
 									handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
@@ -691,9 +691,9 @@ namespace fyp1_prototype
 						//	Move the item with the hand cursor
 						if (handCursorOn != -1)
 						{
-							var p = canvas.Children[handCursorOn].TranslatePoint(new Point(0, 0), canvas);
-							Canvas.SetLeft(canvas.Children[handCursorOn], p.X + handCursorOnLeftDistant);
-							Canvas.SetTop(canvas.Children[handCursorOn], p.Y + handCursorOnTopDistant);
+							var p = handCursor.TranslatePoint(new Point(0, 0), canvas);
+							Canvas.SetLeft(canvas.Children[handCursorOn], p.X - handCursorOnLeftDistant);
+							Canvas.SetTop(canvas.Children[handCursorOn], p.Y - handCursorOnTopDistant);
 						}
 					}
 					else if (lastHandEvent == InteractionHandEventType.GripRelease)
@@ -860,10 +860,10 @@ namespace fyp1_prototype
 			//convert the value to X/Y
 			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
 			SkeletonPoint point = new SkeletonPoint();
-			//point.X = ScaleVector(screenWidth, joint.Position.X);
-			//point.Y = ScaleVector(screenHeight, -joint.Position.Y);
-			point.X = ScaleVectorX(screenWidth, joint.Position.X);
-			point.Y = ScaleVectorY(screenHeight, -joint.Position.Y);
+			point.X = ScaleVector(screenWidth, joint.Position.X);
+			point.Y = ScaleVector(screenHeight, -joint.Position.Y);
+			//point.X = ScaleVectorX(screenWidth, joint.Position.X);
+			//point.Y = ScaleVectorY(screenHeight, -joint.Position.Y);
 			point.Z = joint.Position.Z;
 
 			Joint scaledJoint = joint;
@@ -879,7 +879,7 @@ namespace fyp1_prototype
 		//	Scale the X and Y to the screen size: Kinect 640x480 30 fps
 		private float ScaleVector(int length, float position)
 		{
-			float value = ((((length) / 1f) / 2f) * position * 5) + (length / 2);
+			float value = ((((float)length / 1f) / 2f) * position) + (length / 2);
 			if (value > length)
 			{
 				return (float)length;
@@ -919,10 +919,10 @@ namespace fyp1_prototype
 		{
 			SkeletonPoint point = new SkeletonPoint
 			{
-				//point.X = ScaleVector(screenWidth, rightHand.Position.X);
-				//point.Y = ScaleVector(screenHeight, -rightHand.Position.Y);
-				X = ScaleVectorX(screenWidth, rightHand.Position.X),
-				Y = ScaleVectorY(screenHeight, -rightHand.Position.Y),
+				X = ScaleVector(screenWidth, rightHand.Position.X),
+				Y = ScaleVector(screenHeight, -rightHand.Position.Y),
+				//X = ScaleVectorX(screenWidth, rightHand.Position.X),
+				//Y = ScaleVectorY(screenHeight, -rightHand.Position.Y),
 				Z = rightHand.Position.Z
 			};
 
@@ -938,21 +938,28 @@ namespace fyp1_prototype
 					return;
 				}
 
-				//DepthImagePoint rightDepthPoint =
-				//	depth.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position);
-				
-				DepthImagePoint rightDepthPoint =
+				try
+				{
+					//DepthImagePoint rightDepthPoint =
+				 //	depth.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position);
+
+					DepthImagePoint rightDepthPoint =
 					kinectSensorChooser.Kinect.CoordinateMapper.MapSkeletonPointToDepthPoint(first.Joints[JointType.HandRight].Position, DepthImageFormat.Resolution640x480Fps30);
 
-				//ColorImagePoint rightColorPoint =
-				//	depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
-				//	ColorImageFormat.RgbResolution640x480Fps30);
+					//ColorImagePoint rightColorPoint =
+					//	depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
+					//	ColorImageFormat.RgbResolution640x480Fps30);
 
-				ColorImagePoint rightColorPoint =
-					kinectSensorChooser.Kinect.CoordinateMapper.MapDepthPointToColorPoint(DepthImageFormat.Resolution640x480Fps30,
-					rightDepthPoint, ColorImageFormat.RgbResolution640x480Fps30);
+					ColorImagePoint rightColorPoint =
+						kinectSensorChooser.Kinect.CoordinateMapper.MapDepthPointToColorPoint(DepthImageFormat.Resolution640x480Fps30,
+						rightDepthPoint, ColorImageFormat.RgbResolution640x480Fps30);
 
-				CameraPosition(handCursor, rightColorPoint);
+					CameraPosition(handCursor, rightColorPoint);
+				}
+				catch (Exception)
+				{
+
+				}
 			}
 		}
 
@@ -961,11 +968,11 @@ namespace fyp1_prototype
 			// 640 x 480
 			//Canvas.SetLeft(element, point.X * (screenWidth / 1280) - element.Width / 2);
 			//Canvas.SetTop(element, point.Y * (screenHeight / 960) - element.Height / 2);
-			Canvas.SetLeft(element, point.X * screenFactorX * 1.5 - element.Width / 2);
-			Canvas.SetTop(element, point.Y * screenFactorY * 1.5 - element.Height / 2);
+			Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
+			Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
 
-			screenX = (point.X * screenFactorX * 1.5).ToString();
-			screenY = (point.Y * screenFactorY * 1.5).ToString();
+			//screenX = (point.X * screenFactorX).ToString();
+			//screenY = (point.Y * screenFactorY).ToString();
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
