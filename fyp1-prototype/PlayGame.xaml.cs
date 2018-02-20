@@ -157,7 +157,6 @@ namespace fyp1_prototype
 
 		//	TODO:
 		//	Scale to screensize - next to do
-		//	items drop vertical speed
 		//	add more items
 		//	fix kinect start and stop app crash
 		//	personal best at homescreen
@@ -338,6 +337,7 @@ namespace fyp1_prototype
 			UpdateScoreLivesTime();
 		}
 
+		//	Function that check if the game ends according to the selected game mode
 		private void CheckGameEnd()
 		{
 			//	Check if game ends
@@ -479,6 +479,36 @@ namespace fyp1_prototype
 			//	Get the specific item
 			ItemsRepository.ItemsDto itemsDto = itemsRepository.GetItem(itemGame)[0];
 
+			#region Randomize specific item drop down speed
+			//	Randomize speed / difficulty
+			randomVertical = new Random();
+
+			//	If game mode is survival mode
+			if (gameMode == 0)
+			{
+				if (previousTime + watch.ElapsedMilliseconds / 1000 <= 30)
+				{
+					//	If less than or equal to 30 seconds
+					verticalLength = randomVertical.Next(1, 9); // 1 to 8
+				}
+				else if (previousTime + watch.ElapsedMilliseconds / 1000 <= 60)
+				{
+					//	If game time passes 30 seconds and before 1 minute
+					verticalLength = randomVertical.Next(6, 13); //	6 to 12
+				}
+				else
+				{
+					//	If game time passes 1 minute
+					verticalLength = randomVertical.Next(10, 22); // 10 to 21
+				}
+			}
+			//	If game mode is time attack mode
+			else if (gameMode == 1)
+			{
+				verticalLength = randomVertical.Next(3, 19); // 3 to 18
+			}
+			#endregion
+
 			Application.Current.Dispatcher.Invoke(delegate
 			{
 				image = new Image
@@ -486,7 +516,10 @@ namespace fyp1_prototype
 					Width = imageWidth,
 					Height = imageHeight,
 					Source = new BitmapImage(new Uri(itemsDto.Item_Image_Link, UriKind.Relative)),
-					Tag = itemsDto.Item_Type,
+					Tag = new ItemTag() {
+						ItemType = itemsDto.Item_Type,
+						DropSpeed = verticalLength,
+					},
 				};
 
 				//	Randomize
@@ -522,10 +555,7 @@ namespace fyp1_prototype
 				Point brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
 
 				//	Push the image down
-				Canvas.SetTop(itemObject, itemPoint.Y + verticalLength);
-
-				//	Define speed / difficulty
-				verticalLength = 10;
+				Canvas.SetTop(itemObject, itemPoint.Y + ((ItemTag)itemObject.Tag).DropSpeed);
 
 				//	Update the item point
 				itemPoint = itemObject.TranslatePoint(new Point(0, 0), canvas);
@@ -539,7 +569,7 @@ namespace fyp1_prototype
 					if (itemPoint.X + itemWidth * 0.75 >= blueBinPoint.X && itemPoint.X + itemWidth * 0.25 <= blueBinPoint.X + blueBin.ActualWidth)
 					{
 						//	Blue bin. Tag = 0
-						if ((int)itemObject.Tag == 0)
+						if (((ItemTag)itemObject.Tag).ItemType == 0)
 						{
 							currentScore++;
 						}
@@ -551,7 +581,7 @@ namespace fyp1_prototype
 					else if (itemPoint.X + itemWidth * 0.75 >= orangeBinPoint.X && itemPoint.X + itemWidth * 0.25 <= orangeBinPoint.X + orangeBin.ActualWidth)
 					{
 						//	Orange bin. Tag = 1
-						if ((int)itemObject.Tag == 1)
+						if (((ItemTag)itemObject.Tag).ItemType == 1)
 						{
 							currentScore++;
 						}
@@ -563,7 +593,7 @@ namespace fyp1_prototype
 					else if (itemPoint.X + itemWidth * 0.75 >= brownBinPoint.X && itemPoint.X + itemWidth * 0.25 <= brownBinPoint.X + brownBin.ActualWidth)
 					{
 						//	Brown bin. Tag = 2
-						if ((int)itemObject.Tag == 2)
+						if (((ItemTag)itemObject.Tag).ItemType == 2)
 						{
 							currentScore++;
 						}
