@@ -124,6 +124,11 @@ namespace fyp1_prototype
 		//	Has game ended flag
 		private bool hasGameEnded = false;
 
+		//	Random variables
+		Random random;
+		Random randomHorizontal;
+		Random randomVertical;
+
 		//	DipatchTimer
 		DispatcherTimer timerCountdown = new DispatcherTimer();
 		DispatcherTimer timerCreateImage = new DispatcherTimer();
@@ -150,9 +155,12 @@ namespace fyp1_prototype
 			DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
 		#endregion
 
-		private string screenX;
-		private string screenXEquation;
-		private string screenY;
+		//	TODO:
+		//	Scale to screensize - next to do
+		//	items drop vertical speed
+		//	add more items
+		//	fix kinect start and stop app crash
+		//	personal best at homescreen
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
@@ -316,9 +324,6 @@ namespace fyp1_prototype
 			}
 
 			CheckGameEnd();
-
-			CurrentScoreText = screenX;
-			CurrentTimeText = screenY;
 		}
 
 		//	Set up data for loading game
@@ -468,7 +473,7 @@ namespace fyp1_prototype
 			Image image;
 
 			//	Generate random number for the random recycleable item from the database
-			Random random = new Random();
+			random = new Random();
 			itemGame = random.Next(1, 10);
 
 			//	Get the specific item
@@ -484,15 +489,13 @@ namespace fyp1_prototype
 					Tag = itemsDto.Item_Type,
 				};
 
+				//	Randomize
+				randomHorizontal = new Random();
+				horizontalLength = randomHorizontal.Next(0, horizontalMaxLength);
+
 				canvas.Children.Add(image);
 				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], horizontalLength);
 				Point p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
-
-				//	Randomize
-				horizontalLength += horizontalLengthChange;
-
-				if (horizontalLength >= horizontalMaxLength)
-					horizontalLength = horizontalLengthStart;  //Reset to the most left of screen
 			});
 		}
 
@@ -653,12 +656,6 @@ namespace fyp1_prototype
 					var lastHandEvent = lastHandEvents.ContainsKey(userID)
 											? lastHandEvents[userID]
 											: InteractionHandEventType.None;
-					//	TODO:
-					//	Scale to screensize - next to do
-					//	Randomized the item drops
-					//	items drop vertical speed
-					//	add more items
-					//	fix kinect start and stop app ordering
 					
 					//	Update the time
 					UpdateScoreLivesTime();
@@ -861,8 +858,6 @@ namespace fyp1_prototype
 			SkeletonPoint point = new SkeletonPoint();
 			point.X = ScaleVector(screenWidth, joint.Position.X);
 			point.Y = ScaleVector(screenHeight, -joint.Position.Y);
-			//point.X = ScaleVectorX(screenWidth, joint.Position.X);
-			//point.Y = ScaleVectorY(screenHeight, -joint.Position.Y);
 			point.Z = joint.Position.Z;
 
 			Joint scaledJoint = joint;
@@ -920,8 +915,6 @@ namespace fyp1_prototype
 			{
 				X = ScaleVector(screenWidth, rightHand.Position.X),
 				Y = ScaleVector(screenHeight, -rightHand.Position.Y),
-				//X = ScaleVectorX(screenWidth, rightHand.Position.X),
-				//Y = ScaleVectorY(screenHeight, -rightHand.Position.Y),
 				Z = rightHand.Position.Z
 			};
 
@@ -965,13 +958,8 @@ namespace fyp1_prototype
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
 			// 640 x 480
-			//Canvas.SetLeft(element, point.X * (screenWidth / 1280) - element.Width / 2);
-			//Canvas.SetTop(element, point.Y * (screenHeight / 960) - element.Height / 2);
 			Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
 			Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
-
-			//screenX = (point.X * screenFactorX).ToString();
-			//screenY = (point.Y * screenFactorY).ToString();
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
@@ -979,10 +967,10 @@ namespace fyp1_prototype
 			timerCreateImage.Stop();
 			timerPushImage.Stop();
 
-			if (sensor != null)
+			/*if (sensor != null)
 				sensor.Stop();
 
-			kinectSensorChooser.Stop();
+			kinectSensorChooser.Stop();*/
 		}
 
 		//	Temporary click function
