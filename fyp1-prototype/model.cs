@@ -372,6 +372,7 @@ namespace fyp1_prototype
 					PlayerScore = score.PlayerScore,
 					GameMode = score.GameMode
 				})
+				.OrderBy(s => s.Value)
 				.ToList();
 		}
 

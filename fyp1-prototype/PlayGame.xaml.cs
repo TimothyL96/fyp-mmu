@@ -654,12 +654,11 @@ namespace fyp1_prototype
 											? lastHandEvents[userID]
 											: InteractionHandEventType.None;
 					//	TODO:
-					//	Scale to screensize
+					//	Scale to screensize - next to do
 					//	Randomized the item drops
 					//	items drop vertical speed
 					//	add more items
-					//	high score ordering
-					//	fix kinect start and start app ordering
+					//	fix kinect start and stop app ordering
 					
 					//	Update the time
 					UpdateScoreLivesTime();
