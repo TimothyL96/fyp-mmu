@@ -176,18 +176,14 @@ namespace fyp1_prototype
 				.ToList();
 		}
 
-		//	Get specific data of players with Data Transfer Object (Get specific column)
-		public List<PlayerDto> GetAllPlayerSpecificColumn()
+		//	Get score data of specific player with Data Transfer Object (Get specific column)
+		public int GetPlayerScore(int playerID)
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc.Players
-				.Select(player => new PlayerDto()
-				{
-					Id = player.Id,
-					Username = player.Username,
-					Score = player.Score
-				})
-				.ToList();
+				.Where(p => p.Score == playerID)
+				.Select(p => p.Score)
+				.FirstOrDefault();
 		}
 
 		//	Get all scores of all players
@@ -356,7 +352,7 @@ namespace fyp1_prototype
 			dc.SaveChanges();
 
 			//	Update best score at player table
-			UpdatePersonalBest();
+			UpdatePersonalBest(playerID, score);
 		}
 
 		public List<ScoreDto> GetAllScore(int gameMode)
@@ -376,9 +372,15 @@ namespace fyp1_prototype
 				.ToList();
 		}
 
-		public void UpdatePersonalBest()
+		public void UpdatePersonalBest(int playerID, int latestScore)
 		{
+			PlayersRepository playersRepository = new PlayersRepository();
+			int storedScore = playersRepository.GetPlayerScore(playerID);
 
+			if (storedScore < latestScore)
+			{
+				playersRepository.ModifyPlayerScore(playerID, latestScore);
+			}
 		}
 	}
 
