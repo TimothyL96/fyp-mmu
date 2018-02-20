@@ -150,9 +150,9 @@ namespace fyp1_prototype
 			DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
 		#endregion
 
-		private int screenX;
+		private string screenX;
 		private string screenXEquation;
-		private int screenY;
+		private string screenY;
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
@@ -316,6 +316,9 @@ namespace fyp1_prototype
 			}
 
 			CheckGameEnd();
+
+			CurrentScoreText = screenX;
+			CurrentTimeText = screenY;
 		}
 
 		//	Set up data for loading game
@@ -328,6 +331,30 @@ namespace fyp1_prototype
 
 			//	Update the screen's score, livse and time
 			UpdateScoreLivesTime();
+		}
+
+		private void CheckGameEnd()
+		{
+			//	Check if game ends
+			if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60) && hasGameEnded == false)
+			{
+				//	Game ends
+				hasGameEnded = true;
+
+				//	Stop the timers
+				timerCreateImage.Stop();
+				timerPushImage.Stop();
+				watch.Stop();
+
+				//	Display text
+				countdown.Visibility = Visibility.Visible;
+				countdown.Text = "END";
+
+				//	Delay three second and display score
+				timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
+				timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
+				timerGameEnd.Start();
+			}
 		}
 
 		//	IInteractionClient for DummyInteractionClient
@@ -727,30 +754,6 @@ namespace fyp1_prototype
 			}
 		}
 
-		private void CheckGameEnd()
-		{
-			//	Check if game ends
-			if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60) && hasGameEnded == false)
-			{
-				//	Game ends
-				hasGameEnded = true;
-
-				//	Stop the timers
-				timerCreateImage.Stop();
-				timerPushImage.Stop();
-				watch.Stop();
-
-				//	Display text
-				countdown.Visibility = Visibility.Visible;
-				countdown.Text = "END";
-
-				//	Delay three second and display score
-				timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
-				timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
-				timerGameEnd.Start();
-			}
-		}
-
 		private void SensorOnSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs skeletonFrameReadyEventArgs)
 		{
 			using (SkeletonFrame skeletonFrame = skeletonFrameReadyEventArgs.OpenSkeletonFrame())
@@ -935,12 +938,19 @@ namespace fyp1_prototype
 					return;
 				}
 
+				//DepthImagePoint rightDepthPoint =
+				//	depth.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position);
+				
 				DepthImagePoint rightDepthPoint =
-					depth.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position);
+					kinectSensorChooser.Kinect.CoordinateMapper.MapSkeletonPointToDepthPoint(first.Joints[JointType.HandRight].Position, DepthImageFormat.Resolution640x480Fps30);
+
+				//ColorImagePoint rightColorPoint =
+				//	depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
+				//	ColorImageFormat.RgbResolution640x480Fps30);
 
 				ColorImagePoint rightColorPoint =
-					depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
-					ColorImageFormat.RgbResolution640x480Fps30);
+					kinectSensorChooser.Kinect.CoordinateMapper.MapDepthPointToColorPoint(DepthImageFormat.Resolution640x480Fps30,
+					rightDepthPoint, ColorImageFormat.RgbResolution640x480Fps30);
 
 				CameraPosition(handCursor, rightColorPoint);
 			}
@@ -948,10 +958,14 @@ namespace fyp1_prototype
 
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
+			// 640 x 480
 			//Canvas.SetLeft(element, point.X * (screenWidth / 1280) - element.Width / 2);
 			//Canvas.SetTop(element, point.Y * (screenHeight / 960) - element.Height / 2);
-			Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
-			Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
+			Canvas.SetLeft(element, point.X * screenFactorX * 1.5 - element.Width / 2);
+			Canvas.SetTop(element, point.Y * screenFactorY * 1.5 - element.Height / 2);
+
+			screenX = (point.X * screenFactorX * 1.5).ToString();
+			screenY = (point.Y * screenFactorY * 1.5).ToString();
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
