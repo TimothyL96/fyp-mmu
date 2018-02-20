@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Data;
 using System.Diagnostics;
+using System.Windows.Media;
+using System.Windows.Input;
 
 namespace fyp1_prototype
 {
@@ -59,8 +61,8 @@ namespace fyp1_prototype
 		private static int screenHeight;
 
 		//	Screen factor of horizontal and vertical by dividing screenWidth and screenHeight by Kinect's 640x480 for scaling
-		private int screenFactorX;
-		private int screenFactorY;
+		private float screenFactorX;
+		private float screenFactorY;
 
 		//	Dictionary for left and right hand
 		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
@@ -68,6 +70,9 @@ namespace fyp1_prototype
 
 		//	Indicate on which item the hand cursor is on by index of canvas.children
 		private int handCursorOn = -1;
+
+		//	Flag for setting hand cursor on left & top distant
+		private bool handCursorOnSet = false;
 
 		//	When the hand cursor is gripping the item, record the left and right distance to move the item in the right ratio from the point of grip
 		private double handCursorOnLeftDistant;
@@ -114,7 +119,10 @@ namespace fyp1_prototype
 		private int totalItemCount = 0;
 
 		//	Flag for counting down. After 3 seconds will run the game
-		private int countdownFlag = 3;
+		private double countdownFlag = 4;
+
+		//	Has game ended flag
+		private bool hasGameEnded = false;
 
 		//	DipatchTimer
 		DispatcherTimer timerCountdown = new DispatcherTimer();
@@ -142,6 +150,10 @@ namespace fyp1_prototype
 			DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
 		#endregion
 
+		private int screenX;
+		private string screenXEquation;
+		private int screenY;
+
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
 		{
@@ -162,7 +174,7 @@ namespace fyp1_prototype
 
 			//	Reset the stopwatch
 			watch.Reset();
-			
+
 			//	Default value for the score, lives and time
 			currentScore = 0;
 			currentLives = 3;
@@ -192,7 +204,7 @@ namespace fyp1_prototype
 			//	Get total item counts
 			totalItemCount = itemsRepository.GetCount();
 		}
-	
+
 		//	When window is loaded
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -220,16 +232,6 @@ namespace fyp1_prototype
 			//	Vertical max length is screen height minus recycle bin height minus 25% of a item height
 			verticalMaxLength = screenHeight - (int)blueBin.ActualHeight - (int)(itemHeight * 0.75);
 			horizontalMaxLength = screenWidth - itemWidth;
-
-			//	test - start the game
-			//	Delay one second
-			System.Threading.Thread.Sleep(1000);
-
-			//	Start counting down
-			timerCountdown.Tick += new EventHandler(Tick_Countdown);
-			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
-			countdown.Visibility = Visibility.Visible;
-			timerCountdown.Start();
 		}
 
 		//	When Kinect is started or stopped
@@ -312,6 +314,8 @@ namespace fyp1_prototype
 			{
 				CurrentTimeText = "Time: " + Convert.ToString((60 - Convert.ToInt32(currentTime)));
 			}
+
+			CheckGameEnd();
 		}
 
 		//	Set up data for loading game
@@ -321,7 +325,7 @@ namespace fyp1_prototype
 			previousTime = time;
 			currentScore = score;
 			this.itemGame = itemGame;
-			
+
 			//	Update the screen's score, livse and time
 			UpdateScoreLivesTime();
 		}
@@ -336,7 +340,7 @@ namespace fyp1_prototype
 				double y
 				);
 		}
-		
+
 		//	Dummy Interaction Client with Interaction Info
 		public class DummyInteractionClient : Microsoft.Kinect.Toolkit.Interaction.IInteractionClient
 		{
@@ -354,7 +358,7 @@ namespace fyp1_prototype
 				return result;
 			}
 		}
-		
+
 		private void InitializeSkeleton()
 		{
 			if (DesignerProperties.GetIsInDesignMode(this))
@@ -374,35 +378,50 @@ namespace fyp1_prototype
 
 			_interactionStream = new InteractionStream(sensor, new DummyInteractionClient());
 			_interactionStream.InteractionFrameReady += InteractionStreamOnInteractionFrameReady;
-			   
+
 			sensor.DepthFrameReady += SensorOnDepthFrameReady;
 			sensor.SkeletonFrameReady += SensorOnSkeletonFrameReady;
 			sensor.AllFramesReady += SensorAllFramesReady;
-			
+
 			if (!sensor.IsRunning)
 				sensor.Start();
 
 			//	Delay one second
-			System.Threading.Thread.Sleep(1000);
+			//System.Threading.Thread.Sleep(1000);
 
 			//	Start counting down
 			timerCountdown.Tick += new EventHandler(Tick_Countdown);
-			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
-			countdown.Visibility = Visibility.Visible;
+			timerCountdown.Interval = TimeSpan.FromMilliseconds(100);
 			timerCountdown.Start();
+
+			//	Show the text box
+			countdown.Visibility = Visibility.Visible;
+			countdown.Width = 1000;
 		}
-		
+
 		private void Tick_Countdown(object source, EventArgs e)
 		{
-			countdownFlag--;
-			countdown.Text = countdownFlag.ToString();
+			if (countdownFlag == 4)
+			{
+				countdown.FontSize = 396;
+				countdown.Text = (countdownFlag - 1).ToString();
+				countdownFlag--;
+			}
+			else
+			{
+				countdownFlag -= 0.1;
+				countdown.Text = ((int)countdownFlag + 1).ToString();
+			}
 
-			if (countdownFlag == 0)
+			Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+			Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
+
+			if (countdownFlag <= 0)
 			{
 				//	Start the timer
 				watch.Start();
 
-				//	Start counting down
+				//	Start create images
 				timerCreateImage.Tick += new EventHandler(Tick_CreateImage);
 				timerCreateImage.Interval = TimeSpan.FromMilliseconds(1500);
 				timerCreateImage.Start();
@@ -532,27 +551,6 @@ namespace fyp1_prototype
 					//	Update the score
 					UpdateScoreLivesTime();
 				}
-
-				//	testtt
-				//	Check if game ends
-				if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60))
-				{
-					//	Game ends
-
-					//	Stop the timers
-					timerCreateImage.Stop();
-					timerPushImage.Stop();
-					watch.Stop();
-
-					//	Display text
-					countdown.Visibility = Visibility.Visible;
-					countdown.Text = "END";
-
-					//	Delay three second and display score
-					timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
-					timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
-					timerGameEnd.Start();
-				}
 			}
 		}
 
@@ -582,11 +580,11 @@ namespace fyp1_prototype
 
 			//	Auto back after 5 seconds
 			timerGameBack.Tick += new EventHandler(Tick_GameBack);
-			timerGameBack.Interval = TimeSpan.FromMilliseconds(5000);
+			timerGameBack.Interval = TimeSpan.FromMilliseconds(3000);
 			timerGameBack.Start();
 		}
 
-		//	Close the game 5 seconds after game end
+		//	Close the game 3 seconds after game end
 		private void Tick_GameBack(object source, EventArgs e)
 		{
 			//	Stop the one time timer
@@ -602,16 +600,16 @@ namespace fyp1_prototype
 			{
 				if (iaf == null)
 					return;
-     
+
 				iaf.CopyInteractionDataTo(_userInfos);
 			}
-    
+
 			foreach (var userInfo in _userInfos)
 			{
 				var userID = userInfo.SkeletonTrackingId;
 				if (userID == 0)
 					continue;
-     
+
 				var hands = userInfo.HandPointers;
 
 				foreach (var hand in hands)
@@ -624,7 +622,7 @@ namespace fyp1_prototype
 
 					if (hand.HandEventType != InteractionHandEventType.None)
 						lastHandEvents[userID] = hand.HandEventType;
-     
+
 					var lastHandEvent = lastHandEvents.ContainsKey(userID)
 											? lastHandEvents[userID]
 											: InteractionHandEventType.None;
@@ -634,31 +632,10 @@ namespace fyp1_prototype
 					//	items drop vertical speed
 					//	add more items
 					//	high score ordering
+					//	fix kinect start and start app ordering
 
 					//	Update the time
 					UpdateScoreLivesTime();
-
-					//	Check if game ends
-					if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60))
-					{
-						//	Game ends
-
-						//	Stop the timers
-						timerCreateImage.Stop();
-						timerPushImage.Stop();
-						watch.Stop();
-
-						//	Display text
-						countdown.Visibility = Visibility.Visible;
-						countdown.Text = "END";
-						Canvas.SetTop(countdown, (screenHeight / 2) - (countdown.ActualHeight / 2));
-						Canvas.SetLeft(countdown, (screenWidth / 2) - (countdown.ActualWidth / 2));
-
-						//	Delay three second
-						timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
-						timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
-						timerGameEnd.Start();
-					}
 
 					if (lastHandEvent == InteractionHandEventType.Grip)
 					{
@@ -666,18 +643,19 @@ namespace fyp1_prototype
 						handCursor.Source = new BitmapImage(new Uri("Resources/pointerWhite.png", UriKind.Relative));
 
 						//	Find the item number of which the hand cursor is on
-						if (handCursorOn == -1)
+						if (handCursorOn == -1 && handCursorOnSet == false)
 						{
 							for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 							{
 								var childrenPoint = canvas.Children[i].TranslatePoint(new Point(0, 0), canvas);
 								var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
-								if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X + 
+								if (handCursorPoint.X >= childrenPoint.X && handCursorPoint.X <= childrenPoint.X +
 									itemWidth && handCursorPoint.Y >= childrenPoint.Y && handCursorPoint.Y <= childrenPoint.Y + itemHeight)
 								{
 									handCursorOn = i;
 									handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
 									handCursorOnTopDistant = handCursorPoint.Y - childrenPoint.Y;
+									handCursorOnSet = true;
 									break;
 								}
 							}
@@ -686,7 +664,7 @@ namespace fyp1_prototype
 						//	Move the item with the hand cursor
 						if (handCursorOn != -1)
 						{
-							var p = handCursor.TranslatePoint(new Point(0, 0), canvas);
+							var p = canvas.Children[handCursorOn].TranslatePoint(new Point(0, 0), canvas);
 							Canvas.SetLeft(canvas.Children[handCursorOn], p.X + handCursorOnLeftDistant);
 							Canvas.SetTop(canvas.Children[handCursorOn], p.Y + handCursorOnTopDistant);
 						}
@@ -696,11 +674,12 @@ namespace fyp1_prototype
 						//	If hand grip released, show normal cursor
 						handCursor.Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative));
 						handCursorOn = -1;
+						handCursorOnSet = false;
 					}
 					else if (hand.IsPressed)
 					{
 						//	If hand pressed the back, go back:
-						
+
 						//	Get points of hand cursor and back button
 						var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
 						var backPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
@@ -748,13 +727,37 @@ namespace fyp1_prototype
 			}
 		}
 
+		private void CheckGameEnd()
+		{
+			//	Check if game ends
+			if ((gameMode == 0 && currentLives == 0) || (gameMode == 1 && currentTime >= 60) && hasGameEnded == false)
+			{
+				//	Game ends
+				hasGameEnded = true;
+
+				//	Stop the timers
+				timerCreateImage.Stop();
+				timerPushImage.Stop();
+				watch.Stop();
+
+				//	Display text
+				countdown.Visibility = Visibility.Visible;
+				countdown.Text = "END";
+
+				//	Delay three second and display score
+				timerGameEnd.Tick += new EventHandler(Tick_GameEnd);
+				timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
+				timerGameEnd.Start();
+			}
+		}
+
 		private void SensorOnSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs skeletonFrameReadyEventArgs)
 		{
 			using (SkeletonFrame skeletonFrame = skeletonFrameReadyEventArgs.OpenSkeletonFrame())
 			{
 				if (skeletonFrame == null)
 					return;
-      
+
 				try
 				{
 					skeletonFrame.CopySkeletonDataTo(_skeletons);
@@ -773,9 +776,9 @@ namespace fyp1_prototype
 		{
 			using (DepthImageFrame depthFrame = depthImageFrameReadyEventArgs.OpenDepthImageFrame())
 			{
-				 if (depthFrame == null)
-					 return;
-      
+				if (depthFrame == null)
+					return;
+
 				try
 				{
 					_interactionStream.ProcessDepth(depthFrame.GetRawPixelData(), depthFrame.Timestamp);
@@ -813,7 +816,7 @@ namespace fyp1_prototype
 				return bitmapimage;
 			}
 		}
-		
+
 		private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 			Skeleton first = GetFirstSkeleton(e);
@@ -843,8 +846,7 @@ namespace fyp1_prototype
 
 				Skeleton first = (from s in allSkeletons
 								  where s.TrackingState == SkeletonTrackingState.Tracked
-								  select s).ElementAt(0);
-				//.FirstOrDefault();
+								  select s).FirstOrDefault();
 
 				return first;
 			}
@@ -855,8 +857,10 @@ namespace fyp1_prototype
 			//convert the value to X/Y
 			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
 			SkeletonPoint point = new SkeletonPoint();
-			point.X = ScaleVector(screenWidth, joint.Position.X);
-			point.Y = ScaleVector(screenHeight, -joint.Position.Y);
+			//point.X = ScaleVector(screenWidth, joint.Position.X);
+			//point.Y = ScaleVector(screenHeight, -joint.Position.Y);
+			point.X = ScaleVectorX(screenWidth, joint.Position.X);
+			point.Y = ScaleVectorY(screenHeight, -joint.Position.Y);
 			point.Z = joint.Position.Z;
 
 			Joint scaledJoint = joint;
@@ -869,10 +873,10 @@ namespace fyp1_prototype
 			Canvas.SetTop(element, scaledJoint.Position.Y);
 		}
 
-		//	Scale the X and Y to the screen size
+		//	Scale the X and Y to the screen size: Kinect 640x480 30 fps
 		private float ScaleVector(int length, float position)
 		{
-			float value = (((((float)length) / 1f) / 2f) * position * 5) + (length / 2);
+			float value = ((((length) / 1f) / 2f) * position * 5) + (length / 2);
 			if (value > length)
 			{
 				return (float)length;
@@ -884,13 +888,40 @@ namespace fyp1_prototype
 			return value;
 		}
 
+		private float ScaleVectorX(int length, float position)
+		{
+			float value = position * screenFactorX;
+
+			if (value > screenWidth)
+			{
+				return screenWidth;
+			}
+			
+			return value;
+		}
+
+		private float ScaleVectorY(int length, float position)
+		{
+			float value = position * screenFactorY - length / 2 ;
+
+			if (value > screenHeight)
+			{
+				return screenHeight;
+			}
+
+			return value;
+		}
+
 		private void ProcessGesture(Joint rightHand)
 		{
-			SkeletonPoint point = new SkeletonPoint();
-
-			point.X = ScaleVector(screenWidth, rightHand.Position.X);
-			point.Y = ScaleVector(screenHeight, -rightHand.Position.Y);
-			point.Z = rightHand.Position.Z;
+			SkeletonPoint point = new SkeletonPoint
+			{
+				//point.X = ScaleVector(screenWidth, rightHand.Position.X);
+				//point.Y = ScaleVector(screenHeight, -rightHand.Position.Y);
+				X = ScaleVectorX(screenWidth, rightHand.Position.X),
+				Y = ScaleVectorY(screenHeight, -rightHand.Position.Y),
+				Z = rightHand.Position.Z
+			};
 
 			rightHand.Position = point;
 		}
@@ -909,7 +940,7 @@ namespace fyp1_prototype
 
 				ColorImagePoint rightColorPoint =
 					depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
-					ColorImageFormat.RgbResolution1280x960Fps12);
+					ColorImageFormat.RgbResolution640x480Fps30);
 
 				CameraPosition(handCursor, rightColorPoint);
 			}
@@ -917,8 +948,10 @@ namespace fyp1_prototype
 
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
-			Canvas.SetLeft(element, point.X - element.Width / 2.5);
-			Canvas.SetTop(element, point.Y - element.Height / 2.5);
+			//Canvas.SetLeft(element, point.X * (screenWidth / 1280) - element.Width / 2);
+			//Canvas.SetTop(element, point.Y * (screenHeight / 960) - element.Height / 2);
+			Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
+			Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
@@ -949,9 +982,9 @@ namespace fyp1_prototype
 				{
 					gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
 				}
-				watch.Reset();	
+				watch.Reset();
 			}
-			
+
 			//	Close the game window
 			Close();
 		}

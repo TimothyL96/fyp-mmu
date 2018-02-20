@@ -134,7 +134,9 @@ namespace fyp1_prototype
 					//	Load a new game
 					GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
 					gameMode.Show();
-					
+
+					Close();
+
 					VisualStateManager.GoToState(buttonLoad, "MouseOver", true);
 				}
 				else if (e.HandPointer.GetIsOver(buttonBack))

@@ -12,17 +12,17 @@
 		<Grid>
 			<Canvas Name="canvas">
 				<Button	VerticalAlignment="Top" HorizontalAlignment="Left" Name="back" Margin="25,25,0,0" Height="100" Width="250" Click="back_Click">Back</Button>
-				
+
 				<TextBlock Canvas.Right="100" Canvas.Top="30"	Name="lives"	Text="{Binding CurrentLivesText}"/>
 				<TextBlock Canvas.Right="100" Canvas.Top="60"	Name="score"	Text="{Binding CurrentScoreText}"/>
 				<TextBlock Canvas.Right="100" Canvas.Top="90"	Name="time"		Text="{Binding CurrentTimeText}"/>
-				
+
 				<Image Canvas.Left="500"	Canvas.Bottom="500"	Name="handCursor"	Stretch="Fill"	Height="090" Width="080" Source="Resources/handWhite.png"	Panel.ZIndex="5"/>
 				<Image Canvas.Left="180"	Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill"	Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
 				<Image Canvas.Left="720"	Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill"	Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
 				<Image Canvas.Right="180"	Canvas.Bottom="0"	Name="brownBin"		Stretch="Fill"	Height="160" Width="140" Source="Resources/brownbin.png"	Panel.ZIndex="3"/>
 
-				<TextBlock Name="countdown" Text="3" FontSize="396" FontWeight="Bold" Width="1000" Height="auto" TextAlignment="Center" Visibility="Visible" Background="AliceBlue"/>
+				<TextBlock Name="countdown" Text="Initializing" FontSize="196" FontWeight="Bold" Width="auto" Height="auto" TextAlignment="Center" Visibility="Visible" Background="AliceBlue"/>
 			</Canvas>
 		</Grid>
 	</Grid>
