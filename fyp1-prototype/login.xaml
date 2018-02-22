@@ -50,6 +50,7 @@
 				<Button Content="B" Margin="370,560,0,0" x:Name="btnB" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
 				<Button Content="N" Margin="460,560,0,0" x:Name="btnN" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
 				<Button Content="M" Margin="550,560,0,0" x:Name="btnM" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
+				<Button Content="⌫" Margin="640,560,0,0" x:Name="btnBackspace" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
 			</Grid>
 		</k:KinectRegion>
 	</Grid>

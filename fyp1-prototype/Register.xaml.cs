@@ -436,11 +436,21 @@ namespace fyp1_prototype
 					capturedHandPointer = e.HandPointer;
 					e.Handled = true;
 				}
-				else if (e.HandPointer.GetIsOver((Button)sender))
+				else
 				{
-					e.HandPointer.Capture((Button)sender);
-					capturedHandPointer = e.HandPointer;
-					e.Handled = true;
+					try
+					{
+						if (e.HandPointer.GetIsOver((Button)sender))
+						{
+							e.HandPointer.Capture((Button)sender);
+							capturedHandPointer = e.HandPointer;
+							e.Handled = true;
+						}
+					}
+					catch (Exception)
+					{
+
+					}
 				}
 			}
 		}
@@ -570,7 +580,8 @@ namespace fyp1_prototype
 					e.HandPointer.GetIsOver(btnW) ||
 					e.HandPointer.GetIsOver(btnX) ||
 					e.HandPointer.GetIsOver(btnY) ||
-					e.HandPointer.GetIsOver(btnZ))
+					e.HandPointer.GetIsOver(btnZ) ||
+					e.HandPointer.GetIsOver(btnBackspace))
 				{
 					Button button = (Button)sender;
 					if (button.Equals(btnA))
@@ -677,24 +688,55 @@ namespace fyp1_prototype
 					{
 						keyPressed = 'z';
 					}
+					else if (button.Equals(btnBackspace))
+					{
+						keyPressed = '\b';
+					}
 
 					if (textBoxUsername.IsFocused)
 					{
 						int usernameCaretIndex = textBoxUsername.CaretIndex;
-						textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
-						textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+
+						if (keyPressed == '\b' && textBoxUsername.Text.Length > 0)
+						{
+							textBoxUsername.Text = textBoxUsername.Text.Remove(usernameCaretIndex - 1, 1);
+							textBoxUsername.CaretIndex = usernameCaretIndex - 1;
+						}
+						else
+						{
+							textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
+							textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+						}
 					}
 					else if (passwordBox.IsFocused)
 					{
 						//	Due to security reason, caret index of passwordbox is not retrievable
-						//	Use TextCompositionManager to input at current caret
-						TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+
+						if (keyPressed == '\b' && passwordBox.Password.Length > 0)
+						{
+							//	Remove all password
+							passwordBox.Password = "";
+						}
+						else
+						{
+							//	Use TextCompositionManager to input at current caret
+							TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+						}
 					}
 					else if (passwordBox1.IsFocused)
 					{
 						//	Due to security reason, caret index of passwordbox is not retrievable
-						//	Use TextCompositionManager to input at current caret
-						TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox1, keyPressed.ToString()));
+
+						if (keyPressed == '\b' && passwordBox1.Password.Length > 0)
+						{
+							//	Remove all password
+							passwordBox1.Password = "";
+						}
+						else
+						{
+							//	Use TextCompositionManager to input at current caret
+							TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox1, keyPressed.ToString()));
+						}
 					}
 				}
 				else
@@ -729,6 +771,7 @@ namespace fyp1_prototype
 					VisualStateManager.GoToState(btnX, "Normal", true);
 					VisualStateManager.GoToState(btnY, "Normal", true);
 					VisualStateManager.GoToState(btnZ, "Normal", true);
+					VisualStateManager.GoToState(btnBackspace, "Normal", true);
 				}
 
 				e.HandPointer.Capture(null);
@@ -972,22 +1015,55 @@ namespace fyp1_prototype
 			{
 				keyPressed = 'z';
 			}
+			else if (button.Equals(btnBackspace))
+			{
+				keyPressed = '\b';
+			}
 
 			if (textBoxUsername.IsFocused)
 			{
 				int usernameCaretIndex = textBoxUsername.CaretIndex;
-				textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
-				textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+
+				if (keyPressed == '\b' && textBoxUsername.Text.Length > 0)
+				{
+					textBoxUsername.Text = textBoxUsername.Text.Remove(usernameCaretIndex - 1, 1);
+					textBoxUsername.CaretIndex = usernameCaretIndex - 1;
+				}
+				else
+				{
+					textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
+					textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+				}
 			}
 			else if (passwordBox.IsFocused)
 			{
 				//	Due to security reason, caret index of passwordbox is not retrievable
-				//	Use TextCompositionManager to input at current caret
-				TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+
+				if (keyPressed == '\b' && passwordBox.Password.Length > 0)
+				{
+					//	Remove all password
+					passwordBox.Password = "";
+				}
+				else
+				{
+					//	Use TextCompositionManager to input at current caret
+					TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+				}
 			}
 			else if (passwordBox1.IsFocused)
 			{
-				TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox1, keyPressed.ToString()));
+				//	Due to security reason, caret index of passwordbox is not retrievable
+
+				if (keyPressed == '\b' && passwordBox1.Password.Length > 0)
+				{
+					//	Remove all password
+					passwordBox1.Password = "";
+				}
+				else
+				{
+					//	Use TextCompositionManager to input at current caret
+					TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox1, keyPressed.ToString()));
+				}
 			}
 		}
 	}

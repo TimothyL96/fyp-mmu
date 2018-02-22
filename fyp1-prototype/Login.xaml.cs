@@ -412,11 +412,21 @@ namespace fyp1_prototype
 					capturedHandPointer = e.HandPointer;
 					e.Handled = true;
 				}
-				else if (e.HandPointer.GetIsOver((Button)sender))
+				else
 				{
-					e.HandPointer.Capture((Button)sender);
-					capturedHandPointer = e.HandPointer;
-					e.Handled = true;
+					try
+					{
+						if (e.HandPointer.GetIsOver((Button)sender))
+						{
+							e.HandPointer.Capture((Button)sender);
+							capturedHandPointer = e.HandPointer;
+							e.Handled = true;
+						}
+					}
+					catch (Exception)
+					{
+
+					}
 				}
 			}
 		}
@@ -511,159 +521,193 @@ namespace fyp1_prototype
 					passwordBox.Focus();
 					VisualStateManager.GoToState(passwordBox, "MouseOver", true);
 				}
-				else if (e.HandPointer.GetIsOver((Button)sender))
-				{
-					Button button = (Button)sender;
-					if (button.Equals(btnA))
-					{
-						keyPressed = 'a';
-					}
-					else if (button.Equals(btnB))
-					{
-						keyPressed = 'b';
-					}
-					else if (button.Equals(btnC))
-					{
-						keyPressed = 'c';
-					}
-					else if (button.Equals(btnD))
-					{
-						keyPressed = 'd';
-					}
-					else if (button.Equals(btnE))
-					{
-						keyPressed = 'e';
-					}
-					else if (button.Equals(btnF))
-					{
-						keyPressed = 'f';
-					}
-					else if (button.Equals(btnG))
-					{
-						keyPressed = 'g';
-					}
-					else if (button.Equals(btnH))
-					{
-						keyPressed = 'h';
-					}
-					else if (button.Equals(btnI))
-					{
-						keyPressed = 'i';
-					}
-					else if (button.Equals(btnJ))
-					{
-						keyPressed = 'j';
-					}
-					else if (button.Equals(btnK))
-					{
-						keyPressed = 'k';
-					}
-					else if (button.Equals(btnL))
-					{
-						keyPressed = 'l';
-					}
-					else if (button.Equals(btnM))
-					{
-						keyPressed = 'm';
-					}
-					else if (button.Equals(btnN))
-					{
-						keyPressed = 'n';
-					}
-					else if (button.Equals(btnO))
-					{
-						keyPressed = 'o';
-					}
-					else if (button.Equals(btnP))
-					{
-						keyPressed = 'p';
-					}
-					else if (button.Equals(btnQ))
-					{
-						keyPressed = 'q';
-					}
-					else if (button.Equals(btnR))
-					{
-						keyPressed = 'r';
-					}
-					else if (button.Equals(btnS))
-					{
-						keyPressed = 's';
-					}
-					else if (button.Equals(btnT))
-					{
-						keyPressed = 't';
-					}
-					else if (button.Equals(btnU))
-					{
-						keyPressed = 'u';
-					}
-					else if (button.Equals(btnV))
-					{
-						keyPressed = 'v';
-					}
-					else if (button.Equals(btnW))
-					{
-						keyPressed = 'w';
-					}
-					else if (button.Equals(btnX))
-					{
-						keyPressed = 'x';
-					}
-					else if (button.Equals(btnY))
-					{
-						keyPressed = 'y';
-					}
-					else if (button.Equals(btnZ))
-					{
-						keyPressed = 'z';
-					}
-
-					if (textBoxUsername.IsFocused)
-					{
-						int usernameCaretIndex = textBoxUsername.CaretIndex;
-						textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
-						textBoxUsername.CaretIndex = usernameCaretIndex + 1;
-					}
-					else if (passwordBox.IsFocused)
-					{
-						//	Due to security reason, caret index of passwordbox is not retrievable
-						//	Use TextCompositionManager to input at current caret
-						TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
-					}
-				}
 				else
 				{
-					VisualStateManager.GoToState(btnCancelLogin, "Normal", true);
-					VisualStateManager.GoToState(btnLogin, "Normal", true);
-					VisualStateManager.GoToState(textBoxUsername, "Normal", true);
-					VisualStateManager.GoToState(passwordBox, "Normal", true);
-					VisualStateManager.GoToState(btnA, "Normal", true);
-					VisualStateManager.GoToState(btnB, "Normal", true);
-					VisualStateManager.GoToState(btnC, "Normal", true);
-					VisualStateManager.GoToState(btnD, "Normal", true);
-					VisualStateManager.GoToState(btnE, "Normal", true);
-					VisualStateManager.GoToState(btnF, "Normal", true);
-					VisualStateManager.GoToState(btnH, "Normal", true);
-					VisualStateManager.GoToState(btnI, "Normal", true);
-					VisualStateManager.GoToState(btnJ, "Normal", true);
-					VisualStateManager.GoToState(btnK, "Normal", true);
-					VisualStateManager.GoToState(btnL, "Normal", true);
-					VisualStateManager.GoToState(btnM, "Normal", true);
-					VisualStateManager.GoToState(btnN, "Normal", true);
-					VisualStateManager.GoToState(btnO, "Normal", true);
-					VisualStateManager.GoToState(btnP, "Normal", true);
-					VisualStateManager.GoToState(btnQ, "Normal", true);
-					VisualStateManager.GoToState(btnR, "Normal", true);
-					VisualStateManager.GoToState(btnS, "Normal", true);
-					VisualStateManager.GoToState(btnT, "Normal", true);
-					VisualStateManager.GoToState(btnU, "Normal", true);
-					VisualStateManager.GoToState(btnV, "Normal", true);
-					VisualStateManager.GoToState(btnW, "Normal", true);
-					VisualStateManager.GoToState(btnX, "Normal", true);
-					VisualStateManager.GoToState(btnY, "Normal", true);
-					VisualStateManager.GoToState(btnZ, "Normal", true);
+					try
+					{
+						if (e.HandPointer.GetIsOver((Button)sender))
+						{
+							Button button = (Button)sender;
+							if (button.Equals(btnA))
+							{
+								keyPressed = 'a';
+							}
+							else if (button.Equals(btnB))
+							{
+								keyPressed = 'b';
+							}
+							else if (button.Equals(btnC))
+							{
+								keyPressed = 'c';
+							}
+							else if (button.Equals(btnD))
+							{
+								keyPressed = 'd';
+							}
+							else if (button.Equals(btnE))
+							{
+								keyPressed = 'e';
+							}
+							else if (button.Equals(btnF))
+							{
+								keyPressed = 'f';
+							}
+							else if (button.Equals(btnG))
+							{
+								keyPressed = 'g';
+							}
+							else if (button.Equals(btnH))
+							{
+								keyPressed = 'h';
+							}
+							else if (button.Equals(btnI))
+							{
+								keyPressed = 'i';
+							}
+							else if (button.Equals(btnJ))
+							{
+								keyPressed = 'j';
+							}
+							else if (button.Equals(btnK))
+							{
+								keyPressed = 'k';
+							}
+							else if (button.Equals(btnL))
+							{
+								keyPressed = 'l';
+							}
+							else if (button.Equals(btnM))
+							{
+								keyPressed = 'm';
+							}
+							else if (button.Equals(btnN))
+							{
+								keyPressed = 'n';
+							}
+							else if (button.Equals(btnO))
+							{
+								keyPressed = 'o';
+							}
+							else if (button.Equals(btnP))
+							{
+								keyPressed = 'p';
+							}
+							else if (button.Equals(btnQ))
+							{
+								keyPressed = 'q';
+							}
+							else if (button.Equals(btnR))
+							{
+								keyPressed = 'r';
+							}
+							else if (button.Equals(btnS))
+							{
+								keyPressed = 's';
+							}
+							else if (button.Equals(btnT))
+							{
+								keyPressed = 't';
+							}
+							else if (button.Equals(btnU))
+							{
+								keyPressed = 'u';
+							}
+							else if (button.Equals(btnV))
+							{
+								keyPressed = 'v';
+							}
+							else if (button.Equals(btnW))
+							{
+								keyPressed = 'w';
+							}
+							else if (button.Equals(btnX))
+							{
+								keyPressed = 'x';
+							}
+							else if (button.Equals(btnY))
+							{
+								keyPressed = 'y';
+							}
+							else if (button.Equals(btnZ))
+							{
+								keyPressed = 'z';
+							}
+							else if (button.Equals(btnBackspace))
+							{
+								keyPressed = '\b';
+							}
+
+							if (textBoxUsername.IsFocused)
+							{
+								int usernameCaretIndex = textBoxUsername.CaretIndex;
+
+								if (keyPressed == '\b' && textBoxUsername.Text.Length > 0)
+								{
+									textBoxUsername.Text = textBoxUsername.Text.Remove(usernameCaretIndex - 1, 1);
+									textBoxUsername.CaretIndex = usernameCaretIndex - 1;
+								}
+								else
+								{
+									textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
+									textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+								}
+							}
+							else if (passwordBox.IsFocused)
+							{
+								//	Due to security reason, caret index of passwordbox is not retrievable
+
+								if (keyPressed == '\b' && passwordBox.Password.Length > 0)
+								{
+									//	Remove all password
+									passwordBox.Password = "";
+								}
+								else
+								{
+									//	Use TextCompositionManager to input at current caret
+									TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+								}
+							}
+						}
+						else
+						{
+							VisualStateManager.GoToState(btnCancelLogin, "Normal", true);
+							VisualStateManager.GoToState(btnLogin, "Normal", true);
+							VisualStateManager.GoToState(textBoxUsername, "Normal", true);
+							VisualStateManager.GoToState(passwordBox, "Normal", true);
+							VisualStateManager.GoToState(btnA, "Normal", true);
+							VisualStateManager.GoToState(btnB, "Normal", true);
+							VisualStateManager.GoToState(btnC, "Normal", true);
+							VisualStateManager.GoToState(btnD, "Normal", true);
+							VisualStateManager.GoToState(btnE, "Normal", true);
+							VisualStateManager.GoToState(btnF, "Normal", true);
+							VisualStateManager.GoToState(btnH, "Normal", true);
+							VisualStateManager.GoToState(btnI, "Normal", true);
+							VisualStateManager.GoToState(btnJ, "Normal", true);
+							VisualStateManager.GoToState(btnK, "Normal", true);
+							VisualStateManager.GoToState(btnL, "Normal", true);
+							VisualStateManager.GoToState(btnM, "Normal", true);
+							VisualStateManager.GoToState(btnN, "Normal", true);
+							VisualStateManager.GoToState(btnO, "Normal", true);
+							VisualStateManager.GoToState(btnP, "Normal", true);
+							VisualStateManager.GoToState(btnQ, "Normal", true);
+							VisualStateManager.GoToState(btnR, "Normal", true);
+							VisualStateManager.GoToState(btnS, "Normal", true);
+							VisualStateManager.GoToState(btnT, "Normal", true);
+							VisualStateManager.GoToState(btnU, "Normal", true);
+							VisualStateManager.GoToState(btnV, "Normal", true);
+							VisualStateManager.GoToState(btnW, "Normal", true);
+							VisualStateManager.GoToState(btnX, "Normal", true);
+							VisualStateManager.GoToState(btnY, "Normal", true);
+							VisualStateManager.GoToState(btnZ, "Normal", true);
+							VisualStateManager.GoToState(btnBackspace, "Normal", true);
+						}
+					}
+					catch (Exception)
+					{
+
+					}
 				}
+				
 				e.HandPointer.Capture(null);
 				e.Handled = true;
 			}
@@ -903,18 +947,40 @@ namespace fyp1_prototype
 			{
 				keyPressed = 'z';
 			}
+			else if (button.Equals(btnBackspace))
+			{
+				keyPressed = '\b';
+			}
 
 			if (textBoxUsername.IsFocused)
 			{
 				int usernameCaretIndex = textBoxUsername.CaretIndex;
-				textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
-				textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+
+				if (keyPressed == '\b' && textBoxUsername.Text.Length > 0)
+				{
+					textBoxUsername.Text = textBoxUsername.Text.Remove(usernameCaretIndex - 1, 1);
+					textBoxUsername.CaretIndex = usernameCaretIndex - 1;
+				}
+				else
+				{
+					textBoxUsername.Text = textBoxUsername.Text.Insert(usernameCaretIndex, keyPressed.ToString());
+					textBoxUsername.CaretIndex = usernameCaretIndex + 1;
+				}
 			}
 			else if (passwordBox.IsFocused)
 			{
 				//	Due to security reason, caret index of passwordbox is not retrievable
-				//	Use TextCompositionManager to input at current caret
-				TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+				
+				if (keyPressed == '\b' && passwordBox.Password.Length > 0)
+				{
+					//	Remove all password
+					passwordBox.Password = "";
+				}
+				else
+				{
+					//	Use TextCompositionManager to input at current caret
+					TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
+				}
 			}
 		}
 	}
