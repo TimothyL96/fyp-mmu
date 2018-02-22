@@ -160,6 +160,7 @@ namespace fyp1_prototype
 		//	add more items
 		//	fix kinect start and stop app crash
 		//	personal best at homescreen
+		//	multiplayer
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
@@ -561,7 +562,7 @@ namespace fyp1_prototype
 				itemPoint = itemObject.TranslatePoint(new Point(0, 0), canvas);
 
 				//	If the image passed the max vertical length then stop it
-				if (itemPoint.Y >= verticalMaxLength)
+				if (itemPoint.Y >= verticalMaxLength && i != handCursorOn)
 				{
 					canvas.Children.Remove(itemObject);
 
@@ -988,8 +989,8 @@ namespace fyp1_prototype
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
 			// 640 x 480
-			Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
-			Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
+			Canvas.SetLeft(element, point.X * (screenFactorX + 0.5) - element.Width / 2);
+			Canvas.SetTop(element, point.Y * (screenFactorY + 0.5) - element.Height / 2);
 		}
 
 		private void Window_Closing(object sender, EventArgs e)
