@@ -456,14 +456,14 @@ namespace fyp1_prototype
 					VisualStateManager.GoToState(btn_highScores, "MouseOver", true);
 
 					GameMode gameMode = new GameMode(kinectSensorChooser, playerID, 0);
-					gameMode.Show();
+					gameMode.ShowDialog();
 				}
 				else if (e.HandPointer.GetIsOver(btn_help))
 				{
 					VisualStateManager.GoToState(btn_help, "MouseOver", true);
 
 					Help help = new Help(kinectSensorChooser);
-					help.Show();
+					help.ShowDialog();
 				}
 				else if (e.HandPointer.GetIsOver(btn_exit))
 				{
@@ -515,6 +515,8 @@ namespace fyp1_prototype
 			else
 			{
 				GameRepository gameRepository = new GameRepository();
+				PlayersRepository playersRepository = new PlayersRepository();
+
 				if (gameRepository.GetGame(playerID).Count > 0)
 				{
 					LoadGame loadGame = new LoadGame(kinectSensorChooser, playerID);
@@ -525,6 +527,7 @@ namespace fyp1_prototype
 					GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
 					gameMode.ShowDialog();
 				}
+				PersonalBestValue.Text = playersRepository.GetPlayerScore(playerID).ToString();
 			}
 		}
 

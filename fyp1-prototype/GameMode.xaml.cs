@@ -163,7 +163,7 @@ namespace fyp1_prototype
 					{
 						//	Survival
 						HighScore highScore = new HighScore(kinectSensorChooser, 0);
-						highScore.Show();
+						highScore.ShowDialog();
 
 						VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
 					}
@@ -171,7 +171,7 @@ namespace fyp1_prototype
 					{
 						//	Time Attack
 						HighScore highScore = new HighScore(kinectSensorChooser, 1);
-						highScore.Show();
+						highScore.ShowDialog();
 
 						VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
 					}
