@@ -305,20 +305,30 @@ namespace fyp1_prototype
 			{
 				VisualStateManager.GoToState(passwordBox, "MouseOver", true);
 			}
-			else if (e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
+			else
 			{
-				VisualStateManager.GoToState((Button)sender, "MouseOver", true);
-
-				Button button = (Button)sender;
-				button.RenderTransformOrigin = new Point(0.5, 0.5);
-				ScaleTransform scaleTransform = new ScaleTransform
+				try
 				{
-					ScaleX = 1.8,
-					ScaleY = 1.8
-				};
-				TransformGroup transformGroup = new TransformGroup();
-				transformGroup.Children.Add(scaleTransform);
-				button.RenderTransform = transformGroup;
+					if (e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
+					{
+						VisualStateManager.GoToState((Button)sender, "MouseOver", true);
+
+						Button button = (Button)sender;
+						button.RenderTransformOrigin = new Point(0.5, 0.5);
+						ScaleTransform scaleTransform = new ScaleTransform
+						{
+							ScaleX = 1.8,
+							ScaleY = 1.8
+						};
+						TransformGroup transformGroup = new TransformGroup();
+						transformGroup.Children.Add(scaleTransform);
+						button.RenderTransform = transformGroup;
+					}
+				}
+				catch (Exception)
+				{
+
+				}
 			}				
 
 			e.Handled = true;
