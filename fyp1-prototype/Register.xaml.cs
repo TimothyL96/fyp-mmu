@@ -583,7 +583,16 @@ namespace fyp1_prototype
 					e.HandPointer.GetIsOver(btnZ) ||
 					e.HandPointer.GetIsOver(btnBackspace))
 				{
-					Button button = (Button)sender;
+					Button button = null;
+					try
+					{
+						button = (Button)sender;
+					}
+					catch (Exception)
+					{
+
+					}
+					
 					if (button.Equals(btnA))
 					{
 						keyPressed = 'a';

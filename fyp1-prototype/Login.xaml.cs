@@ -527,7 +527,16 @@ namespace fyp1_prototype
 					{
 						if (e.HandPointer.GetIsOver((Button)sender))
 						{
-							Button button = (Button)sender;
+							Button button = null;
+							try
+							{
+								button = (Button)sender;
+							}
+							catch (Exception)
+							{
+
+							}
+
 							if (button.Equals(btnA))
 							{
 								keyPressed = 'a';
