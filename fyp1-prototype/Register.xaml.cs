@@ -72,6 +72,7 @@ namespace fyp1_prototype
 			KinectRegion.SetIsPressTarget(btnX, true);
 			KinectRegion.SetIsPressTarget(btnY, true);
 			KinectRegion.SetIsPressTarget(btnZ, true);
+			KinectRegion.SetIsPressTarget(btnBackspace, true);
 
 			KinectRegion.SetIsPressTarget(textBoxUsername, true);
 			KinectRegion.SetIsPressTarget(passwordBox, true);
@@ -155,6 +156,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerEnterHandler(btnX, HandPointerEnterEvent);
 			KinectRegion.AddHandPointerEnterHandler(btnY, HandPointerEnterEvent);
 			KinectRegion.AddHandPointerEnterHandler(btnZ, HandPointerEnterEvent);
+			KinectRegion.AddHandPointerEnterHandler(btnBackspace, HandPointerEnterEvent);
 
 			//	2 - HandPointerEnterHandler
 			KinectRegion.AddHandPointerLeaveHandler(btnA, HandPointerLeaveEvent);
@@ -183,6 +185,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerLeaveHandler(btnX, HandPointerLeaveEvent);
 			KinectRegion.AddHandPointerLeaveHandler(btnY, HandPointerLeaveEvent);
 			KinectRegion.AddHandPointerLeaveHandler(btnZ, HandPointerLeaveEvent);
+			KinectRegion.AddHandPointerLeaveHandler(btnBackspace, HandPointerLeaveEvent);
 
 			//	3 - AddHandPointerPressHandler
 			KinectRegion.AddHandPointerPressHandler(btnA, HandPointerPressEvent);
@@ -211,6 +214,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerPressHandler(btnX, HandPointerPressEvent);
 			KinectRegion.AddHandPointerPressHandler(btnY, HandPointerPressEvent);
 			KinectRegion.AddHandPointerPressHandler(btnZ, HandPointerPressEvent);
+			KinectRegion.AddHandPointerPressHandler(btnBackspace, HandPointerPressEvent);
 
 			//	4 - AddHandPointerPressReleaseHandler
 			KinectRegion.AddHandPointerPressReleaseHandler(btnA, HandPointerPressReleaseEvent);
@@ -239,6 +243,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerPressReleaseHandler(btnX, HandPointerPressReleaseEvent);
 			KinectRegion.AddHandPointerPressReleaseHandler(btnY, HandPointerPressReleaseEvent);
 			KinectRegion.AddHandPointerPressReleaseHandler(btnZ, HandPointerPressReleaseEvent);
+			KinectRegion.AddHandPointerPressReleaseHandler(btnBackspace, HandPointerPressReleaseEvent);
 
 			//	5 - AddHandPointerGotCaptureHandler
 			KinectRegion.AddHandPointerGotCaptureHandler(btnA, HandPointerCaptureEvent);
@@ -267,6 +272,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerGotCaptureHandler(btnX, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerGotCaptureHandler(btnY, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerGotCaptureHandler(btnZ, HandPointerCaptureEvent);
+			KinectRegion.AddHandPointerGotCaptureHandler(btnBackspace, HandPointerCaptureEvent);
 
 			//	6 - AddHandPointerLostCaptureHandler
 			KinectRegion.AddHandPointerLostCaptureHandler(btnA, HandPointerLostCaptureEvent);
@@ -295,6 +301,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerLostCaptureHandler(btnX, HandPointerLostCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(btnY, HandPointerLostCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(btnZ, HandPointerLostCaptureEvent);
+			KinectRegion.AddHandPointerLostCaptureHandler(btnBackspace, HandPointerLostCaptureEvent);
 			#endregion
 		}
 

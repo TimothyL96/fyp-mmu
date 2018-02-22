@@ -38,6 +38,9 @@ namespace fyp1_prototype
 			this.playerID = playerID;
 			this.kinectSensorChooser = kinectSensorChooser;
 
+			var kinectRegionandSensorBinding = new Binding("Kinect") { Source = kinectSensorChooser };
+			BindingOperations.SetBinding(kinectKinectRegion, KinectRegion.KinectSensorProperty, kinectRegionandSensorBinding);
+
 			#region KinectRegion
 			//	Setup Kinect region press target and event handlers
 			KinectRegion.SetIsPressTarget(btnBack, true);
