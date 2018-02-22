@@ -117,7 +117,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerGotCaptureHandler(passwordBox, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(passwordBox, HandPointerLostCaptureEvent);
 
-			//	passwordBox
+			//	passwordBox1
 			KinectRegion.AddHandPointerEnterHandler(passwordBox1, HandPointerEnterEvent);
 			KinectRegion.AddHandPointerLeaveHandler(passwordBox1, HandPointerLeaveEvent);
 
@@ -394,7 +394,7 @@ namespace fyp1_prototype
 
 		private void HandPointerPressEvent(object sender, HandPointerEventArgs e)
 		{
-			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser && e.HandPointer.IsPrimaryHandOfUser)
+			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser)
 			{
 				if (e.HandPointer.GetIsOver(btnCancelRegister))
 				{
@@ -438,6 +438,8 @@ namespace fyp1_prototype
 		//	Execute press functions
 		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
 		{
+			VisualStateManager.GoToState(btnRegister, "MouseOver", true);
+
 			if (capturedHandPointer == e.HandPointer)
 			{
 				if (e.HandPointer.GetIsOver(btnCancelRegister))
@@ -521,8 +523,6 @@ namespace fyp1_prototype
 						//	Feedback to user that the passwords do not match
 						customMessageBox.ShowText("Password do not match! Try again");
 					}
-
-					VisualStateManager.GoToState(btnRegister, "MouseOver", true);
 				}
 				else if (e.HandPointer.GetIsOver(textBoxUsername))
 				{

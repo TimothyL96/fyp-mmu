@@ -154,7 +154,7 @@ namespace fyp1_prototype
 		//	fix kinect start and stop app crash
 		//	personal best at homescreen
 		//	multiplayer
-		//	login
+		//	login & register - backspace
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)

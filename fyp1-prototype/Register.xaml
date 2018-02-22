@@ -11,18 +11,18 @@
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,20,0,0" Name="textBlockUsername" Text="Username:" FontSize="20" VerticalAlignment="Top" Width="110" />
+				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,30,0,0" Name="textBlockUsername" Text="Username:" FontSize="20" VerticalAlignment="Top" Width="110" />
 
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,60,0,0" Name="textBlockPassword" Text="Password:" FontSize="20" VerticalAlignment="Top" Width="110"  />
+				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,80,0,0" Name="textBlockPassword" Text="Password:" FontSize="20" VerticalAlignment="Top" Width="110"  />
 
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,100,0,0" Name="textBlockPassword1" Text="Repeat Password:" FontSize="20" VerticalAlignment="Top" Width="160"  />
+				<TextBlock Height="30" HorizontalAlignment="Left" Margin="180,130,0,0" Name="textBlockPassword1" Text="Repeat Password:" FontSize="20" VerticalAlignment="Top" Width="160"  />
 
 
-				<TextBox Height="26" HorizontalAlignment="Left" Margin="380,20,0,0" Name="textBoxUsername" FontSize="20" VerticalAlignment="Top" Width="262" />
+				<TextBox Height="36" HorizontalAlignment="Left" Margin="380,20,0,0" Name="textBoxUsername" FontSize="20" VerticalAlignment="Top" Width="262" />
 
-				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="380,60,0,0" Name="passwordBox" FontSize="20" VerticalAlignment="Top" Width="262" />
+				<PasswordBox Height="36" HorizontalAlignment="Left" Margin="380,70,0,0" Name="passwordBox" FontSize="20" VerticalAlignment="Top" Width="262" />
 
-				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="380,100,0,0" Name="passwordBox1" FontSize="20" VerticalAlignment="Top" Width="262" />
+				<PasswordBox Height="36" HorizontalAlignment="Left" Margin="380,120,0,0" Name="passwordBox1" FontSize="20" VerticalAlignment="Top" Width="262" />
 
 				<Button Content="Back" Margin="220 180 0 0" Name="btnCancelRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
 				<Button Content="Register" Margin="420 180 0 0" Name="btnRegister" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="register" IsDefault="True"/>

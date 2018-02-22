@@ -375,7 +375,7 @@ namespace fyp1_prototype
 
 		private void HandPointerPressEvent(object sender, HandPointerEventArgs e)
 		{
-			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser && e.HandPointer.IsPrimaryHandOfUser)
+			if (capturedHandPointer == null && e.HandPointer.IsPrimaryHandOfUser)
 			{
 				if (e.HandPointer.GetIsOver(btnCancelLogin))
 				{
@@ -422,6 +422,8 @@ namespace fyp1_prototype
 				}
 				else if (e.HandPointer.GetIsOver(btnLogin))
 				{
+					VisualStateManager.GoToState(btnLogin, "MouseOver", true);
+
 					//	Setup custom message box
 					CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
 
@@ -487,8 +489,6 @@ namespace fyp1_prototype
 						//	Show dialog that the login is not successful
 						customMessageBox.ShowText("Player doesn't exist!");
 					}
-
-					VisualStateManager.GoToState(btnLogin, "MouseOver", true);
 				}
 				else if (e.HandPointer.GetIsOver(textBoxUsername))
 				{
