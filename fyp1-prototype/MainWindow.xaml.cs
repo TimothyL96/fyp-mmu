@@ -16,6 +16,7 @@ namespace fyp1_prototype
 		private KinectSensorChooser kinectSensorChooser;
 		private HandPointer capturedHandPointer;
 		private int playerID = -1;
+		private int playerScore = -1;
 
 		public MainWindow()
 		{
@@ -326,6 +327,9 @@ namespace fyp1_prototype
 
 						if (logout.CustomShowDialog())
 						{
+							PersonalBestValue.Visibility = Visibility.Hidden;
+							PersonalBestText.Visibility = Visibility.Hidden;
+
 							//	Reset player ID
 							playerID = -1;
 
@@ -333,6 +337,22 @@ namespace fyp1_prototype
 							Login login = new Login(kinectSensorChooser);
 							playerID = login.CustomShowDialog();
 						}
+					}
+
+					//	If logged in, get highest score
+					if (playerID != -1)
+					{
+						PlayersRepository playersRepository = new PlayersRepository();
+						playerScore = playersRepository.GetPlayerScore(playerID);
+						PersonalBestValue.Text = playerScore.ToString();
+
+						PersonalBestValue.Visibility = Visibility.Visible;
+						PersonalBestText.Visibility = Visibility.Visible;
+					}
+					else
+					{
+						PersonalBestValue.Visibility = Visibility.Hidden;
+						PersonalBestText.Visibility = Visibility.Hidden;
 					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_register))
@@ -354,6 +374,9 @@ namespace fyp1_prototype
 						{
 							//	Reset player ID
 							playerID = -1;
+
+							PersonalBestValue.Visibility = Visibility.Hidden;
+							PersonalBestText.Visibility = Visibility.Hidden;
 
 							//	User logged out, proceed to show register screen
 							Register register = new Register(kinectSensorChooser);
@@ -523,13 +546,64 @@ namespace fyp1_prototype
 			{
 				//	A user is logged in, prompt current user to logout before a new login
 				Logout logout = new Logout(kinectSensorChooser, playerID);
+
+				if (logout.CustomShowDialog())
+				{
+					//	Reset player ID
+					playerID = -1;
+
+					//	User logged out, proceed to show login screen
+					Login login = new Login(kinectSensorChooser);
+					playerID = login.CustomShowDialog();
+
+					PersonalBestValue.Visibility = Visibility.Hidden;
+					PersonalBestText.Visibility = Visibility.Hidden;
+				}
+			}
+
+			//	If logged in, get highest score
+			if (playerID != -1)
+			{
+				PlayersRepository playersRepository = new PlayersRepository();
+				playerScore = playersRepository.GetPlayerScore(playerID);
+				PersonalBestValue.Text = playerScore.ToString();
+
+				PersonalBestValue.Visibility = Visibility.Visible;
+				PersonalBestText.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				PersonalBestValue.Visibility = Visibility.Hidden;
+				PersonalBestText.Visibility = Visibility.Hidden;
 			}
 		}
 
 		private void register(object sender, RoutedEventArgs e)
 		{
-			Register register = new Register(kinectSensorChooser);
-			register.ShowDialog();
+			if (playerID == -1)
+			{
+				//	No user logged in, proceed to show register screen
+				Register register = new Register(kinectSensorChooser);
+				register.ShowDialog();
+			}
+			else
+			{
+				//	A user is logged in, prompt current user to logout before a new registration
+				Logout logout = new Logout(kinectSensorChooser, playerID);
+
+				if (logout.CustomShowDialog())
+				{
+					//	Reset player ID
+					playerID = -1;
+
+					PersonalBestValue.Visibility = Visibility.Hidden;
+					PersonalBestText.Visibility = Visibility.Hidden;
+
+					//	User logged out, proceed to show register screen
+					Register register = new Register(kinectSensorChooser);
+					register.ShowDialog();
+				}
+			}
 		}
 
 		private void loadGame(object sender, RoutedEventArgs e)

@@ -67,7 +67,7 @@ namespace fyp1_prototype
 				var textBody = new Label
 				{
 					FontSize = 26,
-					Content = name + "\t\t\t\t\t\t\t\t\t" + highscore[i].Value
+					Content = " " + name + "\t\t\t\t\t\t\t\t\t" + highscore[i].Value
 				};
 				scrollContent.Children.Add(textBody);
 			}

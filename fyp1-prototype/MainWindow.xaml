@@ -41,8 +41,8 @@
 
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="50*"/>	<!-- No: 0-->
-						<ColumnDefinition Width="320*"/>
-						<ColumnDefinition Width="40*" />
+						<ColumnDefinition Width="360*"/>
+						<ColumnDefinition Width="00*" />
 						<ColumnDefinition Width="320*"/>
 						<ColumnDefinition Width="40*" />
 						<ColumnDefinition Width="320*"/>
@@ -54,6 +54,10 @@
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					
+					<!--Personal Best Text-->
+					<TextBlock Name="PersonalBestText" Text="Personal Best:" Grid.Column="1" Grid.Row="1" FontSize="36" Foreground="White" Visibility="Hidden"/>
+					<TextBlock Name="PersonalBestValue" Text="" Grid.Column="3" Grid.Row="1" FontSize="36" Foreground="White" Visibility="Hidden"/>
+
 					<!--Login and Register button-->
 					<Button Content="Login"			x:Name="btn_login"			HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 							Grid.Column="07" Grid.Row="01" Click="login"			Height="80"/>

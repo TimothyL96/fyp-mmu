@@ -181,7 +181,7 @@ namespace fyp1_prototype
 		{
 			DatabaseContext dc = new DatabaseContext();
 			return dc.Players
-				.Where(p => p.Score == playerID)
+				.Where(p => p.Id == playerID)
 				.Select(p => p.Score)
 				.FirstOrDefault();
 		}

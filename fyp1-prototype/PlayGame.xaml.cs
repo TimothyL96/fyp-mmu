@@ -32,7 +32,6 @@ namespace fyp1_prototype
 		//	Set items spawning and speed
 		private const int horizontalLengthStart = 150;
 		private int horizontalLength = 150;  //	X axis image drop starting point
-		private int horizontalLengthChange = 150;
 		private int verticalLength = 10;
 
 		//	Items max spawing and pushing area
@@ -153,7 +152,6 @@ namespace fyp1_prototype
 		//	fix kinect start and stop app crash
 		//	multiplayer
 		//	add more items
-		//	personal best at homescreen
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)

@@ -486,7 +486,6 @@ namespace fyp1_prototype
 								//	Retrieve and save the player ID
 								playerID = player[0].Id;
 
-
 								//	Show dialog that the login is successful
 								customMessageBox.ShowText("Successfully logged in");
 
@@ -762,62 +761,61 @@ namespace fyp1_prototype
 			{
 				//	Show error message dialog
 				customMessageBox.ShowText("Username is at least 3 characters long!");
-
-				//	Return to stop executing the remaining codes
-				return;
 			}
 			//	Check password length is at least 3 characters long
 			else if (passwordBox.Password.Length < 3)
 			{
 				//	Show error message dialog
 				customMessageBox.ShowText("Password is at least 3 characters long!");
-
-				//	Return to stop executing the remaining codes
-				return;
 			}
-
-			//	Create the player repository object
-			PlayersRepository pro = new PlayersRepository();
-
-			//	Hash the password
-			SHA256 sha256 = SHA256.Create();
-			byte[] bytes = Encoding.UTF8.GetBytes(passwordBox.Password);
-			byte[] hash = sha256.ComputeHash(bytes);
-
-			StringBuilder result = new StringBuilder();
-			for (int i = 0; i < hash.Length; i++)
+			else
 			{
-				result.Append(hash[i].ToString("X2"));
-			}
+				//	Create the player repository object
+				PlayersRepository pro = new PlayersRepository();
 
-			//	Search database for this username
-			List<PlayersRepository.PlayerDto> player = pro.GetPlayerWithUsername(textBoxUsername.Text);
+				//	Hash the password
+				SHA256 sha256 = SHA256.Create();
+				byte[] bytes = Encoding.UTF8.GetBytes(passwordBox.Password);
+				byte[] hash = sha256.ComputeHash(bytes);
 
-			//	If player exist
-			if (player.Count == 1)
-			{
-				//	If password match then log them in
-				if (result.ToString().Contains(player[0].Password))
+				StringBuilder result = new StringBuilder();
+				for (int i = 0; i < hash.Length; i++)
 				{
-					//	Show dialog that the login is successful
-					customMessageBox.ShowText("Log in succeeded");
+					result.Append(hash[i].ToString("X2"));
+				}
 
-					//	Close after succesfully logged in
-					Close();
+				//	Search database for this username
+				List<PlayersRepository.PlayerDto> player = pro.GetPlayerWithUsername(textBoxUsername.Text);
+
+				//	If player exist
+				if (player.Count == 1)
+				{
+					//	If password match then log them in
+					if (result.ToString().Contains(player[0].Password))
+					{
+						//	Retrieve and save the player ID
+						playerID = player[0].Id;
+
+						//	Show dialog that the login is successful
+						customMessageBox.ShowText("Successfully logged in");
+
+						//	Close after succesfully logged in
+						Close();
+					}
+					else
+					{
+						//	Show dialog that the login is not successful
+						customMessageBox.ShowText("Password is incorrect!");
+
+						//	Clear the incorrect password
+						passwordBox.Password = "";
+					}
 				}
 				else
 				{
 					//	Show dialog that the login is not successful
-					customMessageBox.ShowText("Password is incorrect!");
-
-					//	Clear the incorrect password
-					passwordBox.Password = "";
+					customMessageBox.ShowText("Player doesn't exist!");
 				}
-			}
-			else
-			{
-				//	Show dialog that the login is not successful
-				customMessageBox.ShowText("Player doesn't exist!");
 			}
 		}
 

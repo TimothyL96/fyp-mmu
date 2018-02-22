@@ -31,6 +31,9 @@ namespace fyp1_prototype
 		{
 			InitializeComponent();
 
+			//	Set window to center of screen
+			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
 			//	Set the values
 			this.playerID = playerID;
 			this.kinectSensorChooser = kinectSensorChooser;
@@ -130,6 +133,7 @@ namespace fyp1_prototype
 				{
 					//	User decided to log out
 					loggedOut = true;
+					Close();
 
 					VisualStateManager.GoToState(btnLogout, "MouseOver", true);
 				}
@@ -180,6 +184,7 @@ namespace fyp1_prototype
 		private void logout(object sender, RoutedEventArgs e)
 		{
 			loggedOut = true;
+			Close();
 		}
 	}
 }
