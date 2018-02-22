@@ -322,6 +322,17 @@ namespace fyp1_prototype
 					else
 					{
 						//	A user is logged in, prompt current user to logout before a new login
+						Logout logout = new Logout(kinectSensorChooser, playerID);
+
+						if (logout.CustomShowDialog())
+						{
+							//	Reset player ID
+							playerID = -1;
+
+							//	User logged out, proceed to show login screen
+							Login login = new Login(kinectSensorChooser);
+							playerID = login.CustomShowDialog();
+						}
 					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_register))
@@ -337,6 +348,17 @@ namespace fyp1_prototype
 					else
 					{
 						//	A user is logged in, prompt current user to logout before a new registration
+						Logout logout = new Logout(kinectSensorChooser, playerID);
+
+						if (logout.CustomShowDialog())
+						{
+							//	Reset player ID
+							playerID = -1;
+
+							//	User logged out, proceed to show register screen
+							Register register = new Register(kinectSensorChooser);
+							register.ShowDialog();
+						}
 					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_singlePlayer))
@@ -457,9 +479,18 @@ namespace fyp1_prototype
 
         private void login(object sender, RoutedEventArgs e)
         {
-            Login login = new Login(kinectSensorChooser);
-            login.ShowDialog();
-        }
+			if (playerID == -1)
+			{
+				//	No user logged in, proceed to show login screen
+				Login login = new Login(kinectSensorChooser);
+				playerID = login.CustomShowDialog();
+			}
+			else
+			{
+				//	A user is logged in, prompt current user to logout before a new login
+				Logout logout = new Logout(kinectSensorChooser, playerID);
+			}
+		}
 
 		private void register(object sender, RoutedEventArgs e)
 		{
