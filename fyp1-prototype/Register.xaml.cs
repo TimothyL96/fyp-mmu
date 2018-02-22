@@ -690,6 +690,12 @@ namespace fyp1_prototype
 						//	Use TextCompositionManager to input at current caret
 						TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox, keyPressed.ToString()));
 					}
+					else if (passwordBox1.IsFocused)
+					{
+						//	Due to security reason, caret index of passwordbox is not retrievable
+						//	Use TextCompositionManager to input at current caret
+						TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, passwordBox1, keyPressed.ToString()));
+					}
 				}
 				else
 				{

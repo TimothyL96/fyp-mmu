@@ -20,7 +20,7 @@
 
 				<TextBox Height="42" HorizontalAlignment="Left" Margin="380,20,0,0" Name="textBoxUsername" FontSize="20" VerticalAlignment="Top" Width="262" BorderThickness="1" />
 
-				<PasswordBox Height="42" HorizontalAlignment="Left" Margin="380,90,0,0" Name="passwordBox" FontSize="20" VerticalAlignment="Top" Width="262" BorderThickness="1" Visibility="Hidden"/>
+				<PasswordBox Height="42" HorizontalAlignment="Left" Margin="380,90,0,0" Name="passwordBox" FontSize="20" VerticalAlignment="Top" Width="262" BorderThickness="1" />
 
 				<PasswordBox Height="42" HorizontalAlignment="Left" Margin="380,160,0,0" Name="passwordBox1" FontSize="20" VerticalAlignment="Top" Width="262" BorderThickness="1" />
 
