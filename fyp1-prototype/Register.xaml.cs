@@ -438,8 +438,6 @@ namespace fyp1_prototype
 		//	Execute press functions
 		private void HandPointerPressReleaseEvent(object sender, HandPointerEventArgs e)
 		{
-			VisualStateManager.GoToState(btnRegister, "MouseOver", true);
-
 			if (capturedHandPointer == e.HandPointer)
 			{
 				if (e.HandPointer.GetIsOver(btnCancelRegister))
@@ -458,21 +456,17 @@ namespace fyp1_prototype
 					{
 						//	Show message dialog to enter longer username
 						customMessageBox.ShowText("Username must be at least 3 characters long!");
-						return;
 					}
 					//	Check if password length is less than 3
 					else if (passwordBox.Password.Length < 3)
 					{
 						//	Show message dialog to enter longer password
 						customMessageBox.ShowText("Password must be at least 3 characters long!");
-
-						//	Return to stop executing
-						return;
 					}
 
 					//	If the fields are correct, then check the data
 					//	Check if password match
-					if (passwordBox.Password == passwordBox1.Password)
+					else if (passwordBox.Password == passwordBox1.Password)
 					{
 						//	Create the player repository object
 						PlayersRepository pro = new PlayersRepository();
@@ -523,6 +517,8 @@ namespace fyp1_prototype
 						//	Feedback to user that the passwords do not match
 						customMessageBox.ShowText("Password do not match! Try again");
 					}
+
+					VisualStateManager.GoToState(btnRegister, "MouseOver", true);
 				}
 				else if (e.HandPointer.GetIsOver(textBoxUsername))
 				{

@@ -11,17 +11,17 @@
 		<Border BorderThickness="1" BorderBrush="Black"></Border>
 		<k:KinectRegion Name="kinectKinectRegion">
 			<Grid>
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="220,25,0,0" Name="textBlockUsername" Text="Username:" FontSize="20" VerticalAlignment="Top" Width="110" />
+				<TextBlock Height="42" HorizontalAlignment="Left" Margin="220,25,0,0" Name="textBlockUsername" Text="Username:" FontSize="20" VerticalAlignment="Top" Width="110" />
 
-				<TextBlock Height="30" HorizontalAlignment="Left" Margin="220,85,0,0" Name="textBlockPassword" Text="Password:" FontSize="20" VerticalAlignment="Top" Width="110"  />
+				<TextBlock Height="42" HorizontalAlignment="Left" Margin="220,95,0,0" Name="textBlockPassword" Text="Password:" FontSize="20" VerticalAlignment="Top" Width="110"  />
 
 
-				<TextBox Height="36" HorizontalAlignment="Left" Margin="370,20,0,0" Name="textBoxUsername" FontSize="20" VerticalAlignment="Top" Width="262" />
+				<TextBox Height="42" HorizontalAlignment="Left" Margin="370,20,0,0" Name="textBoxUsername" FontSize="24" VerticalAlignment="Top" Width="262" />
 
-				<PasswordBox Height="36" HorizontalAlignment="Left" Margin="370,80,0,0" Name="passwordBox" FontSize="20" VerticalAlignment="Top" Width="262" />
+				<PasswordBox Height="42" HorizontalAlignment="Left" Margin="370,90,0,0" Name="passwordBox" FontSize="24" VerticalAlignment="Top" Width="262" />
 
-				<Button Content="Back" Margin="220 140 0 0" Name="btnCancelLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
-				<Button Content="Login" Margin="420 140 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="login" IsDefault="True"/>
+				<Button Content="Back" Margin="220 160 0 0" Name="btnCancelLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
+				<Button Content="Login" Margin="420 160 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="login" IsDefault="True"/>
 
 				<Button Content="Q" Margin="060,250,0,0" x:Name="btnQ" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
 				<Button Content="W" Margin="150,250,0,0" x:Name="btnW" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
