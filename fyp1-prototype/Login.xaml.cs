@@ -26,6 +26,7 @@ namespace fyp1_prototype
 		private KinectSensorChooser kinectSensorChooser;
 		private const int hoverSizeChange = 50;
 		private char keyPressed;
+		public int playerID = -1;
 
 		public Login(KinectSensorChooser kinectSensorChooser)
         {
@@ -472,8 +473,12 @@ namespace fyp1_prototype
 							//	If password match then log them in
 							if (result.ToString().Contains(player[0].Password))
 							{
+								//	Retrieve and save the player ID
+								playerID = player[0].Id;
+
+
 								//	Show dialog that the login is successful
-								customMessageBox.ShowText("Log in succeeded");
+								customMessageBox.ShowText("Successfully logged in");
 
 								//	Close after succesfully logged in
 								Close();
@@ -680,6 +685,12 @@ namespace fyp1_prototype
 				capturedHandPointer = null;
 				e.Handled = true;
 			}
+		}
+
+		public int CustomShowDialog()
+		{
+			ShowDialog();
+			return playerID;
 		}
 
 		//	Temporary click function

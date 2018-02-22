@@ -150,11 +150,13 @@ namespace fyp1_prototype
 
 		//	TODO:
 		//	Scale to screensize - next to do
-		//	add more items
 		//	fix kinect start and stop app crash
-		//	personal best at homescreen
 		//	multiplayer
+		//	add more items
+		//	personal best at homescreen
 		//	login & register - backspace
+		//	login before proceeding playing game n loading game
+		//	logout button
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)

@@ -15,7 +15,7 @@ namespace fyp1_prototype
 	{
 		private KinectSensorChooser kinectSensorChooser;
 		private HandPointer capturedHandPointer;
-		private int playerID = 1;
+		private int playerID = -1;
 
 		public MainWindow()
 		{
@@ -313,15 +313,31 @@ namespace fyp1_prototype
 				{
 					VisualStateManager.GoToState(btn_login, "MouseOver", true);
 
-					Login login = new Login(kinectSensorChooser);
-					login.ShowDialog();
+					if (playerID == -1)
+					{
+						//	No user logged in, proceed to show login screen
+						Login login = new Login(kinectSensorChooser);
+						playerID = login.CustomShowDialog();
+					}
+					else
+					{
+						//	A user is logged in, prompt current user to logout before a new login
+					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_register))
 				{
 					VisualStateManager.GoToState(btn_register, "MouseOver", true);
 
-					Register register = new Register(kinectSensorChooser);
-					register.ShowDialog();
+					if (playerID == -1)
+					{
+						//	No user logged in, proceed to show register screen
+						Register register = new Register(kinectSensorChooser);
+						register.ShowDialog();
+					}
+					else
+					{
+						//	A user is logged in, prompt current user to logout before a new registration
+					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_singlePlayer))
 				{
