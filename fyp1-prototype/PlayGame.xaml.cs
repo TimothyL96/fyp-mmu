@@ -154,7 +154,6 @@ namespace fyp1_prototype
 		//	multiplayer
 		//	add more items
 		//	personal best at homescreen
-		//	login before proceeding playing game n loading game
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)

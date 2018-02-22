@@ -365,41 +365,67 @@ namespace fyp1_prototype
 				{
 					VisualStateManager.GoToState(btn_singlePlayer, "MouseOver", true);
 
-					GameRepository gameRepository = new GameRepository();
-					if (gameRepository.GetGame(playerID).Count > 0)
+					if (playerID == -1)
 					{
-						LoadGame loadGame = new LoadGame(kinectSensorChooser, playerID);
-						loadGame.ShowDialog();
+						CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+						customMessageBox.ShowText("Please login to continue");
 					}
 					else
 					{
-						GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-						gameMode.ShowDialog();
-					}
+						GameRepository gameRepository = new GameRepository();
+						if (gameRepository.GetGame(playerID).Count > 0)
+						{
+							LoadGame loadGame = new LoadGame(kinectSensorChooser, playerID);
+							loadGame.ShowDialog();
+						}
+						else
+						{
+							GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
+							gameMode.ShowDialog();
+						}
+					}					
 				}
 				else if (e.HandPointer.GetIsOver(btn_multiPlayer))
 				{
 					VisualStateManager.GoToState(btn_multiPlayer, "MouseOver", true);
+
+					if (playerID == -1)
+					{
+						CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+						customMessageBox.ShowText("Please login to continue");
+					}
+					else
+					{
+
+					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_loadGame))
 				{
 					VisualStateManager.GoToState(btn_loadGame, "MouseOver", true);
 
-					GameRepository gameRepository = new GameRepository();
-					List<GameRepository.GameDto> getGame = gameRepository.GetGame(playerID);
-					if (getGame.Count == 0)
+					if (playerID == -1)
 					{
-						//	No game saved, display the dialog
 						CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
-						customMessageBox.ShowText("You have no saved game!");
+						customMessageBox.ShowText("Please login to continue");
 					}
 					else
 					{
-						//	Load the game
-						kinectSensorChooser.Stop();
-						DragDropImages dragDropImages = new DragDropImages(playerID, getGame[0].GameMode);
-						dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
-						dragDropImages.Show();
+						GameRepository gameRepository = new GameRepository();
+						List<GameRepository.GameDto> getGame = gameRepository.GetGame(playerID);
+						if (getGame.Count == 0)
+						{
+							//	No game saved, display the dialog
+							CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+							customMessageBox.ShowText("You have no saved game!");
+						}
+						else
+						{
+							//	Load the game
+							kinectSensorChooser.Stop();
+							DragDropImages dragDropImages = new DragDropImages(playerID, getGame[0].GameMode);
+							dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
+							dragDropImages.Show();
+						}
 					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_highScores))
@@ -458,16 +484,24 @@ namespace fyp1_prototype
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
 		{
-			GameRepository gameRepository = new GameRepository();
-			if (gameRepository.GetGame(playerID).Count > 0)
+			if (playerID == -1)
 			{
-				LoadGame loadGame = new LoadGame(kinectSensorChooser, playerID);
-				loadGame.ShowDialog();
+				CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+				customMessageBox.ShowText("Please login to continue");
 			}
 			else
 			{
-				GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-				gameMode.Show();
+				GameRepository gameRepository = new GameRepository();
+				if (gameRepository.GetGame(playerID).Count > 0)
+				{
+					LoadGame loadGame = new LoadGame(kinectSensorChooser, playerID);
+					loadGame.ShowDialog();
+				}
+				else
+				{
+					GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
+					gameMode.ShowDialog();
+				}
 			}
 		}
 
@@ -500,21 +534,29 @@ namespace fyp1_prototype
 
 		private void loadGame(object sender, RoutedEventArgs e)
 		{
-			GameRepository gameRepository = new GameRepository();
-			List<GameRepository.GameDto> getGame = gameRepository.GetGame(playerID);
-			if (getGame.Count == 0)
+			if (playerID == -1)
 			{
-				//	No game saved, display the dialog
 				CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
-				customMessageBox.ShowText("You have no saved game!");
+				customMessageBox.ShowText("Please login to continue");
 			}
 			else
 			{
-				//	Load the game
-				kinectSensorChooser.Stop();
-				DragDropImages dragDropImages = new DragDropImages(playerID, getGame[0].GameMode);
-				dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
-				dragDropImages.Show();
+				GameRepository gameRepository = new GameRepository();
+				List<GameRepository.GameDto> getGame = gameRepository.GetGame(playerID);
+				if (getGame.Count == 0)
+				{
+					//	No game saved, display the dialog
+					CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+					customMessageBox.ShowText("You have no saved game!");
+				}
+				else
+				{
+					//	Load the game
+					kinectSensorChooser.Stop();
+					DragDropImages dragDropImages = new DragDropImages(playerID, getGame[0].GameMode);
+					dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
+					dragDropImages.Show();
+				}
 			}
 		}
 	}
