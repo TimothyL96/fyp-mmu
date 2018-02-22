@@ -68,16 +68,6 @@ namespace fyp1_prototype
 		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
 		private Dictionary<int, InteractionHandEventType> _lastRightHandEvents = new Dictionary<int, InteractionHandEventType>();
 
-		//	Indicate on which item the hand cursor is on by index of canvas.children
-		private int handCursorOn = -1;
-
-		//	Flag for setting hand cursor on left & top distant
-		private bool handCursorOnSet = false;
-
-		//	When the hand cursor is gripping the item, record the left and right distance to move the item in the right ratio from the point of grip
-		private double handCursorOnLeftDistant;
-		private double handCursorOnTopDistant;
-
 		//	This indicates the start index of canvas that is an item
 		private const int itemChildrenStart = 9;
 
@@ -124,6 +114,9 @@ namespace fyp1_prototype
 		//	Has game ended flag
 		private bool hasGameEnded = false;
 
+		//	Item Gripped object
+		ItemGripped itemGripped;
+
 		//	Random variables
 		Random random;
 		Random randomHorizontal;
@@ -132,7 +125,7 @@ namespace fyp1_prototype
 		//	DipatchTimer
 		DispatcherTimer timerCountdown = new DispatcherTimer();
 		DispatcherTimer timerCreateImage = new DispatcherTimer();
-		DispatcherTimer timerPushImage = new DispatcherTimer();
+		DispatcherTimer timerUpdateScore = new DispatcherTimer();
 		DispatcherTimer timerGameEnd = new DispatcherTimer();
 		DispatcherTimer timerGameBack = new DispatcherTimer();
 
@@ -161,6 +154,7 @@ namespace fyp1_prototype
 		//	fix kinect start and stop app crash
 		//	personal best at homescreen
 		//	multiplayer
+		//	login
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
@@ -211,6 +205,15 @@ namespace fyp1_prototype
 
 			//	Get total item counts
 			totalItemCount = itemsRepository.GetCount();
+
+			itemGripped = new ItemGripped
+			{
+				GameMode = gameMode,
+				CurrentScore = currentScore,
+				CurrentLives = currentLives,
+				HandCursorOn = -1,
+				HandCursorOnSet = false,
+			};
 		}
 
 		//	When window is loaded
@@ -349,7 +352,7 @@ namespace fyp1_prototype
 
 				//	Stop the timers
 				timerCreateImage.Stop();
-				timerPushImage.Stop();
+				timerUpdateScore.Stop();
 				watch.Stop();
 
 				//	Display text
@@ -461,10 +464,10 @@ namespace fyp1_prototype
 				timerCountdown.Stop();
 				countdown.Visibility = Visibility.Hidden;
 
-				//	Start pushing images down
-				timerPushImage.Tick += new EventHandler(Tick_PushImage);
-				timerPushImage.Interval = TimeSpan.FromMilliseconds(50);
-				timerPushImage.Start();
+				//	Start updating score
+				timerUpdateScore.Tick += new EventHandler(Tick_UpdateScore);
+				timerUpdateScore.Interval = TimeSpan.FromMilliseconds(50);
+				timerUpdateScore.Start();
 			}
 		}
 
@@ -517,102 +520,45 @@ namespace fyp1_prototype
 					Width = imageWidth,
 					Height = imageHeight,
 					Source = new BitmapImage(new Uri(itemsDto.Item_Image_Link, UriKind.Relative)),
-					Tag = new ItemTag() {
-						ItemType = itemsDto.Item_Type,
-						DropSpeed = verticalLength,
-					},
 				};
 
-				//	Randomize
+				//	Randomize the X-axis position
 				randomHorizontal = new Random();
 				horizontalLength = randomHorizontal.Next(0, horizontalMaxLength);
 
+				//	Add the new image to the canvas
 				canvas.Children.Add(image);
+
+				//	Set the X-axis position of the image
 				Canvas.SetLeft(canvas.Children[canvas.Children.Count - 1], horizontalLength);
-				Point p = canvas.Children[canvas.Children.Count - 1].TranslatePoint(new Point(0, 0), canvas);
+
+				//	Create new item drop instant for the newly create item/image
+				ItemDrop itemDrop = new ItemDrop
+				{
+					ItemType = itemsDto.Item_Type,
+					DropSpeed = verticalLength,
+					ItemWidth = imageWidth,
+					ItemHeight = imageHeight,
+					VerticalMaxLength = verticalMaxLength,
+					ImageSource = new BitmapImage(new Uri(itemsDto.Item_Image_Link, UriKind.Relative)),
+					ItemImage = image,
+					BlueBin = blueBin,
+					OrangeBin = orangeBin,
+					BrownBin = brownBin,
+					CanvasGame = canvas,
+					ItemGrippedObject = itemGripped,
+				};
 			});
 		}
 
-		private void Tick_PushImage(object source, EventArgs e)
+		private void Tick_UpdateScore(object source, EventArgs e)
 		{
-			//	test
+			//	Get the latest data
+			currentScore = itemGripped.CurrentScore;
+			currentLives = itemGripped.CurrentLives;
+
 			//	Update the score
 			UpdateScoreLivesTime();
-
-			//	For every item
-			for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
-			{
-				//	Skip if this item is being gripped
-				if (i == handCursorOn)
-					continue;
-
-				//	Save the item object for easier accessing
-				Image itemObject = (Image)canvas.Children[i];
-
-				//	Get the points
-				Point itemPoint = itemObject.TranslatePoint(new Point(0, 0), canvas);
-				Point blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
-				Point orangeBinPoint = orangeBin.TranslatePoint(new Point(0, 0), canvas);
-				Point brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
-
-				//	Push the image down
-				Canvas.SetTop(itemObject, itemPoint.Y + ((ItemTag)itemObject.Tag).DropSpeed);
-
-				//	Update the item point
-				itemPoint = itemObject.TranslatePoint(new Point(0, 0), canvas);
-
-				//	If the image passed the max vertical length then stop it
-				if (itemPoint.Y >= verticalMaxLength && i != handCursorOn)
-				{
-					canvas.Children.Remove(itemObject);
-
-					//	Check if item touches any bins
-					if (itemPoint.X + itemWidth * 0.75 >= blueBinPoint.X && itemPoint.X + itemWidth * 0.25 <= blueBinPoint.X + blueBin.ActualWidth)
-					{
-						//	Blue bin. Tag = 0
-						if (((ItemTag)itemObject.Tag).ItemType == 0)
-						{
-							currentScore++;
-						}
-						else if (gameMode == 0)
-						{
-							currentLives--;
-						}
-					}
-					else if (itemPoint.X + itemWidth * 0.75 >= orangeBinPoint.X && itemPoint.X + itemWidth * 0.25 <= orangeBinPoint.X + orangeBin.ActualWidth)
-					{
-						//	Orange bin. Tag = 1
-						if (((ItemTag)itemObject.Tag).ItemType == 1)
-						{
-							currentScore++;
-						}
-						else if (gameMode == 0)
-						{
-							currentLives--;
-						}
-					}
-					else if (itemPoint.X + itemWidth * 0.75 >= brownBinPoint.X && itemPoint.X + itemWidth * 0.25 <= brownBinPoint.X + brownBin.ActualWidth)
-					{
-						//	Brown bin. Tag = 2
-						if (((ItemTag)itemObject.Tag).ItemType == 2)
-						{
-							currentScore++;
-						}
-						else if (gameMode == 0)
-						{
-							currentLives--;
-						}
-					}
-					else if (gameMode == 0)
-					{
-						//	When the item never touches the bin but on the floor, easier to lose if uncommented
-						//currentLives--;
-					}
-
-					//	Update the score
-					UpdateScoreLivesTime();
-				}
-			}
 		}
 
 		//	Display final score after game end
@@ -688,16 +634,13 @@ namespace fyp1_prototype
 											? lastHandEvents[userID]
 											: InteractionHandEventType.None;
 					
-					//	Update the time
-					UpdateScoreLivesTime();
-
 					if (lastHandEvent == InteractionHandEventType.Grip)
 					{
 						//	If hand gripped, show gripped cursor and move the item with the cursor
 						handCursor.Source = new BitmapImage(new Uri("Resources/pointerWhite.png", UriKind.Relative));
 
 						//	Find the item number of which the hand cursor is on
-						if (handCursorOn == -1 && handCursorOnSet == false)
+						if (itemGripped.HandCursorOn == -1 && itemGripped.HandCursorOnSet == false)
 						{
 							for (int i = itemChildrenStart; i < canvas.Children.Count; i++)
 							{
@@ -706,29 +649,37 @@ namespace fyp1_prototype
 								if (handCursorPoint.X > childrenPoint.X && handCursorPoint.X < childrenPoint.X +
 									itemWidth && handCursorPoint.Y > childrenPoint.Y && handCursorPoint.Y < childrenPoint.Y + itemHeight)
 								{
-									handCursorOn = i;
-									handCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
-									handCursorOnTopDistant = handCursorPoint.Y - childrenPoint.Y;
-									handCursorOnSet = true;
+									itemGripped.HandCursorOn = i;
+									itemGripped.HandCursorOnLeftDistant = handCursorPoint.X - childrenPoint.X;
+									itemGripped.HandCursorOnTopDistant = handCursorPoint.Y - childrenPoint.Y;
+									itemGripped.HandCursorOnSet = true;
 									break;
 								}
 							}
 						}
 
 						//	Move the item with the hand cursor
-						if (handCursorOn != -1)
+						if (itemGripped.HandCursorOn != -1)
 						{
 							var p = handCursor.TranslatePoint(new Point(0, 0), canvas);
-							Canvas.SetLeft(canvas.Children[handCursorOn], p.X - handCursorOnLeftDistant);
-							Canvas.SetTop(canvas.Children[handCursorOn], p.Y - handCursorOnTopDistant);
+
+							try
+							{
+								Canvas.SetLeft(canvas.Children[itemGripped.HandCursorOn], p.X - itemGripped.HandCursorOnLeftDistant);
+								Canvas.SetTop(canvas.Children[itemGripped.HandCursorOn], p.Y - itemGripped.HandCursorOnTopDistant);
+							}
+							catch (Exception)
+							{
+
+							}
 						}
 					}
 					else if (lastHandEvent == InteractionHandEventType.GripRelease)
 					{
 						//	If hand grip released, show normal cursor
 						handCursor.Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative));
-						handCursorOn = -1;
-						handCursorOnSet = false;
+						itemGripped.HandCursorOn = -1;
+						itemGripped.HandCursorOnSet = false;
 					}
 					else if (hand.IsPressed)
 					{
@@ -886,10 +837,12 @@ namespace fyp1_prototype
 		{
 			//convert the value to X/Y
 			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
-			SkeletonPoint point = new SkeletonPoint();
-			point.X = ScaleVector(screenWidth, joint.Position.X);
-			point.Y = ScaleVector(screenHeight, -joint.Position.Y);
-			point.Z = joint.Position.Z;
+			SkeletonPoint point = new SkeletonPoint
+			{
+				X = ScaleVector(screenWidth, joint.Position.X),
+				Y = ScaleVector(screenHeight, -joint.Position.Y),
+				Z = joint.Position.Z
+			};
 
 			Joint scaledJoint = joint;
 			//Joint scaledJoint = joint.ScaleTo(1920, 1080);
@@ -904,10 +857,10 @@ namespace fyp1_prototype
 		//	Scale the X and Y to the screen size: Kinect 640x480 30 fps
 		private float ScaleVector(int length, float position)
 		{
-			float value = ((((float)length / 1f) / 2f) * position) + (length / 2);
+			float value = (((length / 1f) / 2f) * position) + (length / 2);
 			if (value > length)
 			{
-				return (float)length;
+				return length;
 			}
 			if (value < 0f)
 			{
@@ -996,7 +949,7 @@ namespace fyp1_prototype
 		private void Window_Closing(object sender, EventArgs e)
 		{
 			timerCreateImage.Stop();
-			timerPushImage.Stop();
+			timerUpdateScore.Stop();
 
 			/*if (sensor != null)
 				sensor.Stop();

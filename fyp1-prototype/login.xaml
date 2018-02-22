@@ -20,8 +20,8 @@
 
 				<PasswordBox Height="26" HorizontalAlignment="Left" Margin="370,60,0,0" Name="passwordBox" VerticalAlignment="Top" Width="222" />
 
-				<Button Content="Back" Margin="220 110 0 0" Name="btnCancelLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
-				<Button Content="Login" Margin="420 110 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="login" IsDefault="True"/>
+				<Button Content="Back" Margin="220 140 0 0" Name="btnCancelLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="goback"/>
+				<Button Content="Login" Margin="420 140 0 0" Name="btnLogin" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="60" Click="login" IsDefault="True"/>
 
 				<Button Content="Q" Margin="060,250,0,0" x:Name="btnQ" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>
 				<Button Content="W" Margin="150,250,0,0" x:Name="btnW" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" Click="keyClick" MouseEnter="AMouseEnter" MouseLeave="AMouseLeave" Focusable="False"/>

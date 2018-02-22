@@ -102,7 +102,8 @@
     <Compile Include="GameMode.xaml.cs">
       <DependentUpon>GameMode.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ItemTag.cs" />
+    <Compile Include="ItemDrop.cs" />
+    <Compile Include="ItemGripped.cs" />
     <Compile Include="LoadGame.xaml.cs">
       <DependentUpon>LoadGame.xaml</DependentUpon>
     </Compile>

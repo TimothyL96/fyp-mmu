@@ -342,20 +342,28 @@ namespace fyp1_prototype
 			{
 				VisualStateManager.GoToState(passwordBox, "Normal", true);
 			}
-			if (!e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
-			{
-				VisualStateManager.GoToState((Button)sender, "Normal", true);
 
-				Button button = (Button)sender;
-				button.RenderTransformOrigin = new Point(0.5, 0.5);
-				ScaleTransform scaleTransform = new ScaleTransform
+			try
+			{
+				if (!e.HandPointer.GetIsOver((Button)sender) && e.HandPointer.IsPrimaryHandOfUser)
 				{
-					ScaleX = 1,
-					ScaleY = 1
-				};
-				TransformGroup transformGroup = new TransformGroup();
-				transformGroup.Children.Add(scaleTransform);
-				button.RenderTransform = transformGroup;
+					VisualStateManager.GoToState((Button)sender, "Normal", true);
+
+					Button button = (Button)sender;
+					button.RenderTransformOrigin = new Point(0.5, 0.5);
+					ScaleTransform scaleTransform = new ScaleTransform
+					{
+						ScaleX = 1,
+						ScaleY = 1
+					};
+					TransformGroup transformGroup = new TransformGroup();
+					transformGroup.Children.Add(scaleTransform);
+					button.RenderTransform = transformGroup;
+				}
+			}
+			catch (Exception)
+			{
+
 			}
 
 			if (capturedHandPointer == e.HandPointer)

@@ -336,7 +336,7 @@ namespace fyp1_prototype
 					else
 					{
 						GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-						gameMode.Show();
+						gameMode.ShowDialog();
 					}
 				}
 				else if (e.HandPointer.GetIsOver(btn_multiPlayer))
