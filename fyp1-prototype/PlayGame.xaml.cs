@@ -740,7 +740,7 @@ namespace fyp1_prototype
 					var accelerometerReading = sensor.AccelerometerGetCurrentReading();
 					_interactionStream.ProcessSkeleton(_skeletons, accelerometerReading, skeletonFrame.Timestamp);
 				}
-				catch (InvalidOperationException)
+				catch (Exception)
 				{
 					// SkeletonFrame functions may throw when the sensor gets
 					// into a bad state.  Ignore the frame in that case.
@@ -953,11 +953,14 @@ namespace fyp1_prototype
 		{
 			//	The Kinect should only be stopped after the Kinect is fully closed
 			if (sensor != null)
+			{
 				sensor.Stop();
+				sensor.SkeletonFrameReady -= SensorOnSkeletonFrameReady;
+			}
 
 			if (kinectSensorChooser.Status == ChooserStatus.SensorStarted)
 			{
-				kinectSensorChooser.Stop();
+				//kinectSensorChooser.Stop();
 			}
 		}
 

@@ -133,7 +133,7 @@ namespace fyp1_prototype
 
 					//	Load a new game
 					GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-					gameMode.Show();
+					gameMode.ShowDialog();
 
 					Close();
 
@@ -196,7 +196,7 @@ namespace fyp1_prototype
 
 			//	Load a new game
 			GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-			gameMode.Show();
+			gameMode.ShowDialog();
 
 			Close();
 		}
