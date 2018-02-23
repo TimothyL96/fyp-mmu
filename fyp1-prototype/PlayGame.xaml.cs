@@ -148,8 +148,9 @@ namespace fyp1_prototype
 		#endregion
 
 		//	TODO:
-		//	Scale to screensize - next to do
-		//	multiplayer
+		//	Scale to screensize - next to do - first
+		//	multiplayer	- second
+		//	add text to help & clear database - last
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)

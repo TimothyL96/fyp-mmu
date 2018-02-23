@@ -36,6 +36,7 @@ namespace fyp1_prototype
 
 		DispatcherTimer timerPushImage = new DispatcherTimer();
 
+		//	Constructor
 		public ItemDrop()
 		{
 			//	Start pushing images down

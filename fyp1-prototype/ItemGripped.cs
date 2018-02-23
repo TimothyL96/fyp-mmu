@@ -23,6 +23,7 @@ namespace fyp1_prototype
 		public int CurrentLives { get; set; }
 		public int GameMode { get; set; }
 
+		//	Constructor
 		public ItemGripped()
 		{
 
