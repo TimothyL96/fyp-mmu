@@ -835,14 +835,12 @@ namespace fyp1_prototype
 			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
 			SkeletonPoint point = new SkeletonPoint
 			{
-				X = ScaleVector(screenWidth, joint.Position.X),
-				Y = ScaleVector(screenHeight, -joint.Position.Y),
+				X = ScaleVector(screenWidth + 500, joint.Position.X),
+				Y = ScaleVector(screenHeight + 400, -joint.Position.Y),
 				Z = joint.Position.Z
 			};
 
 			Joint scaledJoint = joint;
-			//Joint scaledJoint = joint.ScaleTo(1920, 1080);
-
 			scaledJoint.TrackingState = JointTrackingState.Tracked;
 			scaledJoint.Position = point;
 
@@ -938,8 +936,8 @@ namespace fyp1_prototype
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
 			// 640 x 480
-			Canvas.SetLeft(element, point.X * (screenFactorX + 0.5) - element.Width / 2);
-			Canvas.SetTop(element, point.Y * (screenFactorY + 0.5) - element.Height / 2);
+			Canvas.SetLeft(element, point.X * (screenFactorX) - element.Width / 2);
+			Canvas.SetTop(element, point.Y * (screenFactorY) - element.Height / 2);
 		}
 
 		//	When window is closing
