@@ -154,7 +154,18 @@ namespace fyp1_prototype
 					}
 
 					if (dragDropImages != null)
-						dragDropImages.Show();
+					{
+						e.HandPointer.Capture(null);
+						e.Handled = true;
+
+						Close();
+
+						dragDropImages.ShowDialog();
+
+						kinectSensorChooser.Start();
+
+						return;
+					}
 				}
 				else
 				{
@@ -223,9 +234,12 @@ namespace fyp1_prototype
 				//	Survival
 				kinectSensorChooser.Stop();
 				DragDropImages dragDropImages = new DragDropImages(playerID, 0);
-				dragDropImages.Show();
 
 				Close();
+
+				dragDropImages.ShowDialog();
+
+				kinectSensorChooser.Start();
 			}
 			else
 			{
@@ -244,9 +258,12 @@ namespace fyp1_prototype
 				//	Time Attack
 				kinectSensorChooser.Stop();
 				DragDropImages dragDropImages = new DragDropImages(playerID, 1);
-				dragDropImages.Show();
 
 				Close();
+
+				dragDropImages.ShowDialog();
+
+				kinectSensorChooser.Start();
 			}
 			else
 			{

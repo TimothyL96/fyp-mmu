@@ -149,9 +149,7 @@ namespace fyp1_prototype
 
 		//	TODO:
 		//	Scale to screensize - next to do
-		//	fix kinect start and stop app crash
 		//	multiplayer
-		//	add more items
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
@@ -943,15 +941,24 @@ namespace fyp1_prototype
 			Canvas.SetTop(element, point.Y * (screenFactorY + 0.5) - element.Height / 2);
 		}
 
+		//	When window is closing
 		private void Window_Closing(object sender, EventArgs e)
 		{
 			timerCreateImage.Stop();
 			timerUpdateScore.Stop();
+		}
 
-			/*if (sensor != null)
+		//	When window closed
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			//	The Kinect should only be stopped after the Kinect is fully closed
+			if (sensor != null)
 				sensor.Stop();
 
-			kinectSensorChooser.Stop();*/
+			if (kinectSensorChooser.Status == ChooserStatus.SensorStarted)
+			{
+				kinectSensorChooser.Stop();
+			}
 		}
 
 		//	Temporary click function
@@ -976,6 +983,6 @@ namespace fyp1_prototype
 
 			//	Close the game window
 			Close();
-		}
+		}	
 	}
 }
