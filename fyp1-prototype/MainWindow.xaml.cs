@@ -447,7 +447,9 @@ namespace fyp1_prototype
 							kinectSensorChooser.Stop();
 							DragDropImages dragDropImages = new DragDropImages(playerID, getGame[0].GameMode);
 							dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
-							dragDropImages.Show();
+							dragDropImages.ShowDialog();
+
+							kinectSensorChooser.Start();
 						}
 					}
 				}
@@ -496,13 +498,13 @@ namespace fyp1_prototype
         //	Below are all temporary click functions
         private void close(object sender, RoutedEventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 
 		private void highscore(object sender, RoutedEventArgs e)
 		{
 			GameMode gameMode = new GameMode(kinectSensorChooser, playerID, 0);
-			gameMode.Show();
+			gameMode.ShowDialog();
 		}
 
 		private void singlePlayer(object sender, RoutedEventArgs e)
@@ -534,7 +536,7 @@ namespace fyp1_prototype
 		private void help(object sender, RoutedEventArgs e)
 		{
 			Help help = new Help(kinectSensorChooser);
-			help.Show();
+			help.ShowDialog();
 		}
 
         private void login(object sender, RoutedEventArgs e)
@@ -632,7 +634,9 @@ namespace fyp1_prototype
 					kinectSensorChooser.Stop();
 					DragDropImages dragDropImages = new DragDropImages(playerID, getGame[0].GameMode);
 					dragDropImages.GetLoadGameData(getGame[0].Lives, getGame[0].Time, getGame[0].Score, getGame[0].ItemGame);
-					dragDropImages.Show();
+					dragDropImages.ShowDialog();
+
+					kinectSensorChooser.Start();
 				}
 			}
 		}
