@@ -133,9 +133,10 @@ namespace fyp1_prototype
 
 					//	Load a new game
 					GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-					gameMode.ShowDialog();
 
 					Close();
+
+					gameMode.ShowDialog();
 
 					VisualStateManager.GoToState(buttonLoad, "MouseOver", true);
 				}
@@ -196,9 +197,8 @@ namespace fyp1_prototype
 
 			//	Load a new game
 			GameMode gameMode = new GameMode(kinectSensorChooser, playerID);
-			gameMode.ShowDialog();
-
 			Close();
+			gameMode.ShowDialog();
 		}
 	}
 }
