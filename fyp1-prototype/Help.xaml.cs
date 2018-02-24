@@ -39,8 +39,10 @@ namespace fyp1_prototype
 			string text = "This section will give you a guide to this game.\nTo play this game, you need to have Kinect for Windows sensor.\nFind an area where the Kinect sensor can detect you well and clear.\n";
 			text += "\nPress a button by performing a push and pull gesture with your hand.\n";
 			text += "Drag and drop items by gripping your hand and releasing the grip.\n";
+			text += "You need an account and be logged in to start playing the game.\n";
 			text += "\nYour goal for the game would be about dragging the spawned item to the correct recycle bin.\n";
 			text += "\nA correct drag drop would give you a score and a wrong drag drop would takes a live away from you.\n";
+			text += "\nCurrently, a drop to the floor would not have your live deducted.\n";
 			text += "\nSURVIVAL MODE:\nSurviving the game limited lives. Your game would not end if you still have lives left!.\n";
 			text += "\nTIME ATTACK MODE:\nIn 60 seconds, get as much score as you can!.\n";
 			var textContent = new Label
@@ -59,11 +61,12 @@ namespace fyp1_prototype
 			scrollContent.Children.Add(creditHeader);
 			var creditContent = new Label
 			{
-				Content = "flaticon.com\nSome images are provided free by this website.",
+				Content = "flaticon.com\nSome images are provided free by this website.\nIcon made by Vaadin from www.flaticon.com ",
 				FontSize = 22
 			};
 			scrollContent.Children.Add(creditContent);
 
+			#region KinectRegion
 			//	Setup Kinect region press target and event handlers
 			KinectRegion.SetIsPressTarget(back, true);
 
@@ -75,6 +78,7 @@ namespace fyp1_prototype
 
 			KinectRegion.AddHandPointerGotCaptureHandler(back, HandPointerCaptureEvent);
 			KinectRegion.AddHandPointerLostCaptureHandler(back, HandPointerLostCaptureEvent);
+			#endregion`
 		}
 
 		private void HandPointerEnterEvent(object sender, HandPointerEventArgs e)
