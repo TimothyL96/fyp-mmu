@@ -223,8 +223,8 @@ namespace fyp1_prototype
 			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
 
 			//	Set the screenWidth and screenHeight to the width and height of the full primary screen
-			screenWidth = (int)SystemParameters.FullPrimaryScreenWidth;
-			screenHeight = (int)SystemParameters.FullPrimaryScreenHeight;
+			screenWidth = (int)(SystemParameters.FullPrimaryScreenWidth * 1.5);
+			screenHeight = (int)(SystemParameters.FullPrimaryScreenHeight * 1.5);
 
 			//	Calculate the screen factor
 			screenFactorX = screenWidth / 640;
@@ -679,19 +679,20 @@ namespace fyp1_prototype
 						itemGripped.HandCursorOn = -1;
 						itemGripped.HandCursorOnSet = false;
 					}
-					else if (hand.IsPressed)
+
+					if (hand.IsPressed)
 					{
 						//	If hand pressed the back, go back:
 
 						//	Get points of hand cursor and back button
 						var handCursorPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
-						var backPoint = handCursor.TranslatePoint(new Point(0, 0), canvas);
+						var backPoint = back.TranslatePoint(new Point(0, 0), canvas);
 
 						//	Left and Right check:
-						if (back.Width + backPoint.X >= handCursorPoint.X && handCursorPoint.X >= backPoint.X)
+						if (back.ActualWidth + backPoint.X >= handCursorPoint.X && handCursorPoint.X + handCursor.ActualWidth / 2 >= backPoint.X)
 						{
 							//	Top and Bottom check:
-							if (back.Height + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y >= backPoint.Y)
+							if (back.ActualHeight + backPoint.Y >= handCursorPoint.Y && handCursorPoint.Y + handCursor.ActualHeight / 2 >= backPoint.Y)
 							{
 								//	If 'watch' timer is running, then save the game first
 								//	If not, just close the window
@@ -837,8 +838,8 @@ namespace fyp1_prototype
 			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
 			SkeletonPoint point = new SkeletonPoint
 			{
-				X = ScaleVector(screenWidth + 500, joint.Position.X),
-				Y = ScaleVector(screenHeight + 400, -joint.Position.Y),
+				X = ScaleVector(screenWidth, joint.Position.X),
+				Y = ScaleVector(screenHeight, -joint.Position.Y),
 				Z = joint.Position.Z
 			};
 
@@ -862,30 +863,6 @@ namespace fyp1_prototype
 			{
 				return 0f;
 			}
-			return value;
-		}
-
-		private float ScaleVectorX(int length, float position)
-		{
-			float value = position * screenFactorX;
-
-			if (value > screenWidth)
-			{
-				return screenWidth;
-			}
-			
-			return value;
-		}
-
-		private float ScaleVectorY(int length, float position)
-		{
-			float value = position * screenFactorY - length / 2 ;
-
-			if (value > screenHeight)
-			{
-				return screenHeight;
-			}
-
 			return value;
 		}
 
@@ -938,8 +915,11 @@ namespace fyp1_prototype
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
 			// 640 x 480
-			Canvas.SetLeft(element, point.X * (screenFactorX) - element.Width / 2);
-			Canvas.SetTop(element, point.Y * (screenFactorY) - element.Height / 2);
+			//Canvas.SetLeft(element, point.X * (screenFactorX) - element.Width / 2);
+			//Canvas.SetTop(element, point.Y * (screenFactorY) - element.Height / 2);
+
+			Canvas.SetLeft(element, 1000);
+			Canvas.SetTop(element, 1000);
 		}
 
 		//	When window is closing
