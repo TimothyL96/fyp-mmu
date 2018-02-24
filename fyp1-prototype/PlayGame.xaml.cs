@@ -28,6 +28,7 @@ namespace fyp1_prototype
 		//	Sensor storage
 		KinectSensor sensor;
 		KinectSensorChooser kinectSensorChooser;
+		bool isGripped = false;
 
 		//	Set items spawning and speed
 		private const int horizontalLengthStart = 150;
@@ -62,6 +63,19 @@ namespace fyp1_prototype
 		//	Screen factor of horizontal and vertical by dividing screenWidth and screenHeight by Kinect's 640x480 for scaling
 		private float screenFactorX;
 		private float screenFactorY;
+
+		//	Data for calibration
+		//	Xmin is the X axis value of Kinect when user move their hand to the left most standing on the ground without moving
+		//	Xmax is the X axis value of Kinect when user move their hand to the right most standing on the ground without moving
+		//	Xdiff is the difference between Xmax and Xmin. It is calculated so that when multiplied with the screen factor,
+		//	user hand at left most will scale to the left most of the game window
+		//	Current X is used to get the latest X axis point from Kinect event handler
+		private int Xmin, Xmax, Xdiff;
+		private int currentX = -999;
+
+		//	Same for Y-axis
+		private int Ymin, Ymax, Ydiff;
+		private int currentY = -999;
 
 		//	Dictionary for left and right hand
 		private Dictionary<int, InteractionHandEventType> _lastLeftHandEvents = new Dictionary<int, InteractionHandEventType>();
@@ -127,6 +141,7 @@ namespace fyp1_prototype
 		DispatcherTimer timerUpdateScore = new DispatcherTimer();
 		DispatcherTimer timerGameEnd = new DispatcherTimer();
 		DispatcherTimer timerGameBack = new DispatcherTimer();
+		DispatcherTimer timerScale = new DispatcherTimer();
 
 		//	ItemsRepository
 		ItemsRepository itemsRepository = new ItemsRepository();
@@ -148,8 +163,9 @@ namespace fyp1_prototype
 		#endregion
 
 		//	TODO:
-		//	Scale to screensize - next to do - first
-		//	multiplayer	- second
+		//	improve scaling, end game is draggable, countdown text size
+		//	edit help section
+		//	multiplayer
 
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
@@ -223,8 +239,8 @@ namespace fyp1_prototype
 			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
 
 			//	Set the screenWidth and screenHeight to the width and height of the full primary screen
-			screenWidth = (int)(SystemParameters.FullPrimaryScreenWidth * 1.5);
-			screenHeight = (int)(SystemParameters.FullPrimaryScreenHeight * 1.5);
+			screenWidth = (int)(SystemParameters.FullPrimaryScreenWidth);
+			screenHeight = (int)(SystemParameters.FullPrimaryScreenHeight);
 
 			//	Calculate the screen factor
 			screenFactorX = screenWidth / 640;
@@ -420,14 +436,181 @@ namespace fyp1_prototype
 			//	Delay one second
 			//System.Threading.Thread.Sleep(1000);
 
+			//	Show the text box
+			Dispatcher.Invoke(() =>
+			{
+				countdown.Visibility = Visibility.Visible;
+				countdown.Width = 1000;
+
+				//	Run the async method
+				Tick_Scale();
+			});			 
+		}
+
+		private async void Tick_Scale()
+		{
+			//	Setup tasks for all the calibration methods
+			//	Calibrate user position to the window screen
+			Task task1 = Task.Run(() => ScaleLeftXAxis());
+			await task1;
+
+			Task task2 = Task.Run(() => ScaleRightXAxis());
+			await task2;
+
+			Task task3 = Task.Run(() => ScaleTopYAxis());
+			await task3;
+
+			Task task4 = Task.Run(() => ScaleBottomYAxis());
+			await task4;
+			
+			Xdiff = Xmax - Xmin;
+			Ydiff = Ymax - Ymin;
+
+			if (Xdiff != 0 && Ydiff != 0)
+			{
+				screenFactorX = screenWidth / Xdiff;
+				screenFactorY = screenHeight / Ydiff;
+			}
+
 			//	Start counting down
 			timerCountdown.Tick += new EventHandler(Tick_Countdown);
 			timerCountdown.Interval = TimeSpan.FromMilliseconds(100);
 			timerCountdown.Start();
+		}
 
-			//	Show the text box
-			countdown.Visibility = Visibility.Visible;
-			countdown.Width = 1000;
+		private void ScaleLeftXAxis()
+		{
+			//	If user hand is gripped
+			while (isGripped)
+			{
+				//	Ask user to ungrip
+				Dispatcher.Invoke(() =>
+				{
+					countdown.Text = "Please ungrip your hand";
+				});
+				System.Threading.Thread.Sleep(1000);
+			}
+
+			//	Set the screen text
+			Dispatcher.Invoke(() =>
+			{
+				countdown.Text = "Left";
+			});
+
+			//	Get the latest X and sleep before checking
+			//	If a smaller X value is retrieved, repeat the process
+			do
+			{
+				Xmin = currentX;
+			}
+			while (currentX == -999);
+
+			do
+			{
+				if (currentX < Xmin)
+					Xmin = currentX;
+			}
+			while (!isGripped);
+		}
+
+		private void ScaleRightXAxis()
+		{
+			//	If user hand is gripped
+			while (isGripped)
+			{
+				//	Ask user to ungrip
+				Dispatcher.Invoke(() =>
+				{
+					countdown.Text = "Please ungrip your hand";
+				});
+				System.Threading.Thread.Sleep(1000);
+			}
+
+			//	Set the screen text
+			Dispatcher.Invoke(() =>
+			{
+				countdown.Text = "Right";
+			});
+
+			do
+			{
+				Xmax = currentX;
+			}
+			while (currentX == -999);
+
+			do
+			{
+				if (currentX > Xmax)
+					Xmax = currentX;
+			}
+			while (!isGripped);
+		}
+
+		private void ScaleTopYAxis()
+		{
+			//	If user hand is gripped
+			while (isGripped)
+			{
+				//	Ask user to ungrip
+				Dispatcher.Invoke(() =>
+				{
+					countdown.Text = "Please ungrip your hand";
+				});
+				System.Threading.Thread.Sleep(1000);
+			}
+
+			//	Set the screen text
+			Dispatcher.Invoke(() =>
+			{
+				countdown.Text = "Top";
+			});
+
+			do
+			{
+				Ymin = currentY;
+			}
+
+			while (currentY == -999);
+
+			do
+			{
+				if (currentY < Ymin)
+					Ymin = currentY;
+			}
+			while (!isGripped);
+		}
+
+		private void ScaleBottomYAxis()
+		{
+			//	If user hand is gripped
+			while (isGripped)
+			{
+				//	Ask user to ungrip
+				Dispatcher.Invoke(() =>
+				{
+					countdown.Text = "Please ungrip your hand";
+				});
+				System.Threading.Thread.Sleep(1000);
+			}
+			
+			//	Set the screen text
+			Dispatcher.Invoke(() =>
+			{
+				countdown.Text = "Bottom";
+			});
+
+			do
+			{
+				Ymax = currentY;
+			}
+			while (currentY == -999);
+
+			do
+			{
+				if (currentY > Ymax)
+					Ymax = currentY;
+			}
+			while (!isGripped);
 		}
 
 		private void Tick_Countdown(object source, EventArgs e)
@@ -634,6 +817,9 @@ namespace fyp1_prototype
 					
 					if (lastHandEvent == InteractionHandEventType.Grip)
 					{
+						//	Set value
+						isGripped = true;
+
 						//	If hand gripped, show gripped cursor and move the item with the cursor
 						handCursor.Source = new BitmapImage(new Uri("Resources/pointerWhite.png", UriKind.Relative));
 
@@ -674,6 +860,9 @@ namespace fyp1_prototype
 					}
 					else if (lastHandEvent == InteractionHandEventType.GripRelease)
 					{
+						//	Set value
+						isGripped = false;
+
 						//	If hand grip released, show normal cursor
 						handCursor.Source = new BitmapImage(new Uri("Resources/handWhite.png", UriKind.Relative));
 						itemGripped.HandCursorOn = -1;
@@ -835,7 +1024,6 @@ namespace fyp1_prototype
 		private void ScalePosition(FrameworkElement element, Joint joint)
 		{
 			//convert the value to X/Y
-			//Joint scaledJoint = joint.ScaleTo(1024, 768); 
 			SkeletonPoint point = new SkeletonPoint
 			{
 				X = ScaleVector(screenWidth, joint.Position.X),
@@ -904,6 +1092,9 @@ namespace fyp1_prototype
 						rightDepthPoint, ColorImageFormat.RgbResolution640x480Fps30);
 
 					CameraPosition(handCursor, rightColorPoint);
+
+					currentX = rightColorPoint.X;
+					currentY = rightColorPoint.Y;
 				}
 				catch (Exception)
 				{
@@ -914,12 +1105,34 @@ namespace fyp1_prototype
 
 		private void CameraPosition(FrameworkElement element, ColorImagePoint point)
 		{
-			// 640 x 480
-			//Canvas.SetLeft(element, point.X * (screenFactorX) - element.Width / 2);
-			//Canvas.SetTop(element, point.Y * (screenFactorY) - element.Height / 2);
+			if (Xdiff != 0 && Ydiff !=0)
+			{
+				//	Set the lower and upper limit for X and Y
+				if (point.X < Xmin)
+					point.X = Xmin;
+				else if (point.Y > Xmax)
+					point.X = Xmax;
 
-			Canvas.SetLeft(element, 1000);
-			Canvas.SetTop(element, 1000);
+				if (point.Y < Ymin)
+					point.Y = Ymin;
+				else if (point.Y > Ymax)
+					point.Y = Ymax;
+
+				point.X = (point.X - Xmin) * (int)screenFactorX;
+				point.Y = (point.Y - Ymin) * (int)screenFactorY;
+
+				// 640 x 480
+				Canvas.SetLeft(element, point.X - element.Width / 2);
+				Canvas.SetTop(element, point.Y - element.Height / 2);
+			}
+			else
+			{
+				// 640 x 480
+				Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
+				Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
+			}
+
+			tb.Text = "X: " + point.X + "Y: " + point.Y;
 		}
 
 		//	When window is closing
