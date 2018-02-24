@@ -560,6 +560,9 @@ namespace fyp1_prototype
 		private void Tick_GameEnd(object source, EventArgs e)
 		{
 			//	Stop the one time timer
+			if (!timerGameEnd.IsEnabled)
+				return;
+
 			timerGameEnd.Stop();
 
 			//	Update the score
