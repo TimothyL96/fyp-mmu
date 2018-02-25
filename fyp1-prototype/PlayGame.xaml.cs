@@ -163,7 +163,7 @@ namespace fyp1_prototype
 		#endregion
 
 		//	TODO:
-		//	improve scaling, end game is draggable, countdown text size
+		//	countdown text size
 		//	edit help section
 		//	multiplayer
 
@@ -1118,8 +1118,8 @@ namespace fyp1_prototype
 				else if (point.Y > Ymax)
 					point.Y = Ymax;
 
-				point.X = (point.X - Xmin) * (int)screenFactorX;
-				point.Y = (point.Y - Ymin) * (int)screenFactorY;
+				point.X = (int)((point.X - Xmin) * screenFactorX);
+				point.Y = (int)((point.Y - Ymin) * screenFactorY);
 
 				// 640 x 480
 				Canvas.SetLeft(element, point.X - element.Width / 2);
@@ -1131,8 +1131,6 @@ namespace fyp1_prototype
 				Canvas.SetLeft(element, point.X * screenFactorX - element.Width / 2);
 				Canvas.SetTop(element, point.Y * screenFactorY - element.Height / 2);
 			}
-
-			tb.Text = "X: " + point.X + "Y: " + point.Y;
 		}
 
 		//	When window is closing
