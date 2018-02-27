@@ -164,7 +164,6 @@ namespace fyp1_prototype
 
 		//	TODO:
 		//	countdown text size
-		//	edit help section
 		//	multiplayer
 
 		//	Constructor
@@ -441,6 +440,7 @@ namespace fyp1_prototype
 			{
 				countdown.Visibility = Visibility.Visible;
 				countdown.Width = 1000;
+				countdown.FontSize = 96;
 
 				//	Run the async method
 				Tick_Scale();
@@ -474,7 +474,7 @@ namespace fyp1_prototype
 
 			//	Start counting down
 			timerCountdown.Tick += new EventHandler(Tick_Countdown);
-			timerCountdown.Interval = TimeSpan.FromMilliseconds(100);
+			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
 			timerCountdown.Start();
 		}
 
@@ -494,7 +494,7 @@ namespace fyp1_prototype
 			//	Set the screen text
 			Dispatcher.Invoke(() =>
 			{
-				countdown.Text = "Left";
+				countdown.Text = "Move your hand to left and grip when done";
 			});
 
 			//	Get the latest X and sleep before checking
