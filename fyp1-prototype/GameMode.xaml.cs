@@ -129,43 +129,52 @@ namespace fyp1_prototype
 			{
 				if (windowType == -1)
 				{
-					//	Show game play window
-					kinectSensorChooser.Stop();
-					DragDropImages dragDropImages = null;
-
-					if (e.HandPointer.GetIsOver(btnSurvival))
+					if (playerID != -1)
 					{
-						//	Survival
-						dragDropImages = new DragDropImages(playerID, 0);
+						//	Single player game
+						//	Show game play window
+						kinectSensorChooser.Stop();
+						DragDropImages dragDropImages = null;
 
-						VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
-					}
-					else if (e.HandPointer.GetIsOver(btnTimeAttack))
-					{
-						//	Time Attack
-						dragDropImages = new DragDropImages(playerID, 1);
+						if (e.HandPointer.GetIsOver(btnSurvival))
+						{
+							//	Survival
+							dragDropImages = new DragDropImages(playerID, 0);
 
-						VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+							VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
+						}
+						else if (e.HandPointer.GetIsOver(btnTimeAttack))
+						{
+							//	Time Attack
+							dragDropImages = new DragDropImages(playerID, 1);
+
+							VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+						}
+						else
+						{
+							VisualStateManager.GoToState(btnSurvival, "Normal", true);
+							VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
+						}
+
+						if (dragDropImages != null)
+						{
+							e.HandPointer.Capture(null);
+							e.Handled = true;
+
+							Close();
+
+							dragDropImages.ShowDialog();
+
+							kinectSensorChooser.Start();
+
+							return;
+						}
 					}
 					else
 					{
-						VisualStateManager.GoToState(btnSurvival, "Normal", true);
-						VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
-					}
+						//	Multiplayer game, log in not required, playerID == -1
 
-					if (dragDropImages != null)
-					{
-						e.HandPointer.Capture(null);
-						e.Handled = true;
-
-						Close();
-
-						dragDropImages.ShowDialog();
-
-						kinectSensorChooser.Start();
-
-						return;
-					}
+					}					
 				}
 				else
 				{

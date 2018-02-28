@@ -68,7 +68,7 @@
 					<Button Content="Single Player" x:Name="btn_singlePlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 							Grid.Column="09" Grid.Row="03" Click="singlePlayer"	Height="80"/>
 					<Button Content="Multi Player"	x:Name="btn_multiPlayer"	HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-							Grid.Column="09" Grid.Row="05"						Height="80"/>
+							Grid.Column="09" Grid.Row="05" Click="multiPlayer"	Height="80"/>
 					<Button Content="Load Game"		x:Name="btn_loadGame"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 							Grid.Column="09" Grid.Row="07" Click="loadGame"		Height="80"/>
 					<Button Content="High Scores"	x:Name="btn_highScores"		HorizontalAlignment="Stretch" VerticalAlignment="Stretch"

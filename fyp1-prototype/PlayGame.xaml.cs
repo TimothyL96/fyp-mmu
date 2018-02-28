@@ -162,9 +162,6 @@ namespace fyp1_prototype
 			DependencyProperty.Register("CurrentTimeText", typeof(string), typeof(DragDropImages), new PropertyMetadata("Time: 0"));
 		#endregion
 
-		//	TODO:
-		//	multiplayer
-
 		//	Constructor
 		public DragDropImages(int playerID, int gameMode)
 		{

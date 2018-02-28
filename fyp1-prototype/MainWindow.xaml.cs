@@ -412,15 +412,8 @@ namespace fyp1_prototype
 				{
 					VisualStateManager.GoToState(btn_multiPlayer, "MouseOver", true);
 
-					if (playerID == -1)
-					{
-						CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
-						customMessageBox.ShowText("Please login to continue");
-					}
-					else
-					{
-
-					}
+					GameMode gameMode = new GameMode(kinectSensorChooser, -1);
+					gameMode.ShowDialog();
 				}
 				else if (e.HandPointer.GetIsOver(btn_loadGame))
 				{
@@ -639,6 +632,12 @@ namespace fyp1_prototype
 					kinectSensorChooser.Start();
 				}
 			}
+		}
+
+		private void multiPlayer(object sender, RoutedEventArgs e)
+		{
+			GameMode gameMode = new GameMode(kinectSensorChooser, -1);
+			gameMode.ShowDialog();
 		}
 	}
 }
