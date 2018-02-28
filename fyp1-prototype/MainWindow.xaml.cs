@@ -412,6 +412,7 @@ namespace fyp1_prototype
 				{
 					VisualStateManager.GoToState(btn_multiPlayer, "MouseOver", true);
 
+					//	Multiplayer doesnt need login, player ID = -1
 					GameMode gameMode = new GameMode(kinectSensorChooser, -1);
 					gameMode.ShowDialog();
 				}
@@ -636,6 +637,7 @@ namespace fyp1_prototype
 
 		private void multiPlayer(object sender, RoutedEventArgs e)
 		{
+			//	Multiplayer doesnt need login, player ID = -1
 			GameMode gameMode = new GameMode(kinectSensorChooser, -1);
 			gameMode.ShowDialog();
 		}
