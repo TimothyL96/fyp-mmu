@@ -240,15 +240,23 @@ namespace fyp1_prototype
 		{
 			if (windowType == -1)
 			{
-				//	Survival
-				kinectSensorChooser.Stop();
-				DragDropImages dragDropImages = new DragDropImages(playerID, 0);
+				if (playerID != -1)
+				{
+					//	Survival
+					kinectSensorChooser.Stop();
+					DragDropImages dragDropImages = new DragDropImages(playerID, 0);
 
-				Close();
+					Close();
 
-				dragDropImages.ShowDialog();
+					dragDropImages.ShowDialog();
 
-				kinectSensorChooser.Start();
+					kinectSensorChooser.Start();
+				}
+				else
+				{
+					//	Multiplayer
+				}
+				
 			}
 			else
 			{
@@ -264,15 +272,22 @@ namespace fyp1_prototype
 		{
 			if (windowType == -1)
 			{
-				//	Time Attack
-				kinectSensorChooser.Stop();
-				DragDropImages dragDropImages = new DragDropImages(playerID, 1);
+				if (playerID != -1)
+				{
+					//	Time Attack
+					kinectSensorChooser.Stop();
+					DragDropImages dragDropImages = new DragDropImages(playerID, 1);
 
-				Close();
+					Close();
 
-				dragDropImages.ShowDialog();
+					dragDropImages.ShowDialog();
 
-				kinectSensorChooser.Start();
+					kinectSensorChooser.Start();
+				}
+				else
+				{
+					//	Multiplayer
+				}
 			}
 			else
 			{

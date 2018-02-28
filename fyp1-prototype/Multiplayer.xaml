@@ -1,0 +1,29 @@
+﻿<Window x:Class="fyp1_prototype.Multiplayer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:k="http://schemas.microsoft.com/kinect/2013"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:fyp1_prototype"
+        mc:Ignorable="d"
+        Title="Multiplayer Game" Height="900" Width="1200" Topmost="True" Icon="Resources/hand.png" WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" StateChanged="Window_StateChanged" Closing="Window_Closing" Closed="Window_Closed" Loaded="Window_Loaded" >
+	<Grid>
+		<Border BorderThickness="1" BorderBrush="Black"></Border>
+		<Grid>
+			<Canvas Name="canvas">
+				<Button	VerticalAlignment="Top" HorizontalAlignment="Left" Name="back" Margin="25,25,0,0" Height="100" Width="250" Click="back_Click">Back</Button>
+
+				<TextBlock Canvas.Right="100" Canvas.Top="30"	Name="lives"	Text="{Binding CurrentLivesText}"/>
+				<TextBlock Canvas.Right="100" Canvas.Top="60"	Name="score"	Text="{Binding CurrentScoreText}"/>
+				<TextBlock Canvas.Right="100" Canvas.Top="90"	Name="time"		Text="{Binding CurrentTimeText}"/>
+
+				<Image Canvas.Left="500"	Canvas.Bottom="500"	Name="handCursor"	Stretch="Fill"	Height="090" Width="080" Source="Resources/handWhite.png"	Panel.ZIndex="5"/>
+				<Image Canvas.Left="180"	Canvas.Bottom="0"	Name="blueBin"		Stretch="Fill"	Height="160" Width="140" Source="Resources/bluebin.png"		Panel.ZIndex="3"/>
+				<Image Canvas.Left="720"	Canvas.Bottom="0"	Name="orangeBin"	Stretch="Fill"	Height="160" Width="140" Source="Resources/orangebin.png"	Panel.ZIndex="3"/>
+				<Image Canvas.Right="180"	Canvas.Bottom="0"	Name="brownBin"		Stretch="Fill"	Height="160" Width="140" Source="Resources/brownbin.png"	Panel.ZIndex="3"/>
+
+				<TextBlock Name="countdown" Text="Initializing" FontSize="196" FontWeight="Bold" Width="auto" Height="auto" TextAlignment="Center" Visibility="Visible" Background="AliceBlue"/>
+			</Canvas>
+		</Grid>
+	</Grid>
+</Window>
