@@ -39,7 +39,7 @@ namespace fyp1_prototype
 			KinectRegion.AddHandPointerLeaveHandler(btn_login, OnHandPointerLeave);
 
 			KinectRegion.AddHandPointerEnterHandler(btn_register, OnHandPointerEnter);
-			KinectRegion.AddHandPointerEnterHandler(btn_register, OnHandPointerEnter);
+			KinectRegion.AddHandPointerLeaveHandler(btn_register, OnHandPointerEnter);
 
 			KinectRegion.AddHandPointerLeaveHandler(btn_singlePlayer, OnHandPointerLeave);
 			KinectRegion.AddHandPointerEnterHandler(btn_singlePlayer, OnHandPointerEnter);
