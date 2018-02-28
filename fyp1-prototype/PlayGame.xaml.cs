@@ -163,7 +163,6 @@ namespace fyp1_prototype
 		#endregion
 
 		//	TODO:
-		//	countdown text size
 		//	multiplayer
 
 		//	Constructor
@@ -236,11 +235,21 @@ namespace fyp1_prototype
 			var brownBinPoint = brownBin.TranslatePoint(new Point(0, 0), canvas);
 			var blueBinPoint = blueBin.TranslatePoint(new Point(0, 0), canvas);
 			Canvas.SetLeft(orangeBin, ((brownBinPoint.X - blueBinPoint.X) / 2) + blueBinPoint.X);
-
+			
 			//	Set the screenWidth and screenHeight to the width and height of the full primary screen
 			screenWidth = (int)(SystemParameters.FullPrimaryScreenWidth);
 			screenHeight = (int)(SystemParameters.FullPrimaryScreenHeight);
-
+			
+			if (screenWidth < (int)(SystemParameters.MaximizedPrimaryScreenWidth))
+			{
+				screenWidth = (int)(SystemParameters.MaximizedPrimaryScreenWidth);
+			}
+			
+			if (screenHeight < (int)(SystemParameters.MaximizedPrimaryScreenHeight))
+			{
+				screenHeight = (int)(SystemParameters.MaximizedPrimaryScreenHeight);
+			}
+			
 			//	Calculate the screen factor
 			screenFactorX = screenWidth / 640;
 			screenFactorY = screenHeight / 480;
@@ -439,7 +448,6 @@ namespace fyp1_prototype
 			Dispatcher.Invoke(() =>
 			{
 				countdown.Visibility = Visibility.Visible;
-				countdown.Width = 1000;
 				countdown.FontSize = 96;
 
 				//	Run the async method
@@ -474,8 +482,10 @@ namespace fyp1_prototype
 
 			//	Start counting down
 			timerCountdown.Tick += new EventHandler(Tick_Countdown);
-			timerCountdown.Interval = TimeSpan.FromMilliseconds(1000);
+			timerCountdown.Interval = TimeSpan.FromMilliseconds(100);
 			timerCountdown.Start();
+
+			countdown.Width = 1000;
 		}
 
 		private void ScaleLeftXAxis()
@@ -487,6 +497,8 @@ namespace fyp1_prototype
 				Dispatcher.Invoke(() =>
 				{
 					countdown.Text = "Please ungrip your hand";
+					Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+					Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 				});
 				System.Threading.Thread.Sleep(1000);
 			}
@@ -494,7 +506,9 @@ namespace fyp1_prototype
 			//	Set the screen text
 			Dispatcher.Invoke(() =>
 			{
-				countdown.Text = "Move your hand to left and grip when done";
+				countdown.Text = "Move your hand to left\r\nGrip when done";
+				Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+				Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 			});
 
 			//	Get the latest X and sleep before checking
@@ -503,7 +517,7 @@ namespace fyp1_prototype
 			{
 				Xmin = currentX;
 			}
-			while (currentX == -999);
+			while (currentX == -999 || Xmin == -999);
 
 			do
 			{
@@ -522,6 +536,8 @@ namespace fyp1_prototype
 				Dispatcher.Invoke(() =>
 				{
 					countdown.Text = "Please ungrip your hand";
+					Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+					Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 				});
 				System.Threading.Thread.Sleep(1000);
 			}
@@ -529,7 +545,9 @@ namespace fyp1_prototype
 			//	Set the screen text
 			Dispatcher.Invoke(() =>
 			{
-				countdown.Text = "Right";
+				countdown.Text = "Move your hand to right\r\nGrip when done";
+				Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+				Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 			});
 
 			do
@@ -555,6 +573,8 @@ namespace fyp1_prototype
 				Dispatcher.Invoke(() =>
 				{
 					countdown.Text = "Please ungrip your hand";
+					Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+					Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 				});
 				System.Threading.Thread.Sleep(1000);
 			}
@@ -562,7 +582,9 @@ namespace fyp1_prototype
 			//	Set the screen text
 			Dispatcher.Invoke(() =>
 			{
-				countdown.Text = "Top";
+				countdown.Text = "Move your hand to Top\r\nGrip when done";
+				Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+				Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 			});
 
 			do
@@ -570,7 +592,7 @@ namespace fyp1_prototype
 				Ymin = currentY;
 			}
 
-			while (currentY == -999);
+			while (currentY == -999 || Ymin == -999);
 
 			do
 			{
@@ -589,6 +611,8 @@ namespace fyp1_prototype
 				Dispatcher.Invoke(() =>
 				{
 					countdown.Text = "Please ungrip your hand";
+					Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+					Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 				});
 				System.Threading.Thread.Sleep(1000);
 			}
@@ -596,7 +620,9 @@ namespace fyp1_prototype
 			//	Set the screen text
 			Dispatcher.Invoke(() =>
 			{
-				countdown.Text = "Bottom";
+				countdown.Text = "Move your hand to bottom\r\nGrip when done";
+				Canvas.SetLeft(countdown, screenWidth / 2 - countdown.ActualWidth / 2);
+				Canvas.SetTop(countdown, screenHeight / 2 - countdown.ActualHeight / 2);
 			});
 
 			do
