@@ -1,18 +1,8 @@
 ﻿using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace fyp1_prototype
 {
@@ -25,6 +15,8 @@ namespace fyp1_prototype
 		KinectSensorChooser kinectSensorChooser;
 		private int playerID;
 		private int windowType;
+		private int player1Score = -1;
+		private int player2Score = -1;
 
 		public GameMode(KinectSensorChooser kinectSensorChooser, int playerID, int window = -1)
 		{
@@ -173,7 +165,63 @@ namespace fyp1_prototype
 					else
 					{
 						//	Multiplayer game, log in not required, playerID == -1
+						Multiplayer multiplayer = null;
+						Multiplayer multiplayer1 = null;
+						kinectSensorChooser.Stop();
 
+						if (e.HandPointer.GetIsOver(btnSurvival))
+						{
+							//	Survival
+							multiplayer = new Multiplayer(0);
+							multiplayer1 = new Multiplayer(0);
+
+							VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
+						}
+						else if (e.HandPointer.GetIsOver(btnTimeAttack))
+						{
+							//	Time Attack
+							multiplayer = new Multiplayer(1);
+							multiplayer1 = new Multiplayer(1);
+
+							VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+						}
+						else
+						{
+							VisualStateManager.GoToState(btnSurvival, "Normal", true);
+							VisualStateManager.GoToState(btnTimeAttack, "Normal", true);
+						}
+
+						if (multiplayer != null && multiplayer1 != null)
+						{
+							e.HandPointer.Capture(null);
+							e.Handled = true;
+
+							Close();
+
+							//	Start the game for player 1 then player 2
+							player1Score = multiplayer.StartGame();
+							player2Score = multiplayer1.StartGame();
+
+							kinectSensorChooser.Start();
+
+							//	Find the winner
+							CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+							if (player1Score > player2Score)
+							{
+								customMessageBox.ShowText("Winner is Player #1\nScore: " + player1Score, "Game Ended");
+							}
+							else if (player2Score > player1Score)
+							{
+								customMessageBox.ShowText("Winner is Player #2\nScore: " + player2Score, "Game Ended");
+							}
+							else
+							{
+								//	If draw
+								customMessageBox.ShowText("DRAW!\nScore: " + player1Score, "Game Ended");
+							}
+
+							return;
+						}
 					}					
 				}
 				else
@@ -255,6 +303,42 @@ namespace fyp1_prototype
 				else
 				{
 					//	Multiplayer
+					//	Multiplayer game, log in not required, playerID == -1
+					Multiplayer multiplayer = null;
+					Multiplayer multiplayer1 = null;
+					kinectSensorChooser.Stop();
+
+					VisualStateManager.GoToState(btnSurvival, "MouseOver", true);
+
+					if (true)
+					{
+						Close();
+
+						//	Start the game for player 1 then player 2
+						//	Survival
+						multiplayer = new Multiplayer(0);
+						player1Score = multiplayer.StartGame();
+						multiplayer1 = new Multiplayer(0);
+						player2Score = multiplayer1.StartGame();
+
+						kinectSensorChooser.Start();
+
+						//	Find the winner
+						CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+						if (player1Score > player2Score)
+						{
+							customMessageBox.ShowText("Winner is Player #1\nScore: " + player1Score, "Game Ended");
+						}
+						else if (player2Score > player1Score)
+						{
+							customMessageBox.ShowText("Winner is Player #2\nScore: " + player2Score, "Game Ended");
+						}
+						else
+						{
+							//	If draw
+							customMessageBox.ShowText("DRAW!\nScore: " + player1Score, "Game Ended");
+						}
+					}
 				}
 				
 			}
@@ -287,6 +371,44 @@ namespace fyp1_prototype
 				else
 				{
 					//	Multiplayer
+					//	Multiplayer game, log in not required, playerID == -1
+					Multiplayer multiplayer = null;
+					kinectSensorChooser.Stop();
+
+					//	Time Attack
+					multiplayer = new Multiplayer(1);
+
+					VisualStateManager.GoToState(btnTimeAttack, "MouseOver", true);
+
+					if (multiplayer != null)
+					{
+						Close();
+
+						//	Start the game for player 1 then player 2
+						player1Score = multiplayer.StartGame();
+						multiplayer = new Multiplayer(1);
+						player2Score = multiplayer.StartGame();
+
+						kinectSensorChooser.Start();
+
+						//	Find the winner
+						CustomMessageBox customMessageBox = new CustomMessageBox(kinectSensorChooser);
+						if (player1Score > player2Score)
+						{
+							customMessageBox.ShowText("Winner is Player #1\nScore: " + player1Score, "Game Ended");
+						}
+						else if (player2Score > player1Score)
+						{
+							customMessageBox.ShowText("Winner is Player #2\nScore: " + player2Score, "Game Ended");
+						}
+						else
+						{
+							//	If draw
+							customMessageBox.ShowText("DRAW!\nScore: " + player1Score, "Game Ended");
+						}
+
+						return;
+					}
 				}
 			}
 			else

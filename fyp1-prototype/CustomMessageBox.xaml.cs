@@ -119,9 +119,10 @@ namespace fyp1_prototype
 		}
 
 		// Show message
-		public void ShowText(string text)
+		public void ShowText(string text, string title = "Error")
 		{
 			textBlock.Text = text;
+			Title = title;
 			ShowDialog();
 		}
 

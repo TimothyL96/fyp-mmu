@@ -42,14 +42,15 @@ namespace fyp1_prototype
 			text += "You need an account and be logged in to start playing the game.\n";
 			text += "At the start of every game, you have to calibrate the Kinect sensor.\n";
 			text += "First, move your desired hand to your left mouse by standing on the same place.\n";
-			text += "Then grip your hand to indicate that this is your desired left most position.\n";
+			text += "Then grip your hand to indicate that this is your hand desired left most position.\n";
 			text += "After that, repeat the calibration for right, top and bottom side.\n";
 			text += "Try not to go to high or low while calibratinge as Kinect has problem detecting grip at those levels.\n";
 			text += "\nYour goal for the game would be about dragging the spawned item to the correct recycle bin.\n";
 			text += "\nA correct drag drop would give you a score and a wrong drag drop would takes a live away from you.\n";
-			text += "\nCurrently, a drop to the floor would not have your live deducted.\n";
+			text += "\nCurrently, a drop to the floor would NOT have your live deducted.\n";
 			text += "\nSURVIVAL MODE:\nSurviving the game limited lives. Your game would not end if you still have lives left!.\n";
 			text += "\nTIME ATTACK MODE:\nIn 60 seconds, get as much score as you can!.\n";
+			text += "\nMULTIPLAYER:\nLogin not required, two players play the game consecutively and the winner will be shown after both game ends..\n";
 			var textContent = new Label
 			{
 				Content = text,

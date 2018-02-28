@@ -163,7 +163,7 @@ namespace fyp1_prototype
 		#endregion
 
 		//	Constructor
-		public Multiplayer(int playerID, int gameMode)
+		public Multiplayer(int gameMode)
 		{
 			InitializeComponent();
 
@@ -173,9 +173,6 @@ namespace fyp1_prototype
 			//	Kinect changed event listener
 			kinectSensorChooser = new KinectSensorChooser();
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
-
-			//	Set the player ID
-			this.playerID = playerID;
 
 			//	Set the game mode
 			this.gameMode = gameMode;
@@ -345,18 +342,6 @@ namespace fyp1_prototype
 			CheckGameEnd();
 		}
 
-		//	Set up data for loading game
-		public void GetLoadGameData(int lives, int time, int score, int itemGame)
-		{
-			currentLives = lives;
-			previousTime = time;
-			currentScore = score;
-			this.itemGame = itemGame;
-
-			//	Update the screen's score, livse and time
-			UpdateScoreLivesTime();
-		}
-
 		//	Function that check if the game ends according to the selected game mode
 		private void CheckGameEnd()
 		{
@@ -380,6 +365,14 @@ namespace fyp1_prototype
 				timerGameEnd.Interval = TimeSpan.FromMilliseconds(3000);
 				timerGameEnd.Start();
 			}
+		}
+
+		//	Return score for user, so highest score between the two users in multiplayer can be displayed
+		public int StartGame()
+		{
+			ShowDialog();
+
+			return currentScore;
 		}
 
 		//	IInteractionClient for DummyInteractionClient
@@ -771,17 +764,6 @@ namespace fyp1_prototype
 
 			timerGameEnd.Stop();
 
-			//	Update the score
-			ScoreRepository scoreRepository = new ScoreRepository();
-			scoreRepository.AddScore(currentScore, playerID, gameMode);
-
-			//	Delete previous saved game
-			GameRepository gameRepository = new GameRepository();
-			if (gameRepository.GetGame(playerID).Count > 0)
-			{
-				gameRepository.DeleteGame(playerID);
-			}
-
 			//	Display the score
 			countdown.Text = "FINAL SCORE:\n" + currentScore;
 			countdown.FontSize = 200;
@@ -912,24 +894,6 @@ namespace fyp1_prototype
 								{
 									//	Stop the timer
 									watch.Stop();
-
-									//	Create new GameRepository object
-									GameRepository gro = new GameRepository();
-									//	Get the playing time
-
-									currentTime = previousTime + watch.ElapsedMilliseconds / 1000;
-
-									//	If the player ID exists in the database (Playing loaded game), update the row to the current game, else insert a new row
-									if (gro.GetGame(playerID).Count == 0)
-									{
-										//	Add a new game to the database
-										gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
-									}
-									else
-									{
-										//	Modify the game in the database
-										gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
-									}
 
 									//	Reset the timer
 									watch.Reset();
@@ -1100,16 +1064,10 @@ namespace fyp1_prototype
 
 				try
 				{
-					//DepthImagePoint rightDepthPoint =
-					//	depth.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position);
 
 					DepthImagePoint rightDepthPoint =
 					kinectSensorChooser.Kinect.CoordinateMapper.MapSkeletonPointToDepthPoint(first.Joints[JointType.HandRight].Position, DepthImageFormat.Resolution640x480Fps30);
-
-					//ColorImagePoint rightColorPoint =
-					//	depth.MapToColorImagePoint(rightDepthPoint.X, rightDepthPoint.Y,
-					//	ColorImageFormat.RgbResolution640x480Fps30);
-
+					
 					ColorImagePoint rightColorPoint =
 						kinectSensorChooser.Kinect.CoordinateMapper.MapDepthPointToColorPoint(DepthImageFormat.Resolution640x480Fps30,
 						rightDepthPoint, ColorImageFormat.RgbResolution640x480Fps30);
@@ -1172,11 +1130,6 @@ namespace fyp1_prototype
 				sensor.Stop();
 				sensor.SkeletonFrameReady -= SensorOnSkeletonFrameReady;
 			}
-
-			if (kinectSensorChooser.Status == ChooserStatus.SensorStarted)
-			{
-				//kinectSensorChooser.Stop();
-			}
 		}
 
 		//	Temporary click function
@@ -1186,16 +1139,6 @@ namespace fyp1_prototype
 			if (watch.IsRunning)
 			{
 				watch.Stop();
-				GameRepository gro = new GameRepository();
-				currentTime = previousTime + watch.ElapsedMilliseconds / 1000;
-				if (gro.GetGame(playerID).Count == 0)
-				{
-					gro.AddGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
-				}
-				else
-				{
-					gro.ModifyGame(currentLives, playerID, currentTime, currentScore, itemGame, gameMode);
-				}
 				watch.Reset();
 			}
 
