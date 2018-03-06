@@ -23,7 +23,7 @@ namespace fyp1_prototype
 	{
 		private HandPointer capturedHandPointer;
 		private KinectSensorChooser kinectSensorChooser;
-
+		
 		public CustomMessageBox(KinectSensorChooser kinectSensorChooser)
 		{
 			InitializeComponent();
