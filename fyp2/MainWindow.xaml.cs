@@ -24,7 +24,7 @@ namespace fyp1_prototype
 
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            kinectSensorChooser = new KinectSensorChooser();
+            kinectSensorChooser = new KinectSensorChooser(); 
 			kinectSensorChooser.KinectChanged += KinectSensorChooser_KinectChanged;
 			kinectSensorDisplay.KinectSensorChooser = kinectSensorChooser;
 
